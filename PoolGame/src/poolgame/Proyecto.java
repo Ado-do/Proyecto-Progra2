@@ -1,8 +1,16 @@
 package poolgame;
 
-public class Proyecto {
+/* //TODO Lista de cosas que hacer
+ * Rotar punto segun movimiento de mouse respecto a un punto (Bola blanca)
+ * Simular lanzamiento con distinta fuerza (inercia)
+ * Colisiones (interfaz Colider)
+ * Crear bolas en posiciones random en mesa
+ * Juntar todo
+ * Crea botones y menu
+ */
 
+public class Proyecto {
     public static void main(String[] args) {
-        Ventana v = new Ventana(); //única sentencia
+        new Ventana();
     }
 }
