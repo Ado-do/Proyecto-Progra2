@@ -1,10 +1,8 @@
 package poolgame;
 
 public class Proyecto {
-    
+
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-        
-        new Ventana();
+        Ventana v = new Ventana(); //única sentencia
     }
 }
