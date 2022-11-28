@@ -33,13 +33,18 @@ public class Mesa extends JPanel {
         System.out.println(this.getBounds());
 
         //* Agregar componentes
-        bolas.add(new Bola(Color.white, 300, 150));
-        bolas.add(new Bola(Color.red, 405, 190));
-        bolas.add(new Bola(Color.orange, 420, 230));
-        bolas.add(new Bola(Color.blue, 455, 240));
-        bolas.add(new Bola(Color.black, 480, 210));
-        bolas.add(new Bola(Color.gray, 430, 270));
-        bolas.add(new Bola(Color.yellow, 445, 200));
+        int offset = 80;
+
+        bolas.add(new Bola(Color.white, 610, 300));
+
+        bolas.add(new Bola(Color.red, 750 + offset, 300));
+        bolas.add(new Bola(Color.orange, 750 + offset, 335));
+        bolas.add(new Bola(Color.blue, 750 + offset, 265));
+
+        bolas.add(new Bola(Color.black, 785 + offset, 320));
+        bolas.add(new Bola(Color.gray, 785 + offset, 280));
+        
+        bolas.add(new Bola(Color.yellow, 820 + offset, 300));
 
         for (Bola bola : bolas) this.add(bola);
     }

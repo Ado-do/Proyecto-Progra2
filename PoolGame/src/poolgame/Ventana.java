@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class Ventana extends JFrame {
-    private Gameplay game;
+    private InGame game;
 
     public Ventana() {
         // Configurar ventana (JFrame)
@@ -16,7 +16,7 @@ public class Ventana extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Agregar pantallas del juego (menus y gameplay)
-        this.game = new Gameplay();
+        this.game = new InGame();
         this.add(game);
 
         // Despues de configurar todo hacer visible la ventana

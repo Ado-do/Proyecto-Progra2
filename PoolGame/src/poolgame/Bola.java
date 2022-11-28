@@ -6,9 +6,9 @@ import java.awt.Color;
 
 public class Bola extends JComponent {
     private int x, y;
-    private int radio;
     private Color color;
-
+    private final int radio; // Constante
+    
     public Bola(Color color, int posX, int posY) {
         super();
 
@@ -24,7 +24,7 @@ public class Bola extends JComponent {
     public void paint(Graphics g) {
         g.setColor(color);
         g.fillOval(x, y, radio, radio);
-    
+
         super.paint(g);
     }
 }
