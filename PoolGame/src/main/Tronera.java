@@ -1,4 +1,4 @@
-package poolgame;
+package main;
 
 public class Tronera {
     

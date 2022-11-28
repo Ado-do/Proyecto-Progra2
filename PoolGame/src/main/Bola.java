@@ -1,4 +1,4 @@
-package poolgame;
+package main;
 
 import javax.swing.JComponent;
 import java.awt.Graphics;
@@ -21,7 +21,7 @@ public class Bola extends JComponent {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         g.setColor(color);
         g.fillOval(x, y, radio, radio);
 

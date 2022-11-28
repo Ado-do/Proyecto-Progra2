@@ -1,4 +1,4 @@
-package poolgame;
+package main;
 
 /* //TODO Lista de cosas que hacer
  * Rotar punto segun movimiento de mouse respecto a un punto (Bola blanca)
@@ -10,8 +10,8 @@ package poolgame;
  * Crea botones y menu
  */
 
-public class Proyecto {
+public class Main {
     public static void main(String[] args) {
-        new Ventana();
+        new PoolGame();
     }
 }

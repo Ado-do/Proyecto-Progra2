@@ -1,4 +1,4 @@
-package poolgame;
+package main;
 
 import java.util.ArrayList;
 import javax.swing.JPanel;
@@ -7,9 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 public class Mesa extends JPanel {
-    private final int borde = 35;
+    private final int BORDE = 35;
     private int x, y, width, length;
-
     private ArrayList<Bola> bolas;
 
     public Mesa(int x, int y, int width, int length) {
@@ -25,12 +24,14 @@ public class Mesa extends JPanel {
 
         //* Configurar JPanel
         this.setLayout(null);
+
+        //? TEST
         // this.setBounds(x, y, width, length);
-        this.setSize(width, length);
+        // this.setSize(width, length);
+        // System.out.println(this.getBounds());
+
         this.setPreferredSize(new Dimension(width, length));
         this.setBackground(Color.YELLOW);
-
-        System.out.println(this.getBounds());
 
         //* Agregar componentes
         int offset = 80;
@@ -50,8 +51,8 @@ public class Mesa extends JPanel {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         //* Borde
         g.setColor(new Color(153, 102, 0));
@@ -60,10 +61,10 @@ public class Mesa extends JPanel {
         //* Mesa
         // g.setColor(Color.green);
         g.setColor(new Color(0, 200, 0));
-        g.fillRect(x + borde, y + borde, width-(borde * 2), length-(borde * 2));
+        g.fillRect(x + BORDE, y + BORDE, width-(BORDE * 2), length-(BORDE * 2));
         
         //* Bolas
-        for (Bola bola : bolas) bola.paint(g);
+        for (Bola bola : bolas) bola.paintComponent(g);
         
     }
 }
