@@ -90,17 +90,15 @@ En partida:
 
 <!-- ACKNOWLEDGMENTS -->
 ## Links utiles
-
 Aqui pondremos links utiles para el proyecto, ya sean videos, documentacion de java o ideas para programar el Pool :)
 
-* [Tutorial para juegos 2D en Java](https://zetcode.com/javagames/)
+### Docs
+* [Pagina tutorial para juegos 2D en Java](https://zetcode.com/javagames/)
 * [JavaPool](http://www.mscs.mu.edu/~mikes/174.2002/demos/feb4/JavaPool.html) del libro "[Java Game Programming for Dummies](https://theswissbay.ch/pdf/Gentoomen%20Library/Programming/Java/IDG%20-%20Java%20Game%20Programming%20for%20Dummies.pdf)"
 
-_Ejemplos para insertar link en el readme_
-* [Insertar texto con SDL_ttf (puede ser util para el menu y score)](https://www.parallelrealities.co.uk/tutorials/ttf/ttf1.php)
-* [Gameplay general Tetris](https://tetris.wiki/Gameplay_of_Tetris), [Categorias del Gameplay](https://tetris.wiki/Category:Gameplay)
-* [Generacion de piezas](https://tetris.wiki/Category:Gameplay), [Implementación](https://www.educative.io/courses/game-development-js-tetris/xlKZA7B9lLr)
-
+### Videos
+* [A New Beginning - Episode #01 - Java Game Development Tutorial]([https://zetcode.com/javagames/](https://www.youtube.com/watch?v=6_N8QZ47toY&list=PL4rzdwizLaxYmltJQRjq18a9gsSyEQQ-0&index=1))
+* [How to Make a 2D Game in Java #1 - The Mechanism of 2D Games](https://www.youtube.com/watch?v=om59cwR7psI&list=PL_QPQmz5C6WUF-pOQDsbsKbaBZqXj4qSq)
 
 Sobre github
 * [Readme formatos y syntaxis](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
