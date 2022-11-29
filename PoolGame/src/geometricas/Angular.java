@@ -46,9 +46,9 @@ public class Angular {
     public static double distEntre2Puntos(Point uno, Point dos) {
         double d = Math.sqrt(
                 ((double) uno.x - (double) dos.x) *
-                        ((double) uno.x - (double) dos.x) +
-                        ((double) uno.y - (double) dos.y) *
-                                ((double) uno.y - (double) dos.y));
+                ((double) uno.x - (double) dos.x) +
+                ((double) uno.y - (double) dos.y) *
+                ((double) uno.y - (double) dos.y));
         return d;
     }
 

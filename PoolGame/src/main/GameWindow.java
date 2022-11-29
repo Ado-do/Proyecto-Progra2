@@ -8,7 +8,7 @@ public class GameWindow extends JFrame {
     public GameWindow(GamePanel gamePanel) {
         // Configurar ventana (JFrame)
         super("TEST");
-        this.setIconImage(new ImageIcon(getClass().getResource("/img/icon.png")).getImage());
+        this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         this.setSize(1280 + 15, 720 + 40); //? Lo sumado corresponde a los margenes de la ventana
         this.setResizable(false);
         this.setLocationRelativeTo(null);

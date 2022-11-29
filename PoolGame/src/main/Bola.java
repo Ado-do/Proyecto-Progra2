@@ -3,28 +3,47 @@ package main;
 import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Point;
 
 public class Bola extends JComponent {
-    private int x, y;
+    public static final int radius = 15; // Constante
+    private Point centerPoint;
     private Color color;
-    private final int radio; // Constante
     
     public Bola(Color color, int posX, int posY) {
         super();
 
         this.color = color;
-        this.x = posX;
-        this.y = posY;
-        this.radio = 30;
+        this.centerPoint = new Point(posX, posY);
+    }
 
-        // this.setBounds(posX, posY, radio, radio);
+    public void setCenterLocation(Point p) {
+        centerPoint.setLocation(p);
+    }
+
+    public void setCenterLocation(int pX, int pY) {
+        centerPoint.setLocation(pX, pY);
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public Point getPoint() {
+        return centerPoint;
+    }
+
+    public Point getCenterLocation() {
+        return centerPoint.getLocation();
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        g.setColor(color);
-        g.fillOval(x, y, radio, radio);
+        super.paintComponent(g);
 
-        super.paint(g);
+        if (this.isVisible()) {
+            g.setColor(color);
+            g.fillOval((int)centerPoint.getX() - radius, (int)centerPoint.getY() - radius, radius*2, radius*2);
+        }
     }
 }
