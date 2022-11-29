@@ -45,7 +45,8 @@
 * Lirayen Martinez (liraa001)
 
 ### Fechas Importantes
-* ...
+- [ ] Entrega Github Proyecto (07/12)
+
 <p align="right">(<a href="#top">volver a inicio</a>)</p>
 
 ### Enunciado
@@ -80,6 +81,8 @@
 	- [ ] Logica de troneras
 	- [ ] Asignar puntaje según tipo de bola insertada en tronera
 - [ ] Reiniciar por medio de GUI
+- [ ] Nuevas Funcionalidades
+	- [ ] Multijugador
 
 <p align="right">(<a href="#top">volver a inicio</a>)</p>
 
