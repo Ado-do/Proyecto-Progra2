@@ -58,16 +58,16 @@
 ## Objetivos
 ### Principales
 - [ ] Terminar diseño final de GUI
-	- [x] **Primera versión del diseño (Prototipo de interfaz)**
+	- [X] ~~**Primera versión del diseño (Prototipo de interfaz)**~~
 	- [ ] Subir imagen de la interfaz prototipo
 - [ ] Terminar informe
-	- [ ] Enunciado general del tema, junto a propuestas del equipo
-	- [ ] "Use Case Diagram" con funciones principales de la aplicacion/juego
+	- [X] ~~Enunciado general del tema, junto a propuestas del equipo~~
+	- [X] ~~"Use Case Diagram" con funciones principales de la aplicacion/juego~~
 	- [ ] UML del contenido grafico (GUI)
 	- [ ] "TO-DO List" de cosas que no sabes hacer, y nuestro avance respecto a ellas
 ### TO-DO List
 - [ ] Realizar interfaz de taco e input
-	- [ ] Mover punto respecto a un punto central según movimiento del mouse
+	- [X] ~~Mover punto respecto a un punto central según movimiento del mouse~~
 	- [ ] Dibujar respecto a este input
 - [ ] Simular fisicas
 	- [ ] Lanzamiento de pelota y controlar fuerza de este
