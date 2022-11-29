@@ -115,6 +115,10 @@ En partida:
 * <kbd>R</kbd>: Reinciar
 <p align="right">(<a href="#top">volver a inicio</a>)</p>
 
+### Diagramas
+<img src="/diagramas/Diagramauso.png" alt="DiagramaUso">
+Propotipo Diagrama de uso
+
 <!-- ACKNOWLEDGMENTS -->
 ## Links utiles
 Aqui pondremos links utiles para el proyecto, ya sean videos, documentacion de java o ideas para programar el Pool :)
