@@ -133,6 +133,9 @@ Aqui pondremos links utiles para el proyecto, ya sean videos, documentacion de j
 ### Videos
 * [A New Beginning - Episode #01 - Java Game Development Tutorial](https://www.youtube.com/watch?v=6_N8QZ47toY&list=PL4rzdwizLaxYmltJQRjq18a9gsSyEQQ-0&index=1)
 * [How to Make a 2D Game in Java #1 - The Mechanism of 2D Games](https://www.youtube.com/watch?v=om59cwR7psI&list=PL_QPQmz5C6WUF-pOQDsbsKbaBZqXj4qSq)
+* [Programming Animation: Billiard Ball Collisions](https://youtu.be/guWIF87CmBg)
+* [Programming Animation: Ball Bounces Off Angles](https://youtu.be/Ep2N0N6SB6U)
+* [Programming Balls #1 Circle Vs Circle Collisions C++](https://youtu.be/LPzyNOHY3A4)
 
 ### Sobre github
 * [Readme formatos y syntaxis](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
