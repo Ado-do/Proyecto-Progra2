@@ -3,29 +3,29 @@ package main;
 import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.Color;
-import javax.swing.JComponent;
 
-public class CircleTest extends JComponent {
+public class Circle {
 
     private int radius;
     private Point centerPoint;
 
-    public CircleTest(int x, int y, int r) {
+    public Circle(int x, int y, int r) {
         centerPoint = new Point(x, y);
         radius = r;
     }
-    public CircleTest() {
-        centerPoint = new Point(0, 0);
-        radius = 1;
+    public Circle(Point p, int r) {
+        centerPoint = p;
+        radius = r;
     }
 
-    public void setCenterLocation(Point p) {
+    public void setLocation(Point p) {
         centerPoint.setLocation(p);
     }
 
-    public void setCenterLocation(int pX, int pY) {
-        centerPoint.setLocation(pX, pY);
-    }
+    // @Override
+    // public void setLocation(int pX, int pY) {
+    //     centerPoint.setLocation(pX, pY);
+    // }
 
     public int getRadius() {
         return radius;
@@ -43,14 +43,11 @@ public class CircleTest extends JComponent {
         return centerPoint;
     }
 
-    public Point getCenterLocation() {
+    public Point getLocation() {
         return centerPoint.getLocation();
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
+    public void paint(Graphics g) {
         g.setColor(Color.RED);
         g.drawOval((int)centerPoint.getX() - radius, (int)centerPoint.getY() - radius, radius*2, radius*2);
 

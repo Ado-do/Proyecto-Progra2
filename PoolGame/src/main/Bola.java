@@ -1,12 +1,11 @@
 package main;
 
-import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
 
-public class Bola extends JComponent {
-    public static final int radius = 15; // Constante
+public class Bola {
+    public static final int RADIUS = 15; // Constante
     private Point centerPoint;
     private Color color;
     
@@ -16,34 +15,29 @@ public class Bola extends JComponent {
         this.color = color;
         this.centerPoint = new Point(posX, posY);
     }
+    public Bola(Color color, Point p) {
+        super();
 
-    public void setCenterLocation(Point p) {
+        this.color = color;
+        this.centerPoint = p;
+    }
+
+//* Setters
+    public void setLocation(Point p) {
         centerPoint.setLocation(p);
     }
-
-    public void setCenterLocation(int pX, int pY) {
-        centerPoint.setLocation(pX, pY);
-    }
-
-    public int getRadius() {
-        return radius;
-    }
-
-    public Point getPoint() {
+    
+//* Getters
+    public Point getPoint() { // Devuelve referencia a punto central (acceso a cambiar posición)
         return centerPoint;
     }
-
-    public Point getCenterLocation() {
+    public Point getLocation() { // Devuelve referencia a punto nuevo con la posición de centro (para obtener posición actual)
         return centerPoint.getLocation();
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        if (this.isVisible()) {
-            g.setColor(color);
-            g.fillOval((int)centerPoint.getX() - radius, (int)centerPoint.getY() - radius, radius*2, radius*2);
-        }
+//* Paint
+    public void paint(Graphics g) {
+        g.setColor(color);
+        g.fillOval((int)centerPoint.getX() - RADIUS, (int)centerPoint.getY() - RADIUS, RADIUS*2, RADIUS*2);
     }
 }

@@ -1,27 +1,24 @@
 package main;
 
-import javax.swing.JComponent;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Point;
 
-//TODO Agregar logica creada en el paint de Mesa para generar taco
+//TODO Agregar lógica creada en el paint de Mesa para generar taco
 
-public class Taco extends JComponent {
-    private final int ancho = 6;
+public class Taco {
+    private final int WIDTH = 6;
+
+    private Point p1, p2;
+    private Bola blanca;
     
-    public Taco() {
-        this.setVisible(false);
+    public Taco(Bola bolaBlanca) {
+        this.blanca = bolaBlanca;
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    // public
 
-        if (this.isVisible()) {
-            g.setColor(Color.black);
-            for (int i = 1; i <= ancho; i++) {
-            g.drawLine(350, 310 + i, 520, 310 + i);
-        }
-        }
+    public void paint(Graphics g) {
+
     }
 }
