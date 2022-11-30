@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   </a>
-    <img src="/desing/logo.png" alt="Logo" width="550" height="360">
+    <img src="/desing/ss.png" alt="Logo">
   </a>
 
   <h3 align="center">PROYECTO PROGRAMACIÓN II (S2 2022)</h3>
