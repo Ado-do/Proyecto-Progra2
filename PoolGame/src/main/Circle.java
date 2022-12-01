@@ -49,10 +49,10 @@ public class Circle {
 
     public void paint(Graphics g) {
         g.setColor(Color.RED);
-        g.drawOval((int)centerPoint.getX() - radius, (int)centerPoint.getY() - radius, radius*2, radius*2);
+        g.drawOval((int)Math.round(centerPoint.getX()) - radius, (int)Math.round(centerPoint.getY()) - radius, radius*2, radius*2);
 
         int miniRadius = 1;
         g.setColor(Color.BLACK);
-        g.drawOval((int)centerPoint.getX() - miniRadius, (int)centerPoint.getY() - miniRadius, miniRadius*2, miniRadius*2);
+        g.drawOval((int)Math.round(centerPoint.getX()) - miniRadius, (int)Math.round(centerPoint.getY()) - miniRadius, miniRadius*2, miniRadius*2);
     }
 }

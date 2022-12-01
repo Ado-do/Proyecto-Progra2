@@ -38,6 +38,6 @@ public class Bola {
 //* Paint
     public void paint(Graphics g) {
         g.setColor(color);
-        g.fillOval((int)centerPoint.getX() - RADIUS, (int)centerPoint.getY() - RADIUS, RADIUS*2, RADIUS*2);
+        g.fillOval((int)Math.round(centerPoint.getX()) - RADIUS, (int)Math.round(centerPoint.getY()) - RADIUS, RADIUS*2, RADIUS*2);
     }
 }
