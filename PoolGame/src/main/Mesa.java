@@ -157,10 +157,11 @@ public class Mesa extends JPanel {
         }
     //! Dibujar circunferencia formada por taco
         int radioTotal = distAjustada + largoTaco;
-
+        //bolas.get(0).Move();
         g2D.setColor(Color.YELLOW);
         //TODO Quizás hacer una subclase de Graphics2D, configurarle el antialiasing y ademas agregar esta función "drawCircle()" (?
         g2D.drawOval((int)blanca.getLocation().getX() - radioTotal, (int)blanca.getLocation().getY() - radioTotal, radioTotal*2, radioTotal*2);
+        repaint();
     }
 }
 
