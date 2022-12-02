@@ -1,9 +1,10 @@
-package main;
+package progra2.poolgame;
 
-import geometricas.Angular;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
+
+import geometricas.Angular;
 
 public class Taco {
     public final static int WIDTH = 6;

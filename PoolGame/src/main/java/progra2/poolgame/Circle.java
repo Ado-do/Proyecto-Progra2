@@ -1,4 +1,4 @@
-package main;
+package progra2.poolgame;
 
 import java.awt.Point;
 import java.awt.Graphics;
@@ -21,11 +21,6 @@ public class Circle {
     public void setLocation(Point p) {
         centerPoint.setLocation(p);
     }
-
-    // @Override
-    // public void setLocation(int pX, int pY) {
-    //     centerPoint.setLocation(pX, pY);
-    // }
 
     public int getRadius() {
         return radius;

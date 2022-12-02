@@ -1,11 +1,14 @@
-package main;
+package progra2.poolgame;
 
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
 
 public class Bola {
+    //TODO: Agregar vector y masa
     public static final int RADIUS = 15; // Constante
+    // public static final int MASS = 150;
+
     private Point centerPoint;
     private Color color;
     
@@ -22,12 +25,12 @@ public class Bola {
         this.centerPoint = p;
     }
 
-//* Setters
+// * Setters
     public void setLocation(Point p) {
         centerPoint.setLocation(p);
     }
     
-//* Getters
+// * Getters
     public Point getPoint() { // Devuelve referencia a punto central (acceso a cambiar posición)
         return centerPoint;
     }
@@ -35,9 +38,11 @@ public class Bola {
         return centerPoint.getLocation();
     }
 
-//* Paint
+// * Paint
     public void paint(Graphics g) {
         g.setColor(color);
         g.fillOval((int)Math.round(centerPoint.getX()) - RADIUS, (int)Math.round(centerPoint.getY()) - RADIUS, RADIUS*2, RADIUS*2);
+        g.setColor(Color.BLACK);
+        g.drawOval((int)Math.round(centerPoint.getX()) - RADIUS, (int)Math.round(centerPoint.getY()) - RADIUS, RADIUS*2, RADIUS*2);
     }
 }
