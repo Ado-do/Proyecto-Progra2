@@ -24,4 +24,4 @@ hs_err_pid*
 replay_pid*
 /PoolGame/nbproject/private/
 /PoolGame/build/
-.vscode/settings.json
+PoolGame/nb-configuration.xml
