@@ -132,26 +132,24 @@ public class Mesa extends JPanel {
         g.setColor(new Color(184, 115, 51));
         g.fillRect(0, 0, width, length);
 
-        int borde1 = 10;
-        // g.setColor(Color.BLACK);
-        g.setColor(Color.WHITE);
-        for (int i = 0; i < borde1; i++) {
-            g.drawRect(i, i, width-i*2, length-i*2);
-        }
+        // int borde1 = 10;
+        // // g.setColor(Color.BLACK);
+        // g.setColor(Color.WHITE);
+        // for (int i = 0; i < borde1; i++) {
+        //     g.drawRect(i, i, width-i*2, length-i*2);
+        // }
         
         // * Mesa
         g.setColor(Color.green);
         g.setColor(new Color(0, 200, 0));
-        // g.fillRect(x + BORDE, y + BORDE, width-(BORDE * 2), length-(BORDE * 2));
         g.fillRect(BORDE, BORDE, width-(BORDE * 2), length-(BORDE * 2));
         
         // Borde
-        // g.setColor(new Color(153, 102, 0));
+        g.setColor(new Color(153, 102, 0));
         int borde2 = 8;
-        g.setColor(new Color(160,82,45));
+        // g.setColor(new Color(160,82,45));
         for (int i = 0; i < borde2; i++) {
-            // g.drawRect((x + BORDE)+i, (y + BORDE)+i, (width-(BORDE * 2))-i*2, (length-(BORDE * 2))-i*2);
-            g.drawRect(BORDE+i, BORDE+i, (width-(BORDE * 2))-i*2, (length-(BORDE * 2))-i*2);
+            g.drawRect(BORDE-i, BORDE-i, (width-(BORDE * 2))+i*2, (length-(BORDE * 2))+i*2);
         }
     }
 }

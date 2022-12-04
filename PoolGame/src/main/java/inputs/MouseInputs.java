@@ -41,9 +41,10 @@ public class MouseInputs implements MouseInputListener {
     public void mouseReleased(MouseEvent e) {
         mesa.release.x = e.getX();
         mesa.release.y = e.getY();
-        PVector vel = new PVector(mesa.release.x - mesa.hold.x, mesa.release.y - mesa.hold.y);
-        vel.escalar(-0.25f);
 
+        PVector vel = new PVector(mesa.release.x - mesa.hold.x, mesa.release.y - mesa.hold.y);
+        
+        vel.escalar(-0.25f);
 
         mesa.getBlanca().setSpeed(vel);
 

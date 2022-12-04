@@ -20,6 +20,6 @@ public class PVector {
     }
 
     public float getMagnitud() {
-        return (float)Math.sqrt((this.x * this.x) + (this.y * this.y));
+        return (float)Math.sqrt((x * x) + (y * y));
     }
 }

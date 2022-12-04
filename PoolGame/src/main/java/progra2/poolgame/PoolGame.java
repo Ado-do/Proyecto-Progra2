@@ -1,8 +1,8 @@
 package progra2.poolgame;
 
 public class PoolGame implements Runnable {
-    // private final int FPS_SET = 60;
-    private final int FPS_SET = 120;
+    private final int FPS_SET = 60;
+    // private final int FPS_SET = 120;
     private final int UPS_SET = 60;
 
     private GameWindow gameWindow;
@@ -74,7 +74,7 @@ public class PoolGame implements Runnable {
             if (currentTimeMilli - timeLastCheck >= 1000) { // * Intervalo de tiempo en que se muestran FPS (1000mills = 1s)
                 timeLastCheck = System.currentTimeMillis();
 
-                // System.out.println("FPS: " + frames + " | UPS: " + updates);
+                System.out.println("FPS: " + frames + " | UPS: " + updates);
 
                 frames = 0;
                 updates = 0;
