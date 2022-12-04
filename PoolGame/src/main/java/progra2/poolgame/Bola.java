@@ -44,6 +44,7 @@ public class Bola {
         float mag = speed.getMagnitud();
         if (mag < ROCE) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
             speed.escalar(0);
+            Mesa.moving = false;
         } else { // El roce esta afectando a la bola, pero aun no la detiene.
             speed.normalizar();
             speed.escalar(mag - ROCE);
@@ -58,16 +59,13 @@ public class Bola {
 
     public void checkCollition() {
         //* Bordes horizontales
-        //Izquierda
+        // Izquierda
         if ((x - RADIUS) < Mesa.BORDE && speed.x < 0) {  
-            System.out.println("izq");
             speed.x *= -1;
             x -= 2 * ((x - RADIUS) - Mesa.BORDE);
         } 
-        //Derecha
+        // Derecha
         else if (((x + RADIUS) > (1280 - Mesa.BORDE)) && (speed.x > 0)) {
-            System.out.println("DERECHA");
-            // x -= speed.x;
             speed.x *= -1;
             x -= 2 * ((x + RADIUS) - (1280 - Mesa.BORDE));
         }

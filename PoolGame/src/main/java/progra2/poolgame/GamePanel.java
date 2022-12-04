@@ -30,6 +30,7 @@ public class GamePanel extends JPanel {
     public void updateGame() {
         mesa.update();
     }
+    
     @Override
     public void paint(Graphics g) {
         //! Configurar Render (Graphics2D tiene métodos de dibujado mas útiles y complejos)

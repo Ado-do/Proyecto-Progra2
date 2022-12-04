@@ -48,10 +48,7 @@ public class Mesa extends JPanel {
 
     public void update() {
         if (moving) {
-            int x = Math.round(blanca.getX());
-            // while (0 < x || x < width) {
-                blanca.move();
-            // }
+            blanca.move();
         }
 	}
 
@@ -66,7 +63,7 @@ public class Mesa extends JPanel {
         
         //? TEST ---------------------------------------------------------------------------
         // Si el mouse esta cerca de la bola blanca
-        if (Angular.distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH)) {
+        if (Angular.distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH) && !moving) {
             // Punto central bola blanca
             g2D.setColor(Color.RED);
             g2D.fillOval(blanca.getLocation().x - 2, blanca.getLocation().y - 2, 4, 4);
@@ -95,13 +92,13 @@ public class Mesa extends JPanel {
             g2D.setColor(Color.WHITE);
             g2D.drawLine(pInicioTrayectoria.x, pInicioTrayectoria.y, pFinalTrayectoria.x, pFinalTrayectoria.y);
             g2D.setStroke(defaultStroke); // Regresamos a la linea
+
+            //! Dibujar circunferencia formada por taco
+            int radioTotal = Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH;
+
+            g2D.setColor(Color.YELLOW);
+            g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
         }
-
-        //! Dibujar circunferencia formada por taco
-        int radioTotal = Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH;
-
-        g2D.setColor(Color.YELLOW);
-        g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
     }
 
     public Bola getBlanca() {
