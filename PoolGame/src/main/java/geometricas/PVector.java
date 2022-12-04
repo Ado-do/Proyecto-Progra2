@@ -1,15 +1,25 @@
 package geometricas;
 
-import java.awt.Point;
-
 public class PVector {
-    private Point punto; // Localización
-    private float direccion; // Angulo en términos de PI 
-    private double magnitud; // Distancia
+    public float x, y;
+    
+    public PVector(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
 
-    public PVector(Point p, float ang, double mag) {
-        this.punto = p;
-        this.direccion = ang;
-        this.magnitud = mag;
+    public void escalar(float esc) { // Prueba, con la misma intención 
+        x *= esc;
+        y *= esc;
+    }
+
+    public void normalizar() {
+        float mag = getMagnitud();
+        x /= mag;
+        y /= mag;
+    }
+
+    public float getMagnitud() {
+        return (float)Math.sqrt((this.x * this.x) + (this.y * this.y));
     }
 }

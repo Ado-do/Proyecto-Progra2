@@ -1,14 +1,16 @@
 package progra2.poolgame;
 
 import geometricas.Angular;
+import geometricas.Circle;
+import geometricas.PVector;
+
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import java.awt.*;
 
 public class Mesa extends JPanel {
-    private final int BORDE = 35;
-    private final int width, length;
-    // private final int x, y;
+    public static final int BORDE = 35;
+    public final int width, length;
     
     private ArrayList<Bola> bolas;
     private Bola blanca;
@@ -16,13 +18,98 @@ public class Mesa extends JPanel {
     
     private Point mousePosition;
 
-    private Circle circleTest1, circleTest2; //? TEST
+    //? TEST
+    private Circle circleTest1;
+    public static boolean moving = false;
 
-    // public Mesa(int x, int y, int width, int length) {
+    public PVector hold, release;
+
     public Mesa(int width, int length) {
         // * Inicializar
         super(true);
+        initClasses();
 
+        // * Settear propiedades
+        this.width = width;
+        this.length = length;
+
+        // * Configurar JPanel
+        this.setPreferredSize(new Dimension(width, length));
+        this.setBackground(Color.YELLOW);
+        this.setOpaque(false);
+
+        hold = new PVector(0,0);
+        release = new PVector(0,0); 
+    }
+
+    public void sendMousePosition(Point position) {
+        mousePosition = position;
+    }
+
+    public void update() {
+        if (moving) {
+            int x = Math.round(blanca.getX());
+            // while (0 < x || x < width) {
+                blanca.move();
+            // }
+        }
+	}
+
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2D = (Graphics2D) g;
+
+        //! Dibujos
+        super.paintComponent(g2D);
+        dibujarMesa(g2D); // * Mesa
+        for (Bola bola : bolas) bola.paint(g2D); // * Bolas
+        
+        //? TEST ---------------------------------------------------------------------------
+        // Si el mouse esta cerca de la bola blanca
+        if (Angular.distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH)) {
+            // Punto central bola blanca
+            g2D.setColor(Color.RED);
+            g2D.fillOval(blanca.getLocation().x - 2, blanca.getLocation().y - 2, 4, 4);
+
+            //! Dibujar taco
+            taco.sendMousePos(mousePosition);
+            taco.paint(g2D);
+            
+            // Generar circulo que se mueve según mouse alrededor de bola blanca
+            float angle = Angular.anguloPI(blanca.getLocation(), mousePosition.getLocation()); // * Calcular angulo que se forma entre posición de mouse y el centro de la bola blanca
+
+            circleTest1.setLocation(Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, angle));
+            circleTest1.paint(g2D); 
+
+            // Dibujar linea de trayectoria
+            float opositeAngle = angle + 1f; // * Calcular angulo opuesto para la linea que dibuja la dirección de la bola (sumarle 180° (1pi))
+
+            Point pInicioTrayectoria = Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, opositeAngle);
+            Point pFinalTrayectoria = Angular.generaPunto(pInicioTrayectoria, 600, opositeAngle);
+            
+            float[] patron = {10f, 4f};
+            Stroke stroke = new BasicStroke(4f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, patron, 0.0f);
+            Stroke defaultStroke = g2D.getStroke(); //Guardamos la linea predeterminada
+            
+            g2D.setStroke(stroke);
+            g2D.setColor(Color.WHITE);
+            g2D.drawLine(pInicioTrayectoria.x, pInicioTrayectoria.y, pFinalTrayectoria.x, pFinalTrayectoria.y);
+            g2D.setStroke(defaultStroke); // Regresamos a la linea
+        }
+
+        //! Dibujar circunferencia formada por taco
+        int radioTotal = Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH;
+
+        g2D.setColor(Color.YELLOW);
+        g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
+    }
+
+    public Bola getBlanca() {
+        return blanca;
+    }
+
+    //! Subfunciones
+    private void initClasses() {
         bolas = new ArrayList<Bola>();
         blanca = new Bola(Color.white, 640 - 30/2, 300);
         taco = new Taco(blanca);
@@ -38,93 +125,8 @@ public class Mesa extends JPanel {
         bolas.add(new Bola(Color.gray, 785 + offset, 280));
         bolas.add(new Bola(Color.yellow, 820 + offset, 300));
 
-        //? TEST
-        circleTest1 = new Circle(640 - Bola.RADIUS, 300, 10);
-        circleTest2 = new Circle(640 - Bola.RADIUS, 300, 10); 
-
-        // * Settear propiedades
-        // this.x = x;
-        // this.y = y;
-        this.width = width;
-        this.length = length;
-
-        // * Configurar JPanel
-        this.setPreferredSize(new Dimension(width, length));
-        this.setBackground(Color.YELLOW);
-        this.setOpaque(false);
-        // this.addMouseMotionListener(new MouseAdapter() {
-            // @Override
-            // public void mouseMoved(MouseEvent e) {
-            //     mousePosition = e.getPoint().getLocation();
-                
-            //     repaint();
-            // }
-        // });
+        circleTest1 = new Circle(640 - Bola.RADIUS, 300, 10); //? TEST
     }
-
-    public void sendMousePosition(Point position) {
-        mousePosition = position;
-        // repaint();
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        //! Configurar Render (Graphics2D tiene métodos de dibujado mas útiles y complejos)
-        Graphics2D g2D = (Graphics2D) g;
-        // * Para hacer los bordes de los dibujos mas suaves
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2D.setRenderingHints(rh);
-
-        //! Dibujos
-        super.paintComponent(g2D);
-
-        // * Mesa
-        dibujarMesa(g2D);
-
-        // * Bolas
-        for (Bola bola : bolas) bola.paint(g2D);
-        
-        //? TEST ---------------------------------------------------------------------------
-        // Si el mouse esta cerca de la bola blanca
-        if (Angular.distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH)) {
-
-            //? Punto central bola blanca
-            g2D.setColor(Color.RED);
-            g2D.fillOval((int)Math.round(blanca.getLocation().getX()) - 2, (int)Math.round(blanca.getLocation().getY()) - 2, 4, 4);
-
-            //! Dibujar taco
-            taco.sendMousePos(mousePosition);
-            taco.paint(g2D);
-            
-            //? Generar circulo que se mueve según mouse alrededor de bola blanca
-            float angle = Angular.anguloPI(blanca.getLocation(), mousePosition.getLocation()); // * Calcular angulo que se forma entre posición de mouse y el centro de la bola blanca
-
-            circleTest1.setLocation(Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, angle));
-            circleTest1.paint(g2D); 
-
-            //! Dibujar linea de trayectoria
-            float oppAngle = angle + 1f; // * Calcular angulo opuesto para la linea que dibuja la dirección de la bola (sumarle 180° (1pi))
-            circleTest2.setLocation(Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, oppAngle));
-
-            Point line1 = circleTest2.getLocation();
-            int line1X = (int)Math.round(line1.getX());
-            int line1Y = (int)Math.round(line1.getY());
-        
-            Point lineaPrediccion = Angular.generaPunto(line1, 600, oppAngle);
-            int lineaPrediccX = (int)Math.round(lineaPrediccion.getX());
-            int lineaPrediccY = (int)Math.round(lineaPrediccion.getY());
-            g2D.setColor(Color.WHITE);
-            g2D.drawLine(line1X, line1Y, lineaPrediccX, lineaPrediccY);
-        }
-
-        //? Dibujar circunferencia formada por taco
-        int radioTotal = Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH;
-
-        g2D.setColor(Color.YELLOW);
-        //TODO Quizás hacer una subclase de Graphics2D, configurarle el antialiasing y ademas agregar esta función "drawCircle()" (?
-        g2D.drawOval((int)Math.round(blanca.getLocation().getX()) - radioTotal, (int)Math.round(blanca.getLocation().getY()) - radioTotal, radioTotal*2, radioTotal*2);
-    }
-
     private void dibujarMesa(Graphics g) {
         // * Borde
         g.setColor(new Color(184, 115, 51));
@@ -153,4 +155,3 @@ public class Mesa extends JPanel {
         }
     }
 }
-

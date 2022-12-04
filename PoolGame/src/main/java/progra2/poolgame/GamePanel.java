@@ -18,33 +18,45 @@ public class GamePanel extends JPanel {
         mesa = new Mesa(1280, 600);
         initGUI();
         
-        System.out.println("Tamaño GamePanel: "+this.getWidth()+"x"+this.getHeight()); //? TEST
-        
         // * Configurar JPanel principal de juego
         this.setSize(1280, 720);
         this.setLayout(new BorderLayout());
-
-        // * Agregar Listeners
-        addListeners();
-
-        // * Agregar JComponents a JPanel principal
+        this.addListeners(); // * Agregar Listeners
+        System.out.println("Tamaño GamePanel: "+this.getWidth()+"x"+this.getHeight()); //? TEST
         this.add(gui, BorderLayout.SOUTH);
         this.add(mesa, BorderLayout.CENTER);
     }
+
+    public void updateGame() {
+        mesa.update();
+    }
+    @Override
+    public void paint(Graphics g) {
+        //! Configurar Render (Graphics2D tiene métodos de dibujado mas útiles y complejos)
+        Graphics2D g2D = (Graphics2D) g;
+
+        // Para hacer los bordes de los dibujos mas suaves
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2D.setRenderingHints(rh);
+
+        //* Dibujar
+        // mesa.paint(g);
+        super.paint(g2D);
+
+        Toolkit.getDefaultToolkit().sync(); //* Para solucionar problemas de fluidez
+    }
     
-    private void addListeners() {
-        KeyboardInputs keyInputs = new KeyboardInputs(this);
-        this.addKeyListener(keyInputs);
-        
-        MouseInputs mouseInputs = new MouseInputs(this);
-        this.addMouseListener(mouseInputs);
-        gui.addMouseListener(mouseInputs);
-        mesa.addMouseListener(mouseInputs);
-        
-        mesa.addMouseMotionListener(mouseInputs);
-        // this.addMouseMotionListener(mouseInputs);
+    public Mesa getMesa() {
+        return mesa;
+    }
+    public JPanel getGUI() {
+        return gui;
+    }
+    public GameWindow getWindow() {
+        return gameWindow;
     }
 
+    //! Subfunciones
     private void initGUI() {
         gui = new JPanel(new BorderLayout());
         gui.setPreferredSize(new Dimension(1280, 120));
@@ -76,20 +88,16 @@ public class GamePanel extends JPanel {
 
         gui.add(subPanelOeste, BorderLayout.WEST);
     }
-
-    public Mesa getMesa() {
-        return mesa;
-    }
-    public JPanel getGUI() {
-        return gui;
-    }
-    public GameWindow getWindow() {
-        return gameWindow;
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        mesa.paintComponent(g);        
-        super.paint(g);
+    private void addListeners() {
+        KeyboardInputs keyInputs = new KeyboardInputs(this);
+        this.addKeyListener(keyInputs);
+        
+        MouseInputs mouseInputs = new MouseInputs(this);
+        this.addMouseListener(mouseInputs);
+        gui.addMouseListener(mouseInputs);
+        mesa.addMouseListener(mouseInputs);
+        
+        mesa.addMouseMotionListener(mouseInputs);
+        // this.addMouseMotionListener(mouseInputs);
     }
 }

@@ -1,4 +1,4 @@
-package progra2.poolgame;
+package geometricas;
 
 import java.awt.Point;
 import java.awt.Graphics;
@@ -44,10 +44,10 @@ public class Circle {
 
     public void paint(Graphics g) {
         g.setColor(Color.RED);
-        g.drawOval((int)Math.round(centerPoint.getX()) - radius, (int)Math.round(centerPoint.getY()) - radius, radius*2, radius*2);
+        g.drawOval(centerPoint.x - radius, centerPoint.y - radius, radius*2, radius*2);
 
-        int miniRadius = 1;
+        int pointLen = 1;
         g.setColor(Color.BLACK);
-        g.drawOval((int)Math.round(centerPoint.getX()) - miniRadius, (int)Math.round(centerPoint.getY()) - miniRadius, miniRadius*2, miniRadius*2);
+        g.drawOval(centerPoint.x - pointLen, centerPoint.y - pointLen, pointLen*2, pointLen*2);
     }
 }

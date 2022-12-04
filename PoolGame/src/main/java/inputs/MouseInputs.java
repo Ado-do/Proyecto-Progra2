@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import geometricas.PVector;
 import progra2.poolgame.GamePanel;
 import progra2.poolgame.Mesa;
 
@@ -21,16 +22,35 @@ public class MouseInputs implements MouseInputListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getSource() == mesa) System.out.println("hola");
-        if (e.getSource() == gui) System.out.println("CHAU");
+        // if (e.getSource() == mesa) {
+        //     PVector vel = new PVector(-40, 0);
+        //     vel.escalar(-0.25f);
+        //     mesa.getBlanca().setSpeed(vel);
+        //     mesa.moving = true;
+        // }
+        // if (e.getSource() == gui) System.out.println("CHAU");
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        mesa.hold.x = e.getX();
+        mesa.hold.y = e.getY();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        mesa.release.x = e.getX();
+        mesa.release.y = e.getY();
+        PVector vel = new PVector(mesa.release.x - mesa.hold.x, mesa.release.y - mesa.hold.y);
+        vel.escalar(-0.25f);
+
+
+        mesa.getBlanca().setSpeed(vel);
+
+        mesa.moving = true;
+                
+        mesa.hold.escalar(0);
+        mesa.release.escalar(0);
     }
 
     @Override
@@ -43,6 +63,8 @@ public class MouseInputs implements MouseInputListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        mesa.release.x = e.getX();
+        mesa.release.y = e.getY();
     }
 
     @Override
