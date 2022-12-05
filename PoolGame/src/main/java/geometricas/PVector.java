@@ -13,6 +13,11 @@ public class PVector {
         y *= esc;
     }
 
+    //! PRUEBA DE CODIGO
+    // public static float dot(PVector a, PVector b){
+    //     return a.x * b.x + a.y * b.y;
+    // }
+
     public void normalizar() {
         float mag = getMagnitud();
         x /= mag;

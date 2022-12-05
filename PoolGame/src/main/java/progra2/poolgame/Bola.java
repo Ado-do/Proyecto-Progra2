@@ -9,7 +9,6 @@ import java.awt.Toolkit;
 import geometricas.PVector;
 
 public class Bola {
-    //TODO: Agregar vector y masa
     //* Constantes
     public static final int RADIUS = 15;
     public static final int MASS = 150;
@@ -27,6 +26,8 @@ public class Bola {
         this.color = color;
         this.x = posX;
         this.y = posY;
+
+        this.speed = new PVector(0, 0);
         moving = false;
     }
     public Bola(Color color, Point p) {
@@ -34,6 +35,8 @@ public class Bola {
         this.color = color;
         this.x = p.x;
         this.y = p.y;
+        
+        this.speed = new PVector(0, 0);
         moving = false;
     }
 
@@ -58,10 +61,10 @@ public class Bola {
         }
 
         // * Revisar colisiones
-        checkCollition();
+        checkWallCollition();
     }
 
-    private void checkCollition() {
+    private void checkWallCollition() {
         //* Bordes horizontales
         // Izquierda
         if ((x - RADIUS) < Mesa.BORDE && speed.x < 0) {  
@@ -85,6 +88,54 @@ public class Bola {
             y -= 2 * ((y + RADIUS) - (600 - Mesa.BORDE));
         }
     }
+
+    public boolean hayColision(Bola bola) { // Revisamos si hay colision con la bola
+        PVector choko = new PVector(bola.x-x, bola.y-y);
+        boolean colision = (choko.getMagnitud() < RADIUS * 2); // si la magnitud del vector es menor que el diametro de la bola, quiere decir
+        return colision; // que estan una encima de la otra
+    }
+    
+
+    //! PRUEBA DE CODIGO
+    // public void descolisonarBolas(Bola bola) {
+    //     PVector puntomedio = new PVector((bola.x+x)/2f, (bola.y+y)/2);
+    //     PVector normal = new PVector(bola.x - x, bola.y-y);
+    //     normal.normalizar();
+
+    //     bola.x =  puntomedio.x + normal.x * RADIUS;
+    //     bola.y =  puntomedio.y + normal.y * RADIUS;
+
+    //     this.x =  puntomedio.x - normal.x * RADIUS;
+    //     this.y =  puntomedio.y - normal.y * RADIUS;
+    // }
+
+    // public void colisionar(Bola b) {
+    //     PVector normal = new PVector(b.x - x, b.y - y);
+    //     normal.normalizar();
+        
+    //     PVector tangente = new PVector(normal.y * -1f, normal.x);
+        
+    //     float b1escalarNormal = PVector.dot(normal, this.speed);
+    //     float b2escalarNormal = PVector.dot(normal, b.speed);
+        
+    //     float b1escalarTangente = PVector.dot(tangente, this.speed);
+    //     float b2escalarTangente = PVector.dot(tangente, b.speed);
+        
+    //     PVector vectorB1_normal = new PVector(normal.x, normal.y);
+    //     vectorB1_normal.escalar(b2escalarNormal); //no, no esta invertido, la formula es asi
+        
+    //     PVector vectorB2_normal = new PVector(normal.x, normal.y);
+    //     vectorB2_normal.escalar(b1escalarNormal); //no, no esta invertido, la formula es asi
+        
+    //     PVector vectorB1_tan = new PVector(tangente.x, tangente.y);
+    //     vectorB1_tan.escalar(b1escalarTangente);
+        
+    //     PVector vectorB2_tan = new PVector(tangente.x, tangente.y);
+    //     vectorB2_tan.escalar(b2escalarTangente);
+        
+    //     this.setSpeed(new PVector(vectorB1_tan.x + vectorB1_normal.x, vectorB1_tan.y + vectorB1_normal.y));
+    //     b.setSpeed(new PVector(vectorB2_tan.x + vectorB2_normal.x, vectorB2_tan.y + vectorB2_normal.y));
+    // }
 
     public void bounce() {
 

@@ -75,7 +75,7 @@ public class PoolGame implements Runnable {
             if (currentTimeMilli - timeLastCheck >= 1000) { // * Intervalo de tiempo en que se muestran FPS (1000mills = 1s)
                 timeLastCheck = System.currentTimeMillis();
 
-                System.out.println("FPS: " + frames + " | UPS: " + updates);
+                // System.out.println("FPS: " + frames + " | UPS: " + updates);
 
                 frames = 0;
                 updates = 0;

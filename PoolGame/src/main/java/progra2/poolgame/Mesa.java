@@ -48,9 +48,29 @@ public class Mesa extends JPanel {
         movement = checkMovement();
 
         if (movement) {
-            blanca.move();
+            for (int i = 0; i < bolas.size(); i++) {
+                Bola bolaActual = bolas.get(i);
+                bolaActual.move();
+                for (int j = 0; j < bolas.size(); j++) {
+                    if (i == j) continue;
+                    Bola bolaSiguente = bolas.get(j);
+                    
+                    if (bolaActual.hayColision(bolaSiguente)) {
+                        System.out.println("Choco bola " + i + " con bola " + j);
+                        // bolaActual.descolisonarBolas(bolaSiguente);
+                        // bolaActual.colisionar(bolaSiguente);
+                    }
+                }
+            }
         }
 	}
+
+    private boolean checkMovement() {
+        for (Bola bola : bolas) {
+            if (bola.isMoving()) return true;
+        }
+        return false;
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -128,31 +148,22 @@ public class Mesa extends JPanel {
         // * Borde
         g.setColor(new Color(184, 115, 51));
         g.fillRect(0, 0, WIDH, LENGTH);
-
-        // int borde1 = 10;
-        // // g.setColor(Color.BLACK);
-        // g.setColor(Color.WHITE);
-        // for (int i = 0; i < borde1; i++) {
-        //     g.drawRect(i, i, width-i*2, length-i*2);
-        // }
         
+        int subBorde = 8;
+        g.setColor(new Color(153, 102, 0));
+        g.fillRect(BORDE-subBorde, BORDE-subBorde, (WIDH - (BORDE*2)) + subBorde*2, (LENGTH - (BORDE*2)) + subBorde*2);
+
         // * Mesa
         g.setColor(Color.green);
         g.setColor(new Color(0, 200, 0));
         g.fillRect(BORDE, BORDE, WIDH-(BORDE * 2), LENGTH-(BORDE * 2));
         
         // Borde
-        g.setColor(new Color(153, 102, 0));
+        // g.setColor(new Color(153, 102, 0));
         // g.setColor(new Color(160,82,45));
-        int borde2 = 8;
-        for (int i = 0; i < borde2; i++) {
-            g.drawRect(BORDE-i, BORDE-i, (WIDH-(BORDE * 2))+i*2, (LENGTH-(BORDE * 2))+i*2);
-        }
-    }
-    private boolean checkMovement() {
-        for (Bola bola : bolas) {
-            if (bola.isMoving()) return true;
-        }
-        return false;
+        // int borde2 = 8;
+        // for (int i = 0; i < borde2; i++) {
+        //     g.drawRect(BORDE-i, BORDE-i, (WIDH-(BORDE * 2))+i*2, (LENGTH-(BORDE * 2))+i*2);
+        // }
     }
 }
