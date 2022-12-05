@@ -1,7 +1,6 @@
 package progra2.poolgame;
 
 import geometricas.Angular;
-import geometricas.Circle;
 import geometricas.PVector;
 
 import java.util.ArrayList;
@@ -9,29 +8,28 @@ import javax.swing.JPanel;
 import java.awt.*;
 
 public class Mesa extends JPanel {
-    public static final int BORDE = 35;
-    public final int width, length;
+    public static final int BORDE = 40;
+    public final int WIDH, LENGTH;
     
     private ArrayList<Bola> bolas;
     private Bola blanca;
     private Taco taco;
     
     private Point mousePosition;
-
-    //? TEST
-    private Circle circleTest1;
-    public static boolean moving = false;
-
     public PVector hold, release;
 
+    //? TEST
+    public boolean movement = false;
+
     public Mesa(int width, int length) {
-        // * Inicializar
         super(true);
-        initClasses();
 
         // * Settear propiedades
-        this.width = width;
-        this.length = length;
+        this.WIDH = width;
+        this.LENGTH = length;
+
+        // * Inicializar
+        initClasses();
 
         // * Configurar JPanel
         this.setPreferredSize(new Dimension(width, length));
@@ -46,8 +44,10 @@ public class Mesa extends JPanel {
         mousePosition = position;
     }
 
-    public void update() {
-        if (moving) {
+    public void updateGame() {
+        movement = checkMovement();
+
+        if (movement) {
             blanca.move();
         }
 	}
@@ -61,9 +61,8 @@ public class Mesa extends JPanel {
         dibujarMesa(g2D); // * Mesa
         for (Bola bola : bolas) bola.paint(g2D); // * Bolas
         
-        //? TEST ---------------------------------------------------------------------------
         // Si el mouse esta cerca de la bola blanca
-        if (Angular.distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH) && !moving) {
+        if (Angular.distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH) && !movement) {
             // Punto central bola blanca
             g2D.setColor(Color.RED);
             g2D.fillOval(blanca.getLocation().x - 2, blanca.getLocation().y - 2, 4, 4);
@@ -75,23 +74,23 @@ public class Mesa extends JPanel {
             // Generar circulo que se mueve según mouse alrededor de bola blanca
             float angle = Angular.anguloPI(blanca.getLocation(), mousePosition.getLocation()); // * Calcular angulo que se forma entre posición de mouse y el centro de la bola blanca
 
-            circleTest1.setLocation(Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, angle));
-            circleTest1.paint(g2D); 
+            // circleTest1.setLocation(Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, angle));
+            // circleTest1.paint(g2D); 
 
             // Dibujar linea de trayectoria
             float opositeAngle = angle + 1f; // * Calcular angulo opuesto para la linea que dibuja la dirección de la bola (sumarle 180° (1pi))
 
-            Point pInicioTrayectoria = Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + Taco.DISTANCE, opositeAngle);
-            Point pFinalTrayectoria = Angular.generaPunto(pInicioTrayectoria, 600, opositeAngle);
+            Point pInicioTrayectoria = Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + 4, opositeAngle);
+            Point pFinalTrayectoria = Angular.generaPunto(pInicioTrayectoria, 600, opositeAngle); //TODO Cambiar el 600 por la distancia con el objeto habra colision
             
             float[] patron = {10f, 4f};
             Stroke stroke = new BasicStroke(4f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, patron, 0.0f);
-            Stroke defaultStroke = g2D.getStroke(); //Guardamos la linea predeterminada
+            Stroke defaultStroke = g2D.getStroke(); //Guardamos la borde predeterminada
             
             g2D.setStroke(stroke);
             g2D.setColor(Color.WHITE);
             g2D.drawLine(pInicioTrayectoria.x, pInicioTrayectoria.y, pFinalTrayectoria.x, pFinalTrayectoria.y);
-            g2D.setStroke(defaultStroke); // Regresamos a la linea
+            g2D.setStroke(defaultStroke); // Regresamos al borde normal
 
             //! Dibujar circunferencia formada por taco
             int radioTotal = Bola.RADIUS + Taco.DISTANCE + Taco.LENGTH;
@@ -101,6 +100,7 @@ public class Mesa extends JPanel {
         }
     }
 
+    //* Getters
     public Bola getBlanca() {
         return blanca;
     }
@@ -108,7 +108,7 @@ public class Mesa extends JPanel {
     //! Subfunciones
     private void initClasses() {
         bolas = new ArrayList<Bola>();
-        blanca = new Bola(Color.white, 640 - 30/2, 300);
+        blanca = new Bola(Color.white, WIDH/2, LENGTH/2);
         taco = new Taco(blanca);
         mousePosition = new Point();
         
@@ -122,12 +122,12 @@ public class Mesa extends JPanel {
         bolas.add(new Bola(Color.gray, 785 + offset, 280));
         bolas.add(new Bola(Color.yellow, 820 + offset, 300));
 
-        circleTest1 = new Circle(640 - Bola.RADIUS, 300, 10); //? TEST
+        // circleTest1 = new Circle(640 - Bola.RADIUS, 300, 10); //? TEST
     }
     private void dibujarMesa(Graphics g) {
         // * Borde
         g.setColor(new Color(184, 115, 51));
-        g.fillRect(0, 0, width, length);
+        g.fillRect(0, 0, WIDH, LENGTH);
 
         // int borde1 = 10;
         // // g.setColor(Color.BLACK);
@@ -139,14 +139,20 @@ public class Mesa extends JPanel {
         // * Mesa
         g.setColor(Color.green);
         g.setColor(new Color(0, 200, 0));
-        g.fillRect(BORDE, BORDE, width-(BORDE * 2), length-(BORDE * 2));
+        g.fillRect(BORDE, BORDE, WIDH-(BORDE * 2), LENGTH-(BORDE * 2));
         
         // Borde
         g.setColor(new Color(153, 102, 0));
-        int borde2 = 8;
         // g.setColor(new Color(160,82,45));
+        int borde2 = 8;
         for (int i = 0; i < borde2; i++) {
-            g.drawRect(BORDE-i, BORDE-i, (width-(BORDE * 2))+i*2, (length-(BORDE * 2))+i*2);
+            g.drawRect(BORDE-i, BORDE-i, (WIDH-(BORDE * 2))+i*2, (LENGTH-(BORDE * 2))+i*2);
         }
+    }
+    private boolean checkMovement() {
+        for (Bola bola : bolas) {
+            if (bola.isMoving()) return true;
+        }
+        return false;
     }
 }

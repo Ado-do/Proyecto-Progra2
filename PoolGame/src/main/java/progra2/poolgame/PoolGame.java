@@ -3,7 +3,8 @@ package progra2.poolgame;
 public class PoolGame implements Runnable {
     // private final int FPS_SET = 60;
     private final int FPS_SET = 120;
-    private final int UPS_SET = 60;
+    // private final int UPS_SET = 60;
+    private final int UPS_SET = 120;
 
     private GameWindow gameWindow;
     private GamePanel gamePanel;

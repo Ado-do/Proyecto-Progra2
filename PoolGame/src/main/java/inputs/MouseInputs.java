@@ -33,25 +33,26 @@ public class MouseInputs implements MouseInputListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mesa.hold.x = e.getX();
-        mesa.hold.y = e.getY();
+        if (!mesa.movement) { 
+            mesa.hold.x = e.getX();
+            mesa.hold.y = e.getY();
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mesa.release.x = e.getX();
-        mesa.release.y = e.getY();
+        if (!mesa.movement) {
+            mesa.release.x = e.getX();
+            mesa.release.y = e.getY();
 
-        PVector vel = new PVector(mesa.release.x - mesa.hold.x, mesa.release.y - mesa.hold.y);
-        
-        vel.escalar(-0.25f);
+            PVector vel = new PVector(mesa.release.x - mesa.hold.x, mesa.release.y - mesa.hold.y);
+            vel.escalar(-0.25f);
 
-        mesa.getBlanca().setSpeed(vel);
-
-        mesa.moving = true;
-                
-        mesa.hold.escalar(0);
-        mesa.release.escalar(0);
+            mesa.getBlanca().setSpeed(vel);
+                    
+            mesa.hold.escalar(0);
+            mesa.release.escalar(0);
+        }
     }
 
     @Override
@@ -64,8 +65,10 @@ public class MouseInputs implements MouseInputListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        mesa.release.x = e.getX();
-        mesa.release.y = e.getY();
+        if (!mesa.movement) {
+            mesa.release.x = e.getX();
+            mesa.release.y = e.getY();
+        }
     }
 
     @Override

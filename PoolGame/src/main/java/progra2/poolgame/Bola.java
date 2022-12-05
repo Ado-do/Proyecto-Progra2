@@ -4,6 +4,7 @@ import static java.lang.Math.round;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Toolkit;
 
 import geometricas.PVector;
 
@@ -12,26 +13,28 @@ public class Bola {
     //* Constantes
     public static final int RADIUS = 15;
     public static final int MASS = 150;
-    public static final float ROCE = 0.0925f;
+    public static final float ROCE = 0.25f;
 
     //* Propiedades bola
     private float x, y;
     private Color color;
     private PVector speed;
+
+    private boolean moving;
     
     public Bola(Color color, int posX, int posY) {
         super();
-
         this.color = color;
         this.x = posX;
         this.y = posY;
+        moving = false;
     }
     public Bola(Color color, Point p) {
         super();
-
         this.color = color;
         this.x = p.x;
         this.y = p.y;
+        moving = false;
     }
 
     public void move() {
@@ -44,7 +47,8 @@ public class Bola {
         float mag = speed.getMagnitud();
         if (mag < ROCE) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
             speed.escalar(0);
-            Mesa.moving = false;
+
+            moving = false;
         } else { // El roce esta afectando a la bola, pero aun no la detiene.
             speed.normalizar();
             speed.escalar(mag - ROCE);
@@ -57,7 +61,7 @@ public class Bola {
         checkCollition();
     }
 
-    public void checkCollition() {
+    private void checkCollition() {
         //* Bordes horizontales
         // Izquierda
         if ((x - RADIUS) < Mesa.BORDE && speed.x < 0) {  
@@ -89,9 +93,13 @@ public class Bola {
     // * Setters
     public void setSpeed(PVector speed) {
         this.speed = speed;
+        moving = true;
     }
 
     //* Getters
+    public boolean isMoving() {
+        return moving;
+    }
     public Point getLocation() {
         return new Point(round(x), round(y));
     }

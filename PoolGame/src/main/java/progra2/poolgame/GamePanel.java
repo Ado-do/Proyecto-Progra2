@@ -28,7 +28,7 @@ public class GamePanel extends JPanel {
     }
 
     public void updateGame() {
-        mesa.update();
+        mesa.updateGame();
     }
     
     @Override
