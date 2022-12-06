@@ -8,15 +8,16 @@ import geometricas.Angular;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 
-public class Taco {
-    public final static float WIDTH = 10f;
+public class CueStick {
+    public static float WIDTH = 10f;
+    
     public final static int LENGTH = 150;
     public final static int DISTANCE = 10;
 
-    private Bola blanca;
+    private PoolBall blanca;
     private float angle;
     
-    public Taco(Bola bolaBlanca) {
+    public CueStick(PoolBall bolaBlanca) {
         this.blanca = bolaBlanca;
     }
 
@@ -29,7 +30,7 @@ public class Taco {
         Graphics2D g2D = (Graphics2D) g;
 
         // Punto cercano a blanca, respecto al angulo que se formo desde el mouse y el centro de la bola blanca
-        Point p1 = Angular.generaPunto(blanca.getLocation(), Bola.RADIUS + DISTANCE, angle);
+        Point p1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + DISTANCE, angle);
         // Punto lejano
         Point p2 = Angular.generaPunto(p1, LENGTH, angle);
 

@@ -1,14 +1,15 @@
 package progra2.poolgame;
 
 public class PoolGame implements Runnable {
-    // private final int FPS_SET = 60;
     private final int FPS_SET = 120;
-    // private final int UPS_SET = 60;
-    private final int UPS_SET = 120;
+    private final int UPS_SET = 60;
 
-    private GameWindow gameWindow;
-    private GamePanel gamePanel;
-    private Thread gameThread;
+    private Integer fps = FPS_SET;
+    private Integer ups = UPS_SET;
+
+    private GameWindow  gameWindow;
+    private GamePanel   gamePanel;
+    private Thread      gameThread;
 
     public PoolGame() {
         gameWindow = new GameWindow();
@@ -23,12 +24,12 @@ public class PoolGame implements Runnable {
         gameThread.start();
     }
 
-    private void update() {
-        gamePanel.updateGame();
+    private void render() {
+        gamePanel.render(fps);
     }
 
-    private void render() {
-        gamePanel.repaint();
+    private void update() {
+        gamePanel.updateGame(ups);
     }
 
     @Override
@@ -38,9 +39,10 @@ public class PoolGame implements Runnable {
 
         long previusTime = System.nanoTime();
      
+        long timeLastCheck = System.currentTimeMillis();
+
         int frames = 0;
         int updates = 0;
-        long timeLastCheck = System.currentTimeMillis();
 
         double deltaU = 0;
         double deltaF = 0;
@@ -75,6 +77,9 @@ public class PoolGame implements Runnable {
             if (currentTimeMilli - timeLastCheck >= 1000) { // * Intervalo de tiempo en que se muestran FPS (1000mills = 1s)
                 timeLastCheck = System.currentTimeMillis();
 
+                fps = frames;
+                ups = updates;
+                
                 // System.out.println("FPS: " + frames + " | UPS: " + updates);
 
                 frames = 0;
