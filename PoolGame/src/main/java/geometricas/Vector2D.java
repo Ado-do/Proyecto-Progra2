@@ -44,8 +44,8 @@ public class Vector2D {
         y -= vec.y;
     }
 
-    //! PRUEBA DE CODIGO
-    // public static float dot(Vector2D a, Vector2D b){
-    //     return a.x * b.x + a.y * b.y;
-    // }
+    // Para calcular coseno de vectores unitarios
+    public static float dotProduct(Vector2D v1, Vector2D v2) {
+        return ((v1.x * v2.x) + (v1.y * v2.y));
+    }
 }

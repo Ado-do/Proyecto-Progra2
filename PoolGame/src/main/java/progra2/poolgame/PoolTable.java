@@ -5,8 +5,6 @@ import static geometricas.Angular.*;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
-import geometricas.Vector2D;
-
 import java.awt.*;
 
 public class PoolTable extends JPanel {
@@ -21,8 +19,6 @@ public class PoolTable extends JPanel {
     private CueStick taco;
     
     private Point mousePosition;
-
-    public boolean movement;
 
     public PoolTable(int width, int length) {
         super(true);
@@ -41,9 +37,6 @@ public class PoolTable extends JPanel {
         System.out.println("ANCHO Y LARGO BORDES: " + BORDER_WIDTH + "x" + BORDER_LENGHT);
         System.out.println("RADIO BOLAS: " + BALLS_RADIUS);
 
-        //* BOOLEANOS
-        movement = false;
-
         //* INICIALIZAR
         initClasses();
 
@@ -58,78 +51,36 @@ public class PoolTable extends JPanel {
     }
 
     public void updateGame() {
-        movement = checkMovement();
-
-        if (movement) {
+        //* Si alguna bola esta en movimiento, entonces...
+        if (hasMovement()) {
             for (int i = 0; i < balls.size(); i++) {
                 PoolBall currentBall = balls.get(i);
                 currentBall.move();
-                checkWallCollition(currentBall);
+                currentBall.checkBounces(this);
 
-                for (int j = 0; j < balls.size(); j++) {
-                    if (i == j) continue;
+                // for (int j = 0; j < balls.size(); j++) {
+                    // if (i == j) continue;
 
-                    PoolBall nextBall = balls.get(j);
-                    if (currentBall.collition(nextBall)) {
+                    // PoolBall nextBall = balls.get(j);
+                    // if (currentBall.collide(nextBall)) {
                         // System.out.println("Choco bola " + i + " con bola " + j);
                         // bolaActual.descolisonarBolas(nextBall);
                         // bolaActual.colisionar(nextBall);
-                    }
-                }
+                    // }
+                // }
             }
         }
 	}
-
-    private boolean checkMovement() {
-        for (PoolBall ball : balls) {
-            if (ball.isMoving()) return true;
-        }
-        return false;
-    }
-
-    private void checkWallCollition(PoolBall b) {
-        float radius = b.getRadius();
-        Vector2D speed = b.getSpeed();
-
-        //* Bordes horizontales
-        // Izquierda
-        if ((b.x - radius) < BORDER_WIDTH && speed.x < 0) { 
-            speed.x *= -1;
-            b.x -= 2 * ((b.x - radius) - BORDER_WIDTH);
-        } 
-        // Derecha
-        else if (((b.x + radius) > (WIDTH - BORDER_WIDTH)) && (speed.x > 0)) {
-            speed.x *= -1;
-            b.x -= 2 * ((b.x + radius) - (WIDTH - BORDER_WIDTH));
-        }
-
-        //* Bordes verticales
-        // Arriba
-        if (((b.y - radius) < BORDER_LENGHT) && (speed.y < 0)) {
-            speed.y *= -1;
-            b.y -= 2 * ((b.y - radius) - BORDER_LENGHT);
-        // Abajo
-        } else if (((b.y + radius) > (LENGTH - BORDER_LENGHT)) && (speed.y > 0)) {
-            speed.y *= -1;
-            b.y -= 2 * ((b.y + radius) - (LENGTH - BORDER_LENGHT));
-        }
-    }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
 
-        //! Dibujos
         paintTable(g2D); // * Mesa
         for (PoolBall bola : balls) bola.paint(g2D); // * Bolas
         
         // Si el mouse esta cerca de la bola blanca
-        if (distEntre2Puntos(mousePosition.getLocation(), blanca.getLocation()) <= (blanca.getRadius() + CueStick.DISTANCE + CueStick.LENGTH) && !movement) {
-            // Punto central bola blanca
-            // g2D.setColor(Color.RED);
-            // g2D.fillOval(blanca.getLocation().x - 2, blanca.getLocation().y - 2, 4, 4);
-
-            //! Dibujar taco
+        if (!this.hasMovement()) {
             taco.sendMousePos(mousePosition);
             taco.paint(g2D);
             
@@ -152,9 +103,8 @@ public class PoolTable extends JPanel {
             g2D.drawLine(pInicioTrayectoria.x, pInicioTrayectoria.y, pFinalTrayectoria.x, pFinalTrayectoria.y);
             g2D.setStroke(defaultStroke); // Regresamos al borde normal
 
-            //! Dibujar circunferencia formada por taco
+            // Dibujar circunferencia formada por taco
             int radioTotal = blanca.getRadius() + CueStick.DISTANCE + CueStick.LENGTH;
-
             g2D.setColor(Color.YELLOW);
             g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
         }
@@ -165,7 +115,10 @@ public class PoolTable extends JPanel {
         return blanca;
     }
     public boolean hasMovement() {
-        return movement;
+        for (PoolBall ball : balls) {
+            if (ball.isMoving()) return true;
+        }
+        return false;
     }
 
     //! Subfunciones
@@ -174,7 +127,7 @@ public class PoolTable extends JPanel {
 
         balls = new ArrayList<PoolBall>();
         
-        int radius = Math.round((WIDTH * 0.03f) / 2);
+        int radius = Math.round((WIDTH * 0.025f) / 2);
         blanca = new PoolBall(WIDTH/4, LENGTH/2, Color.white, radius);
         
         taco = new CueStick(blanca);
@@ -204,5 +157,7 @@ public class PoolTable extends JPanel {
         g.setColor(Color.green);
         g.setColor(new Color(0, 200, 0));
         g.fillRect(BORDER_WIDTH, BORDER_LENGHT, WIDTH-(BORDER_WIDTH * 2), LENGTH-(BORDER_LENGHT * 2));
+        
+        //TODO Dibujar diamantes de los bordes
     }
 }

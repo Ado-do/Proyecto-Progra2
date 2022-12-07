@@ -45,10 +45,8 @@ public class Angular {
      */
     public static double distEntre2Puntos(Point uno, Point dos) {
         double d = Math.sqrt(
-                ((double) uno.x - (double) dos.x) *
-                ((double) uno.x - (double) dos.x) +
-                ((double) uno.y - (double) dos.y) *
-                ((double) uno.y - (double) dos.y));
+                ((double) uno.x - (double) dos.x) * ((double) uno.x - (double) dos.x) +
+                ((double) uno.y - (double) dos.y) * ((double) uno.y - (double) dos.y));
         return d;
     }
 
@@ -66,7 +64,7 @@ public class Angular {
     }
 
     /**
-     * Multiplicacion matricial de m1 x m2
+     * Multiplicación matricial de m1 x m2
      * 
      * @param m1
      * @param m2

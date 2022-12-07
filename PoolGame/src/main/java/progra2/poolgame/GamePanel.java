@@ -25,7 +25,7 @@ public class GamePanel extends JPanel {
         gui = new SubGUI();
 
         //* Listeners
-        PoolHandler poolInputs = new PoolHandler(table);
+        PoolInputHandler poolInputs = new PoolInputHandler(table);
         table.addMouseMotionListener(poolInputs);
         table.addMouseListener(poolInputs);
         table.addKeyListener(poolInputs);

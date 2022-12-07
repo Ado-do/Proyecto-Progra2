@@ -1,11 +1,13 @@
 package progra2.poolgame;
 
+import java.awt.GraphicsEnvironment;
+
 public class PoolGame implements Runnable {
-    private final int FPS_SET = 120;
+    private final int FPS_SET;
     private final int UPS_SET = 60;
 
-    private Integer fps = FPS_SET;
-    private Integer ups = UPS_SET;
+    private Integer fps;
+    private Integer ups;
 
     private GameWindow  gameWindow;
     private GamePanel   gamePanel;
@@ -15,6 +17,12 @@ public class PoolGame implements Runnable {
         gameWindow = new GameWindow();
         gamePanel = gameWindow.getPanel();
         gamePanel.requestFocusInWindow();
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        FPS_SET = ge.getDefaultScreenDevice().getDisplayMode().getRefreshRate();
+
+        fps = FPS_SET;
+        ups = UPS_SET;
 
         startGameLoop();
     }
