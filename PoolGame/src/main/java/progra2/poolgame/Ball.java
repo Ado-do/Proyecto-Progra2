@@ -1,5 +1,7 @@
 package progra2.poolgame;
 
+import static java.lang.Math.round;
+
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
@@ -76,7 +78,7 @@ public class Ball extends Circle {
         Ball b1 = this;
 
         // Punto medio entre bolas superpuestas (colisionadas)
-        Point midPoint = new Point(Math.round(b1.x + b2.x)/2, Math.round(b1.y + b2.y)/2);
+        Point midPoint = new Point(round(b1.x + b2.x)/2, round(b1.y + b2.y)/2);
         
         // Calculamos el vector director, para que al separarlas se mantengan en el mismo angulo en el que colisionaron
         Vector2D direction = new Vector2D(b2.x - b1.x, b2.y - b1.y);
@@ -159,9 +161,12 @@ public class Ball extends Circle {
         this.drawCircle(g);
 
         if (number != 0) {
+            Circle subCircle = new Circle(round(x), round(y), round(radius * 0.6f));
+            subCircle.fillCircle(g, Color.WHITE);
+
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.BOLD, 14));
-            g.drawString(""+number, Math.round(x+1), Math.round(y+2));
+            g.drawString(""+number, round(x - (g.getFontMetrics().stringWidth(""+number))/2), round(y + (g.getFontMetrics().getHeight())/3));
         }
     }
 }
