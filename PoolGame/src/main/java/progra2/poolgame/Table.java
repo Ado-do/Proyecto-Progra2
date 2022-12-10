@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class Table extends JPanel {
     public final int WIDTH;
@@ -18,6 +19,7 @@ public class Table extends JPanel {
     
     private ArrayList<Ball> ballsArray;
     private Ball blanca;
+    private int contBalls = 0;
     private ArrayList<Pocket> pocketsArray;
     private Cue taco;
     
@@ -49,8 +51,8 @@ public class Table extends JPanel {
         this.setOpaque(false);
     }
 
-    public void sendMousePosition(Point position) {
-        mousePosition = position;
+    public void sendMouseInfo(MouseEvent e) {
+        mousePosition = e.getPoint();
     }
 
     public void updateGame() {
@@ -72,7 +74,7 @@ public class Table extends JPanel {
                     Ball nextBall = ballsArray.get(j);
                     if (currentBall.isCollide(nextBall)) {
                         currentBall.collide(nextBall);
-                        System.out.println("Choco bola " + i + " con bola " + j);
+                        // System.out.println("Choco bola " + i + " con bola " + j);
                     }
                 }
             }
@@ -113,9 +115,9 @@ public class Table extends JPanel {
             g2D.setStroke(defaultStroke); // Regresamos al borde predeterminado
 
             // * Dibujar circunferencia formada por taco
-            int radioTotal = blanca.getRadius() + Cue.DISTANCE + Cue.LENGTH;
-            g2D.setColor(Color.YELLOW);
-            g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
+            // int radioTotal = blanca.getRadius() + Cue.DISTANCE + Cue.LENGTH;
+            // g2D.setColor(Color.YELLOW);
+            // g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
         }
     }
 
@@ -140,19 +142,19 @@ public class Table extends JPanel {
 
         // * Inicializar bolas
         ballsArray = new ArrayList<Ball>();
-        blanca = new Ball(WIDTH/4, LENGTH/2, Color.white, ballRadius);
+        blanca = new Ball(WIDTH/4, LENGTH/2, Color.white, ballRadius, contBalls++);
         
         //TODO Implementar las 16 bolas de pool
         ballsArray.add(blanca);
         
-        ballsArray.add(new Ball(WIDTH * 3/4, LENGTH/2, Color.yellow, ballRadius));
+        ballsArray.add(new Ball(WIDTH * 3/4, LENGTH/2, Color.yellow, ballRadius, contBalls++));
         
-        ballsArray.add(new Ball((WIDTH * 3/4) + (ballRadius*2) - 2, (LENGTH/2) - (ballRadius + 2), Color.black, ballRadius)); 
-        ballsArray.add(new Ball((WIDTH * 3/4) + (ballRadius*2) - 2, (LENGTH/2) + (ballRadius + 2), Color.gray, ballRadius));
+        ballsArray.add(new Ball((WIDTH * 3/4) + (ballRadius*2) - 2, (LENGTH/2) - (ballRadius + 2), Color.black, ballRadius, contBalls++)); 
+        ballsArray.add(new Ball((WIDTH * 3/4) + (ballRadius*2) - 2, (LENGTH/2) + (ballRadius + 2), Color.gray, ballRadius, contBalls++));
         
-        ballsArray.add(new Ball(((WIDTH * 3/4) + (ballRadius*4) - 4), (LENGTH/2) - ((ballRadius*2) + 2), Color.red, ballRadius));
-        ballsArray.add(new Ball(((WIDTH * 3/4) + (ballRadius*4) - 4), LENGTH/2, Color.orange, ballRadius));
-        ballsArray.add(new Ball(((WIDTH * 3/4) + (ballRadius*4) - 4), (LENGTH/2) + ((ballRadius*2) + 2), Color.blue, ballRadius));
+        ballsArray.add(new Ball(((WIDTH * 3/4) + (ballRadius*4) - 4), (LENGTH/2) - ((ballRadius*2) + 2), Color.red, ballRadius, contBalls++));
+        ballsArray.add(new Ball(((WIDTH * 3/4) + (ballRadius*4) - 4), LENGTH/2, Color.orange, ballRadius, contBalls++));
+        ballsArray.add(new Ball(((WIDTH * 3/4) + (ballRadius*4) - 4), (LENGTH/2) + ((ballRadius*2) + 2), Color.blue, ballRadius, contBalls++));
         //TODO Usar "fors" para crear automáticamente triangulo al iniciar según num de bolas (crear clase de para crear colores de bolas de pool random¿)
         
         taco = new Cue(blanca);

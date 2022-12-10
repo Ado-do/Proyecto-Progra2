@@ -1,5 +1,7 @@
 package geometricas;
 
+import java.awt.Point;
+
 public class Vector2D {
     public float x, y;
     
@@ -13,6 +15,10 @@ public class Vector2D {
     }
     public Vector2D(Vector2D vec) {
         setVector(vec);
+    }
+    public Vector2D(Point p) {
+        this.x = (float)p.getX();
+        this.y = (float)p.getY();
     }
 
     public void setVector(float x, float y) {

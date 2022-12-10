@@ -2,6 +2,7 @@ package progra2.poolgame;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 
 import geometricas.Angular;
@@ -12,15 +13,16 @@ public class Ball extends Circle {
     // * Constantes
     public static final int MASS = 160;
     public static final float FRICTION = 0.2f;
+    private final int number;
 
     // * Propiedades bola
     private Color color;
     private Vector2D vel;
     
-    public Ball(int posX, int posY, Color color, int radius) {
+    public Ball(int posX, int posY, Color color, int radius, int number) {
         super(posX, posY, radius);
         this.color = color;
-
+        this.number = number;
         this.vel = new Vector2D();
     }
 
@@ -52,7 +54,7 @@ public class Ball extends Circle {
         separateBalls(b2);
 
         // * Calcular vectores resultantes de colisión
-        b1.vel.subtractVector(b2.getVel());
+        b1.vel.subtractVector(b2.vel);
         float mv = b1.vel.getMagnitude();
 
         // Calcular vectores unitarios
@@ -88,29 +90,29 @@ public class Ball extends Circle {
     public void checkBounces(Table table) {
         int wid = table.WIDTH;
         int len = table.LENGTH;
-        int bWid = table.BORDER_WIDTH;
-        int bLen = table.BORDER_LENGHT;
+        int borderWid = table.BORDER_WIDTH;
+        int borderLen = table.BORDER_LENGHT;
 
         // * Bordes horizontales
         // Izquierda
-        if (((x - radius) < bWid) && (vel.x < 0)) { 
-            x -= 2 * ((x - radius) - bWid);
+        if (((x - radius) < borderWid) && (vel.x < 0)) { 
+            x -= 2 * ((x - radius) - borderWid);
             vel.x *= -1;
         } 
         // Derecha
-        else if (((x + radius) > (wid - bWid)) && (vel.x > 0)) {
-            x -= 2 * ((x + radius) - (wid - bWid));
+        else if (((x + radius) > (wid - borderWid)) && (vel.x > 0)) {
+            x -= 2 * ((x + radius) - (wid - borderWid));
             vel.x *= -1;
         }
 
         // * Bordes verticales
         // Arriba
-        if (((y - radius) < bLen) && (vel.y < 0)) {
-            y -= 2 * ((y - radius) - bLen);
+        if (((y - radius) < borderLen) && (vel.y < 0)) {
+            y -= 2 * ((y - radius) - borderLen);
             vel.y *= -1;
         // Abajo
-        } else if (((y + radius) > (len - bLen)) && (vel.y > 0)) {
-            y -= 2 * ((y + radius) - (len - bLen));
+        } else if (((y + radius) > (len - borderLen)) && (vel.y > 0)) {
+            y -= 2 * ((y + radius) - (len - borderLen));
             vel.y *= -1;
         }
     }
@@ -155,5 +157,11 @@ public class Ball extends Circle {
         
         this.fillCircle(g, color);
         this.drawCircle(g);
+
+        if (number != 0) {
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial", Font.BOLD, 14));
+            g.drawString(""+number, Math.round(x+1), Math.round(y+2));
+        }
     }
 }
