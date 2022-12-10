@@ -6,23 +6,24 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.Point;
 
-import progra2.poolgame.PoolTable;
-import progra2.poolgame.CueStick;
-import progra2.poolgame.PoolBall;
+import progra2.poolgame.Table;
+import progra2.poolgame.Cue;
+import progra2.poolgame.Ball;
 import geometricas.Angular;
 import geometricas.Vector2D;
 
-//TODO Mejorar precision de tiros
+//TODO URGENTEEEE Mejorar precision de tiros
+//! Bloque dirección de tiro cuando presiona mouse y modificar magnitud según distancia de arrastrado de mouse
 
 public class PoolInputHandler implements MouseInputListener, KeyListener {
     private final float forceCorrection = (-1 * 0.2f); // Corregir e invertir dirección de fuerza del golpe a la bola
-    private PoolTable table;
-    private PoolBall blanca;
+    private Table table;
+    private Ball blanca;
 
     private Vector2D hold, release;
     private boolean ballWasPressed;
 
-    public PoolInputHandler(PoolTable table) {
+    public PoolInputHandler(Table table) {
         this.table = table;
         this.blanca = table.getBlanca();
 
@@ -54,7 +55,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             Point pHold = new Point(Math.round(hold.x), Math.round(hold.y));
 
             float dist = (float) Angular.distEntre2Puntos(pHold, e.getPoint());
-            float hitArea = blanca.getRadius() + CueStick.DISTANCE + CueStick.LENGTH;
+            float hitArea = blanca.getRadius() + Cue.DISTANCE + Cue.LENGTH;
 
             if (dist < hitArea) {
                 release.setVector(e.getX(), e.getY());
@@ -65,7 +66,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (!table.hasMovement() && ballWasPressed) {
-            if (release.x == 0 || release.y == 0) {
+            if (release.getMagnitude() == 0) {
                 release.setVector(hold); // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
             }
             // System.out.println("("+release.x+" - "+hold.x+",("+release.y+"-"+hold.y+")");

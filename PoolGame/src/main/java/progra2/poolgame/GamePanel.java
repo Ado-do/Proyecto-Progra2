@@ -8,7 +8,7 @@ import inputs.*;
 public class GamePanel extends JPanel {
     private GameWindow gameWindow;
 
-    private PoolTable table;
+    private Table table;
     private SubGUI gui;
 
     private Integer fps;
@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
 
         int tableWidth = 1400;
         int tableLength = tableWidth/2;
-        table = new PoolTable(tableWidth, tableLength);
+        table = new Table(tableWidth, tableLength);
         gui = new SubGUI();
 
         // * Listeners
@@ -78,7 +78,7 @@ public class GamePanel extends JPanel {
     }
     
     // * Getters
-    public PoolTable getTable() {
+    public Table getTable() {
         return table;
     }
     public JPanel getSubGUI() {

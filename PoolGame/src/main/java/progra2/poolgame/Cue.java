@@ -8,16 +8,16 @@ import geometricas.Angular;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 
-public class CueStick {
+public class Cue {
     public static float WIDTH = 10f;
     
     public final static int LENGTH = 150;
     public final static int DISTANCE = 10;
 
-    private PoolBall blanca;
+    private Ball blanca;
     private float angle;
     
-    public CueStick(PoolBall bolaBlanca) {
+    public Cue(Ball bolaBlanca) {
         this.blanca = bolaBlanca;
     }
 

@@ -1,7 +1,5 @@
 package progra2.poolgame;
 
-import static java.lang.Math.round;
-
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
@@ -10,7 +8,7 @@ import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
-public class PoolBall extends Circle {
+public class Ball extends Circle {
     // * Constantes
     public static final int MASS = 160;
     public static final float FRICTION = 0.2f;
@@ -19,7 +17,7 @@ public class PoolBall extends Circle {
     private Color color;
     private Vector2D vel;
     
-    public PoolBall(int posX, int posY, Color color, int radius) {
+    public Ball(int posX, int posY, Color color, int radius) {
         super(posX, posY, radius);
         this.color = color;
 
@@ -47,8 +45,8 @@ public class PoolBall extends Circle {
         }
     }
 
-    public void collide(PoolBall b2) {
-        PoolBall b1 = this;
+    public void collide(Ball b2) {
+        Ball b1 = this;
 
         // * Separar antes de calcular fuerzas resultantes
         separateBalls(b2);
@@ -72,8 +70,8 @@ public class PoolBall extends Circle {
 
         b2.vel.addVector(directBalls);
     }
-    private void separateBalls(PoolBall b2) {
-        PoolBall b1 = this;
+    private void separateBalls(Ball b2) {
+        Ball b1 = this;
 
         // Punto medio entre bolas superpuestas (colisionadas)
         Point midPoint = new Point(Math.round(b1.x + b2.x)/2, Math.round(b1.y + b2.y)/2);
@@ -87,7 +85,7 @@ public class PoolBall extends Circle {
         b2.setLocation(midPoint.x + (direction.x * radius), midPoint.y + (direction.y * radius));
     }
 
-    public void checkBounces(PoolTable table) {
+    public void checkBounces(Table table) {
         int wid = table.WIDTH;
         int len = table.LENGTH;
         int bWid = table.BORDER_WIDTH;
@@ -117,14 +115,14 @@ public class PoolBall extends Circle {
         }
     }
 
-    public boolean isCollide(PoolBall otra) {
+    public boolean isCollide(Ball otra) {
         return (Angular.distEntre2Puntos(this.getLocation(), otra.getLocation()) < diameter);
     }
     public boolean isMoving() {
         return (vel.x != 0 || vel.y != 0);
     }
     public boolean isPressed(Point posMouse) {
-        return (Angular.distEntre2Puntos(posMouse, getLocation()) < radius + CueStick.DISTANCE + CueStick.LENGTH);
+        return (Angular.distEntre2Puntos(posMouse, getLocation()) < radius + Cue.DISTANCE + Cue.LENGTH);
         //TODO Mejorar para mejor input¿
     }
 
@@ -138,9 +136,6 @@ public class PoolBall extends Circle {
     }
 
     // * Getters
-    public Point getLocation() {
-        return new Point(Math.round(x), Math.round(y));
-    }
     public float getX() {
         return x;
     }
@@ -150,11 +145,15 @@ public class PoolBall extends Circle {
     public Vector2D getVel() {
         return vel;
     }
+    public Color getColor() {
+        return color;
+    }
 
     // * Paint
     public void paint(Graphics g) {
-        g.setColor(color);
-        g.fillOval(round(x - radius), round(y - radius), diameter, diameter);
+        //TODO Agregar numeros (dibujar subCirculo y numero de bola)
+        
+        this.fillCircle(g, color);
         this.drawCircle(g);
     }
 }

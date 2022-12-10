@@ -2,6 +2,7 @@ package geometricas;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Point;
 
 public class Circle {
     public float x, y;
@@ -15,27 +16,27 @@ public class Circle {
         this.diameter = radius * 2;
     }
 
+    // * Getters
     public int getRadius() {
         return radius;
     }
-
     public float getArea() {
         return (float)(Math.PI * (radius * radius));
     }
-
     public float getPerimeter() {
         return (float)(2 * Math.PI * radius);
     }
+    public Point getLocation() {
+        return new Point(Math.round(x), Math.round(y));
+    }
 
-    // protected float distance(Circle c2) {
-    //     float xSq = c2.x - x;
-    //     float ySq = c2.y - y;
-    //     float dist = (float)(Math.sqrt((xSq * xSq) + (ySq * ySq)));
-    //     return dist;
-    // }
-
+    // * Para dibujar
     public void drawCircle(Graphics g) {
         g.setColor(Color.BLACK);
         g.drawOval(Math.round(x - radius), Math.round(y - radius), diameter, diameter);
+    }
+    public void fillCircle(Graphics g, Color c) {
+        g.setColor(c);
+        g.fillOval(Math.round(x - radius), Math.round(y - radius), diameter, diameter);
     }
 }
