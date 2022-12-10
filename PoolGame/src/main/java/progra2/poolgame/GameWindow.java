@@ -16,16 +16,16 @@ public class GameWindow extends JFrame {
         super("PoolGame");
         this.gamePanel = new GamePanel(this);
 
-        //* ICONO
+        // * ICONO
         try { this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         } catch (Exception e) { System.out.println("Exception: Error al cargar icono de la ventana"); };
 
-        //* CONFIGURAR JFRAME (VENTANA)
+        // * CONFIGURAR JFRAME (VENTANA)
         // this.setSize(1280 + 16, 720 + 39); //? Lo sumado corresponde a los margenes de la ventana (Total: 1296x759)
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        //* ASIGNAR TECLA "ESC" PARA CERRAR JUEGO
+        // * ASIGNAR TECLA "ESC" PARA CERRAR JUEGO
         KeyStroke esc = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(esc, "ESC");
         this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
@@ -37,12 +37,12 @@ public class GameWindow extends JFrame {
             }
         });
 
-        //* AGREGAR JPANEL PRINCIPAL DEL JUEGO
+        // * AGREGAR JPANEL PRINCIPAL DEL JUEGO
         this.add(gamePanel);
         this.pack();
         System.out.println("Tamaño GameWindow: "+this.getWidth()+"x"+this.getHeight());
         
-        //* DESPUÉS DE CONFIGURAR, HACER VISIBLE LA VENTANA
+        // * DESPUÉS DE CONFIGURAR, HACER VISIBLE LA VENTANA
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }

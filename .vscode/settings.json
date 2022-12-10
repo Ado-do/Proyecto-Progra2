@@ -13,6 +13,7 @@
         "CODIGO",
         "configurarle",
         "descolisonar",
+        "fors",
         "GAMELOOP",
         "gameplay",
         "JFRAME",
@@ -23,7 +24,8 @@
         "posicion",
         "puntomedio",
         "Settear",
-        "Subfunciones"
+        "Subfunciones",
+        "ubicandolas"
     ],
     "better-comments.tags": [
 

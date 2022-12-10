@@ -23,24 +23,24 @@ public class PoolTable extends JPanel {
     public PoolTable(int width, int length) {
         super(true);
         
-        //* PROPIEDADES
+        // * PROPIEDADES
         this.WIDTH = width;
         this.LENGTH = length;
 
-        //* CALCULAR PROPORCIONES
+        // * CALCULAR PROPORCIONES
         this.BORDER_WIDTH = (WIDTH - Math.round(WIDTH * 0.9f)) / 2;
         this.BORDER_LENGHT = (LENGTH - Math.round(LENGTH * 0.8f)) / 2;
 
-        this.BALLS_RADIUS = Math.round((WIDTH * 0.03f) / 2);
+        this.BALLS_RADIUS = Math.round((BORDER_WIDTH * 0.03f) / 2);
 
         System.out.println("ANCHO Y LARGO: " + WIDTH + "x" + LENGTH);
         System.out.println("ANCHO Y LARGO BORDES: " + BORDER_WIDTH + "x" + BORDER_LENGHT);
         System.out.println("RADIO BOLAS: " + BALLS_RADIUS);
 
-        //* INICIALIZAR
+        // * INICIALIZAR
         initClasses();
 
-        //* CONFIGURAR JPANEL
+        // * CONFIGURAR JPANEL
         this.setPreferredSize(new Dimension(WIDTH, LENGTH));
         this.setBackground(Color.YELLOW);
         this.setOpaque(false);
@@ -51,23 +51,22 @@ public class PoolTable extends JPanel {
     }
 
     public void updateGame() {
-        //* Si alguna bola esta en movimiento, entonces...
+        // * Si alguna bola esta en movimiento, entonces...
         if (hasMovement()) {
             for (int i = 0; i < balls.size(); i++) {
                 PoolBall currentBall = balls.get(i);
                 currentBall.move();
                 currentBall.checkBounces(this);
 
-                // for (int j = 0; j < balls.size(); j++) {
-                    // if (i == j) continue;
+                for (int j = 0; j < balls.size(); j++) {
+                    if (i == j) continue;
 
-                    // PoolBall nextBall = balls.get(j);
-                    // if (currentBall.collide(nextBall)) {
-                        // System.out.println("Choco bola " + i + " con bola " + j);
-                        // bolaActual.descolisonarBolas(nextBall);
-                        // bolaActual.colisionar(nextBall);
-                    // }
-                // }
+                    PoolBall nextBall = balls.get(j);
+                    if (currentBall.isCollide(nextBall)) {
+                        System.out.println("Choco bola " + i + " con bola " + j);
+                        currentBall.collide(nextBall);
+                    }
+                }
             }
         }
 	}
@@ -79,16 +78,18 @@ public class PoolTable extends JPanel {
         paintTable(g2D); // * Mesa
         for (PoolBall bola : balls) bola.paint(g2D); // * Bolas
         
-        // Si el mouse esta cerca de la bola blanca
-        if (!this.hasMovement()) {
+        // * Si el mouse esta cerca de la bola blanca
+        if (!this.hasMovement() && blanca != null) {
             taco.sendMousePos(mousePosition);
             taco.paint(g2D);
             
-            // Generar circulo que se mueve según mouse alrededor de bola blanca
-            float angle = anguloPI(blanca.getLocation(), mousePosition.getLocation()); // * Calcular angulo que se forma entre posición de mouse y el centro de la bola blanca
+            // * Generar circulo que se mueve según mouse alrededor de bola blanca
+            // Calcular angulo que se forma entre posición de mouse y el centro de la bola blanca
+            float angle = anguloPI(blanca.getLocation(), mousePosition.getLocation());
 
-            // Dibujar linea de trayectoria
-            float opositeAngle = angle + 1f; // * Calcular angulo opuesto para la linea que dibuja la dirección de la bola (sumarle 180° (1pi))
+            // * Dibujar linea de trayectoria
+            // Calcular angulo opuesto para la linea que dibuja la dirección de la bola (sumarle 180° (1pi))
+            float opositeAngle = angle + 1f;
 
             Point pInicioTrayectoria = generaPunto(blanca.getLocation(), blanca.getRadius() + 4, opositeAngle);
             Point pFinalTrayectoria = generaPunto(pInicioTrayectoria, 600, opositeAngle);
@@ -96,21 +97,21 @@ public class PoolTable extends JPanel {
             
             float[] patron = {10f, 4f};
             Stroke stroke = new BasicStroke(4f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, patron, 0.0f);
-            Stroke defaultStroke = g2D.getStroke(); //Guardamos la borde predeterminada
+            Stroke defaultStroke = g2D.getStroke(); // Guardamos la borde predeterminada
             
-            g2D.setStroke(stroke);
+            g2D.setStroke(stroke); // Utilizar borde con patron de la linea de trayectoria
             g2D.setColor(Color.WHITE);
             g2D.drawLine(pInicioTrayectoria.x, pInicioTrayectoria.y, pFinalTrayectoria.x, pFinalTrayectoria.y);
-            g2D.setStroke(defaultStroke); // Regresamos al borde normal
+            g2D.setStroke(defaultStroke); // Regresamos al borde predeterminado
 
-            // Dibujar circunferencia formada por taco
+            // * Dibujar circunferencia formada por taco
             int radioTotal = blanca.getRadius() + CueStick.DISTANCE + CueStick.LENGTH;
             g2D.setColor(Color.YELLOW);
             g2D.drawOval(blanca.getLocation().x - radioTotal, blanca.getLocation().y - radioTotal, radioTotal*2, radioTotal*2);
         }
     }
 
-    //* Getters
+    // * Getters
     public PoolBall getBlanca() {
         return blanca;
     }
@@ -143,6 +144,7 @@ public class PoolTable extends JPanel {
         balls.add(new PoolBall(((WIDTH * 3/4) + (radius*4) - 4), LENGTH/2, Color.orange, radius));
         balls.add(new PoolBall(((WIDTH * 3/4) + (radius*4) - 4), (LENGTH/2) + ((radius*2) + 2), Color.blue, radius));
 
+        //TODO Usar "fors" para crear automáticamente triangulo al iniciar según num de bolas (crear clase de para crear colores de bolas de pool randoms?)
     }
     private void paintTable(Graphics g) {
         // * Borde

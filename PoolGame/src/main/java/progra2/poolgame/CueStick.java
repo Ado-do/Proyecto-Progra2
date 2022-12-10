@@ -29,16 +29,18 @@ public class CueStick {
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
 
-        // Punto cercano a blanca, respecto al angulo que se formo desde el mouse y el centro de la bola blanca
-        Point p1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + DISTANCE, angle);
-        // Punto lejano
-        Point p2 = Angular.generaPunto(p1, LENGTH, angle);
+        if (blanca != null) {
+            // Punto cercano a blanca, respecto al angulo que se formo desde el mouse y el centro de la bola blanca
+            Point p1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + DISTANCE, angle);
+            // Punto lejano
+            Point p2 = Angular.generaPunto(p1, LENGTH, angle);
 
-        g.setColor(Color.BLACK);
-        Stroke stroke = new BasicStroke(WIDTH);
-        Stroke defaultStroke = g2D.getStroke();
-        g2D.setStroke(stroke);
-        g.drawLine(p1.x, p1.y, p2.x, p2.y);
-        g2D.setStroke(defaultStroke);
+            g.setColor(Color.BLACK);
+            Stroke stroke = new BasicStroke(WIDTH);
+            Stroke defaultStroke = g2D.getStroke();
+            g2D.setStroke(stroke);
+            g.drawLine(p1.x, p1.y, p2.x, p2.y);
+            g2D.setStroke(defaultStroke);
+        }
     }
 }

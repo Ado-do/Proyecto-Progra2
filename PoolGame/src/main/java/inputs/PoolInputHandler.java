@@ -12,7 +12,10 @@ import progra2.poolgame.PoolBall;
 import geometricas.Angular;
 import geometricas.Vector2D;
 
+//TODO Mejorar precision de tiros
+
 public class PoolInputHandler implements MouseInputListener, KeyListener {
+    private final float forceCorrection = (-1 * 0.2f); // Corregir e invertir dirección de fuerza del golpe a la bola
     private PoolTable table;
     private PoolBall blanca;
 
@@ -29,9 +32,9 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         ballWasPressed = false;
     }
 
-    private void hitBall(Vector2D release) {
-        release.escale(-0.25f);
-        blanca.setSpeed(release);
+    private void hitBall(Vector2D hitVel) {
+        hitVel.escale(forceCorrection);
+        blanca.setVel(hitVel);
     }
 
     @Override

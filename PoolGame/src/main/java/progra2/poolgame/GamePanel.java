@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
         table = new PoolTable(tableWidth, tableLength);
         gui = new SubGUI();
 
-        //* Listeners
+        // * Listeners
         PoolInputHandler poolInputs = new PoolInputHandler(table);
         table.addMouseMotionListener(poolInputs);
         table.addMouseListener(poolInputs);
@@ -64,7 +64,7 @@ public class GamePanel extends JPanel {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHints(rh);
 
-        //* Dibujar
+        // * Dibujar
         super.paint(g2D);
 
         g2D.setColor(Color.BLACK);
@@ -74,10 +74,10 @@ public class GamePanel extends JPanel {
         String contUPS = "UPS: " + ups.toString();
         g2D.drawString(contUPS, this.getWidth() - g2D.getFontMetrics().stringWidth(contUPS) - 5, g2D.getFontMetrics().getHeight());
 
-        Toolkit.getDefaultToolkit().sync(); //* Para solucionar problemas de fluidez
+        Toolkit.getDefaultToolkit().sync(); // * Para solucionar problemas de fluidez
     }
     
-    //* Getters
+    // * Getters
     public PoolTable getTable() {
         return table;
     }

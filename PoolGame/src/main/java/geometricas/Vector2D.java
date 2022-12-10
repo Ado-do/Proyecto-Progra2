@@ -27,7 +27,7 @@ public class Vector2D {
     public float getMagnitude() {
         return (float)(Math.sqrt((x * x) + (y * y)));
     }
-    public void toUnitVector() { // Normalizar vector (convertir en vector unitario (señala direcciones))
+    public void toUnitVector() { // Convertir en vector unitario (señala direcciones)
         float mag = getMagnitude();
         setVector(x / mag, y / mag);
     }
@@ -45,7 +45,7 @@ public class Vector2D {
     }
 
     // Para calcular coseno de vectores unitarios
-    public static float dotProduct(Vector2D v1, Vector2D v2) {
-        return ((v1.x * v2.x) + (v1.y * v2.y));
+    public float dotProduct(Vector2D v2) {
+        return ((this.x * v2.x) + (this.y * v2.y));
     }
 }
