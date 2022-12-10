@@ -166,11 +166,11 @@ public class Table extends JPanel {
 
         for (int i = 0; i < 3; i++) {
             int posY = (i != 1) ? (BORDER_LENGHT) : (BORDER_LENGHT - round(pocketRadius*correctionMid));
-            pocketsArray.add(new Pocket(BORDER_WIDTH + (offsetX*i), posY, pocketRadius));
+            pocketsArray.add(new Pocket(BORDER_WIDTH + (offsetX*i), posY, pocketRadius, this));
         }
         for (int i = 0; i < 3; i++) {
             int posY = (i != 1) ? (LENGTH - BORDER_LENGHT) : ((LENGTH - BORDER_LENGHT) + round(pocketRadius*correctionMid));
-            pocketsArray.add(new Pocket(BORDER_WIDTH + (offsetX*i), posY, pocketRadius));
+            pocketsArray.add(new Pocket(BORDER_WIDTH + (offsetX*i), posY, pocketRadius, this));
         }
     }
     private void paintTable(Graphics g) {

@@ -35,7 +35,7 @@ public class Cue {
             // Punto lejano
             Point p2 = Angular.generaPunto(p1, LENGTH, angle);
 
-            g.setColor(Color.BLACK);
+            g.setColor(new Color(102,51,0));
             Stroke stroke = new BasicStroke(WIDTH);
             Stroke defaultStroke = g2D.getStroke();
             g2D.setStroke(stroke);

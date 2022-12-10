@@ -33,7 +33,7 @@ public class Ball extends Circle {
         x += vel.x;
         y += vel.y;
 
-        descel();
+        // descel();
     }
     private void descel() {
         // * APLICAR ROCE

@@ -16,7 +16,7 @@ import geometricas.Vector2D;
 //! Bloque dirección de tiro cuando presiona mouse y modificar magnitud según distancia de arrastrado de mouse
 
 public class PoolInputHandler implements MouseInputListener, KeyListener {
-    private final float forceCorrection = (-1 * 0.2f); // Corregir e invertir dirección de fuerza del golpe a la bola
+    private final float forceCorrection = (-1 * 0.15f); // Corregir e invertir dirección de fuerza del golpe a la bola
     private Table table;
     private Ball blanca;
 
@@ -46,7 +46,8 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     //* Eventos
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!table.hasMovement() && blanca.isPressed(e.getPoint())) {
+        // if (!table.hasMovement() && blanca.isPressed(e.getPoint())) {
+        if (blanca.isPressed(e.getPoint())) {
             ballWasPressed = true;
 
             // hold.setVector(e.getX(), e.getY());
@@ -58,7 +59,8 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         //TODO Mejorar¿
         table.sendMouseInfo(e);
 
-        if (!table.hasMovement() && ballWasPressed) {
+        if (ballWasPressed) {
+        // if (!table.hasMovement() && ballWasPressed) {
             // Point pHold = new Point(Math.round(hold.x), Math.round(hold.y));
 
             // float dist = (float) Angular.distEntre2Puntos(pHold, e.getPoint());
@@ -73,7 +75,8 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     }
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!table.hasMovement() && ballWasPressed) {
+        if (ballWasPressed) {
+        // if (!table.hasMovement() && ballWasPressed) {
             // if (release.getMagnitude() == 0) {
             if (release == null) {
                 // release.setVector(hold); // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
