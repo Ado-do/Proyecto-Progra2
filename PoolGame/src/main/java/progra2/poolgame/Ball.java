@@ -12,15 +12,14 @@ import geometricas.Circle;
 import geometricas.Vector2D;
 
 public class Ball extends Circle {
-    // * Constantes
-    public static final int MASS = 160;
-    public static final float FRICTION = 0.2f;
-    private final int number;
-
-    // * Propiedades bola
+    public final float FRICTION = 0.045f;
+    
     private Color color;
     private Vector2D vel;
+    private final int number;
     
+    private int contBounces = 0;
+
     public Ball(int posX, int posY, Color color, int radius, int number) {
         super(posX, posY, radius);
         this.color = color;
@@ -33,7 +32,7 @@ public class Ball extends Circle {
         x += vel.x;
         y += vel.y;
 
-        // descel();
+        descel();
     }
     private void descel() {
         // * APLICAR ROCE
@@ -41,11 +40,11 @@ public class Ball extends Circle {
         float speedMag = vel.getMagnitude();
         if (speedMag <= FRICTION) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
             vel.escale(0);
-        } else {                // El roce esta afectando a la bola, pero aún no la detiene.
-            vel.toUnitVector();
-            vel.escale(speedMag - FRICTION);            
-            // System.out.println("x: " + x + "y: " + y);
-            // System.out.println("Mag: " + mag);
+        } else {                    // El roce esta afectando a la bola, pero aún no la detiene.
+            Vector2D fricVec = new Vector2D(vel);
+            fricVec.toUnitVector();
+            fricVec.escale(FRICTION);
+            vel.subtractVector(fricVec);
         }
     }
 
@@ -60,19 +59,20 @@ public class Ball extends Circle {
         float mv = b1.vel.getMagnitude();
 
         // Calcular vectores unitarios
-        Vector2D directBalls = new Vector2D(b2.x - b1.x, b2.y - b1.y);
-        directBalls.toUnitVector();
-        Vector2D directVel = new Vector2D(b1.vel);
-        directVel.toUnitVector();
+        Vector2D newVelB2 = new Vector2D(b2.x - b1.x, b2.y - b1.y);
+        newVelB2.toUnitVector();
+        Vector2D directVelB1 = new Vector2D(b1.vel);
+        directVelB1.toUnitVector();
 
-        // Coseno entre normal de las bolas y velocidad de esta bola
-        float cos = directVel.dotProduct(directBalls); // Angulo entre ambos vectores unitarios
+        // Coseno entre normal de las bolas y vector de velocidad de b1
+        float cos = directVelB1.dotProduct(newVelB2);
+        newVelB2.escale(cos * mv);
 
-        directBalls.escale(cos * mv);
-        b1.vel.subtractVector(directBalls);
+        // * Velocidades resultantes
+        b1.vel.subtractVector(newVelB2);
         b1.vel.addVector(b2.vel);
 
-        b2.vel.addVector(directBalls);
+        b2.vel.addVector(newVelB2);
     }
     private void separateBalls(Ball b2) {
         Ball b1 = this;
@@ -100,11 +100,13 @@ public class Ball extends Circle {
         if (((x - radius) < borderWid) && (vel.x < 0)) { 
             x -= 2 * ((x - radius) - borderWid);
             vel.x *= -1;
+            System.out.println("REBOTES: "+(++contBounces));
         } 
         // Derecha
         else if (((x + radius) > (wid - borderWid)) && (vel.x > 0)) {
             x -= 2 * ((x + radius) - (wid - borderWid));
             vel.x *= -1;
+            System.out.println("REBOTES: "+(++contBounces));
         }
 
         // * Bordes verticales
@@ -112,10 +114,12 @@ public class Ball extends Circle {
         if (((y - radius) < borderLen) && (vel.y < 0)) {
             y -= 2 * ((y - radius) - borderLen);
             vel.y *= -1;
+            System.out.println("REBOTES: "+(++contBounces));
         // Abajo
         } else if (((y + radius) > (len - borderLen)) && (vel.y > 0)) {
             y -= 2 * ((y + radius) - (len - borderLen));
             vel.y *= -1;
+            System.out.println("REBOTES: "+(++contBounces));
         }
     }
 
@@ -124,10 +128,6 @@ public class Ball extends Circle {
     }
     public boolean isMoving() {
         return (vel.x != 0 || vel.y != 0);
-    }
-    public boolean isPressed(Point posMouse) {
-        return (Angular.distEntre2Puntos(posMouse, getLocation()) < radius + Cue.DISTANCE + Cue.LENGTH);
-        //TODO Mejorar para mejor input¿
     }
 
     // * Setters
@@ -154,9 +154,7 @@ public class Ball extends Circle {
     }
 
     // * Paint
-    public void paint(Graphics g) {
-        //TODO Agregar numeros (dibujar subCirculo y numero de bola)
-        
+    public void paint(Graphics g) {        
         this.fillCircle(g, color);
         this.drawCircle(g);
 

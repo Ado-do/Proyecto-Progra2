@@ -17,8 +17,10 @@ public class SubGUI extends JPanel {
         JPanel subPanelCentro = new JPanel(new GridLayout(2, 0));
         JLabel score = new JLabel("SCORE: 100000", SwingConstants.CENTER);
         JLabel escape = new JLabel("Presionar ESC para cerrar", SwingConstants.CENTER);
+        JLabel instruc = new JLabel("Presionar y arrastrar para golpear bola", SwingConstants.CENTER);
         subPanelCentro.add(score);
         subPanelCentro.add(escape);
+        subPanelCentro.add(instruc);
 
         this.add(subPanelCentro);
 

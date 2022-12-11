@@ -4,7 +4,7 @@ import java.awt.GraphicsEnvironment;
 
 public class PoolGame implements Runnable {
     private final int FPS_SET;
-    private final int UPS_SET = 60;
+    private final int UPS_SET = 120;
 
     private Integer fps;
     private Integer ups;
@@ -19,7 +19,8 @@ public class PoolGame implements Runnable {
         gamePanel.requestFocusInWindow();
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        FPS_SET = ge.getDefaultScreenDevice().getDisplayMode().getRefreshRate();
+        int hz = ge.getDefaultScreenDevice().getDisplayMode().getRefreshRate();
+        FPS_SET = (hz > 120) ? 120 : hz;
 
         fps = FPS_SET;
         ups = UPS_SET;

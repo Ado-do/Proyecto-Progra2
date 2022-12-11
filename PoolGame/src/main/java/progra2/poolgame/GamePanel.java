@@ -1,6 +1,7 @@
 package progra2.poolgame;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+
 import java.awt.*;
 
 import inputs.*;
@@ -24,14 +25,16 @@ public class GamePanel extends JPanel {
         table = new Table(tableWidth, tableLength);
         gui = new SubGUI();
 
+        fps = 0;
+        ups = 0;
+
         // * Listeners
         PoolInputHandler poolInputs = new PoolInputHandler(table);
         table.addMouseMotionListener(poolInputs);
         table.addMouseListener(poolInputs);
         table.addKeyListener(poolInputs);
-
-        fps = 0;
-        ups = 0;
+        GUIHandler guiHandler = new GUIHandler(gui);
+        //TODO Agregar listener a gui
 
         // * Configurar JPanel principal de juego
         this.setSize(1280, 720);
@@ -64,10 +67,11 @@ public class GamePanel extends JPanel {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHints(rh);
 
-        // * Dibujar
+        // * Dibujar todo
         super.paint(g2D);
 
-        g2D.setColor(Color.BLACK);
+        // * Info de monitorio (fps - ups)
+        g2D.setColor(Color.GREEN);
         g2D.setFont(new Font("Arial", Font.BOLD, 16));
         String contFPS = "FPS: " + fps.toString();
         g2D.drawString(contFPS, 5, g2D.getFontMetrics().getHeight());
