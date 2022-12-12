@@ -14,14 +14,13 @@ public class GameWindow extends JFrame {
 
     public GameWindow() {
         super("PoolGame");
-        this.gamePanel = new GamePanel(this);
+        this.gamePanel = new GamePanel();
 
         // * ICONO
         try { this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
         } catch (Exception e) { System.out.println("Exception: Error al cargar icono de la ventana"); };
 
         // * CONFIGURAR JFRAME (VENTANA)
-        // this.setSize(1280 + 16, 720 + 39); //? Lo sumado corresponde a los margenes de la ventana (Total: 1296x759)
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 

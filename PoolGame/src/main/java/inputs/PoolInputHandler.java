@@ -40,7 +40,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     public void mouseDragged(MouseEvent e) {
         if (!table.hasMovement()) {
             float dist = (float) Angular.distEntre2Puntos(pDirection, e.getPoint());
-            int hitArea = 150;
+            int hitArea = 100;
 
             if (dist < hitArea) {
                 force.setVector(e.getX(), e.getY());

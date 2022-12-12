@@ -1,8 +1,7 @@
 package progra2.poolgame;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Point;
 
@@ -19,15 +18,8 @@ public class Pocket extends Circle {
     public void receive(ArrayList<Ball> array, Ball ball) {
         if (ball.getColor() == Color.WHITE) {
             //TODO Descontar puntos y devolver bola a mesa
-            Random rand = new Random();
-
-            int borderWid = table.BORDER_WIDTH,  wid = table.WIDTH;
-            int borderLen = table.BORDER_LENGHT, len = table.LENGTH;
-
-            int Xmax = wid-borderWid-ball.getRadius(), Xmin = borderWid + ball.getRadius();
-            int Ymax = len-borderLen-ball.getRadius(), Ymin = borderLen + ball.getRadius();
-            ball.setLocation(rand.nextInt(Xmax - Xmin) + Xmin, rand.nextInt(Ymax - Ymin) + Ymin);
             ball.getVel().escale(0);
+            array.remove(ball);
         } else {
             //TODO Contar puntos
             array.remove(ball);
@@ -40,7 +32,7 @@ public class Pocket extends Circle {
         return (Angular.distEntre2Puntos(pBall, pPocket) < this.radius) ? true : false;
     }
 
-    public void paint(Graphics g) {
-        this.fillCircle(g, Color.BLACK);
+    public void paint(Graphics2D g2D) {
+        this.fillCircle(g2D, Color.BLACK);
     }
 }

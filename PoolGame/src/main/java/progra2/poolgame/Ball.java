@@ -2,23 +2,23 @@ package progra2.poolgame;
 
 import static java.lang.Math.round;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
 
 import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
 public class Ball extends Circle {
-    public final float FRICTION = 0.045f;
+    public final float FRICTION = 0.02f;
     
+    private final int number;
     private Color color;
     private Vector2D vel;
-    private final int number;
-    
-    private int contBounces = 0;
 
     public Ball(int posX, int posY, Color color, int radius, int number) {
         super(posX, posY, radius);
@@ -27,18 +27,51 @@ public class Ball extends Circle {
         this.vel = new Vector2D();
     }
 
+    public static void setRandomLocation(Ball ball, Table table) {
+        ArrayList<Ball> arrayBalls = table.getArrayBalls();
+        ArrayList<Pocket> arrayPockets = table.getArrayPockets();
+
+        Random rand = new Random();
+        int borderWidth = table.rectPlayfield.x,  width = table.rectMain.width;
+        int borderHeight = table.rectPlayfield.y, height = table.rectPlayfield.height;
+        int Xmax = width-borderWidth-ball.getRadius(),   Xmin = borderWidth + ball.getRadius();
+        int Ymax = height-borderHeight-ball.getRadius(), Ymin = borderHeight + ball.getRadius();
+
+        boolean wrongLocation;
+        do {
+            wrongLocation = false;
+            ball.setLocation(rand.nextInt(Xmax - Xmin) + Xmin, rand.nextInt(Ymax - Ymin) + Ymin);
+
+            for (int i = 0; i < arrayBalls.size(); i++) {
+                Ball b2 = arrayBalls.get(i);
+                if (ball == b2) continue;
+
+                if (ball.intersecs(arrayBalls.get(i))) {
+                    wrongLocation = true;
+                    break;
+                }
+            }
+            for (Pocket pocket : arrayPockets) {
+                if (pocket.isPocketed(ball)) {
+                    wrongLocation = true;
+                    break;
+                }
+            }
+        } while (wrongLocation);
+    }
+
     public void move() {
         // * MOVER BOLA SEGÚN VELOCIDAD
         x += vel.x;
         y += vel.y;
+        this.syncBounds();
 
         descel();
     }
     private void descel() {
         // * APLICAR ROCE
         // La fuerza de la bola empieza a recibir el roce de la mesa
-        float speedMag = vel.getMagnitude();
-        if (speedMag <= FRICTION) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
+        if (vel.getMagnitude() <= FRICTION) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
             vel.escale(0);
         } else {                    // El roce esta afectando a la bola, pero aún no la detiene.
             Vector2D fricVec = new Vector2D(vel);
@@ -51,29 +84,34 @@ public class Ball extends Circle {
     public void collide(Ball b2) {
         Ball b1 = this;
 
-        // * Separar antes de calcular fuerzas resultantes
-        separateBalls(b2);
+        if (b1.vel.getMagnitude() < FRICTION) { // Bugfix
+            b1.vel.escale(0);
+        } else {
+            // * Separar antes de calcular fuerzas resultantes
+            separateBalls(b2);
 
-        // * Calcular vectores resultantes de colisión
-        b1.vel.subtractVector(b2.vel);
-        float mv = b1.vel.getMagnitude();
+            // * Calcular vectores resultantes de colisión
+            b1.vel.subtractVector(b2.vel);
+            float mv = b1.vel.getMagnitude();
 
-        // Calcular vectores unitarios
-        Vector2D newVelB2 = new Vector2D(b2.x - b1.x, b2.y - b1.y);
-        newVelB2.toUnitVector();
-        Vector2D directVelB1 = new Vector2D(b1.vel);
-        directVelB1.toUnitVector();
+            // Calcular vectores unitarios
+            Vector2D newVelB2 = new Vector2D(b2.x - b1.x, b2.y - b1.y);
+            newVelB2.toUnitVector();
+            Vector2D directVelB1 = new Vector2D(b1.vel);
+            directVelB1.toUnitVector();
 
-        // Coseno entre normal de las bolas y vector de velocidad de b1
-        float cos = directVelB1.dotProduct(newVelB2);
-        newVelB2.escale(cos * mv);
+            // Coseno entre normal de las bolas y vector de velocidad de b1
+            float cos = directVelB1.dotProduct(newVelB2);
+            newVelB2.escale(cos * mv);
 
-        // * Velocidades resultantes
-        b1.vel.subtractVector(newVelB2);
-        b1.vel.addVector(b2.vel);
+            // * Velocidades resultantes
+            b1.vel.subtractVector(newVelB2);
+            b1.vel.addVector(b2.vel);
 
-        b2.vel.addVector(newVelB2);
+            b2.vel.addVector(newVelB2);
+        }
     }
+    
     private void separateBalls(Ball b2) {
         Ball b1 = this;
 
@@ -90,41 +128,38 @@ public class Ball extends Circle {
     }
 
     public void checkBounces(Table table) {
-        int wid = table.WIDTH;
-        int len = table.LENGTH;
-        int borderWid = table.BORDER_WIDTH;
-        int borderLen = table.BORDER_LENGHT;
+        int width = table.rectMain.width;
+        int height = table.rectMain.height;
+        int borderWidth = table.rectPlayfield.x;
+        int borderHeight = table.rectPlayfield.y;
 
         // * Bordes horizontales
         // Izquierda
-        if (((x - radius) < borderWid) && (vel.x < 0)) { 
-            x -= 2 * ((x - radius) - borderWid);
+        if (((x - radius) < borderWidth) && (vel.x < 0)) {
+            x -= 2 * ((x - radius) - borderWidth);
             vel.x *= -1;
-            System.out.println("REBOTES: "+(++contBounces));
         } 
         // Derecha
-        else if (((x + radius) > (wid - borderWid)) && (vel.x > 0)) {
-            x -= 2 * ((x + radius) - (wid - borderWid));
+        else if (((x + radius) > (width - borderWidth)) && (vel.x > 0)) {
+            x -= 2 * ((x + radius) - (width - borderWidth));
             vel.x *= -1;
-            System.out.println("REBOTES: "+(++contBounces));
         }
 
         // * Bordes verticales
         // Arriba
-        if (((y - radius) < borderLen) && (vel.y < 0)) {
-            y -= 2 * ((y - radius) - borderLen);
+        if (((y - radius) < borderHeight) && (vel.y < 0)) {
+            y -= 2 * ((y - radius) - borderHeight);
             vel.y *= -1;
-            System.out.println("REBOTES: "+(++contBounces));
         // Abajo
-        } else if (((y + radius) > (len - borderLen)) && (vel.y > 0)) {
-            y -= 2 * ((y + radius) - (len - borderLen));
+        } else if (((y + radius) > (height - borderHeight)) && (vel.y > 0)) {
+            y -= 2 * ((y + radius) - (height - borderHeight));
             vel.y *= -1;
-            System.out.println("REBOTES: "+(++contBounces));
         }
+        this.syncBounds();
     }
 
-    public boolean isCollide(Ball otra) {
-        return (Angular.distEntre2Puntos(this.getLocation(), otra.getLocation()) < diameter);
+    public boolean intersecs(Circle otra) {
+        return (Angular.distEntre2Puntos(this.getLocation(), otra.getLocation()) <= diameter);
     }
     public boolean isMoving() {
         return (vel.x != 0 || vel.y != 0);
@@ -133,10 +168,6 @@ public class Ball extends Circle {
     // * Setters
     public void setVel(Vector2D v) {
         vel.setVector(v);
-    }
-    public void setLocation(float x, float y) {
-        this.x = x;
-        this.y = y;
     }
 
     // * Getters
@@ -154,17 +185,17 @@ public class Ball extends Circle {
     }
 
     // * Paint
-    public void paint(Graphics g) {        
-        this.fillCircle(g, color);
-        this.drawCircle(g);
+    public void paint(Graphics2D g2D) {        
+        this.fillCircle(g2D, color);
+        this.drawCircle(g2D, Color.BLACK);
 
         if (number != 0) {
             Circle subCircle = new Circle(round(x), round(y), round(radius * 0.6f));
-            subCircle.fillCircle(g, Color.WHITE);
+            subCircle.fillCircle(g2D, Color.WHITE);
 
-            g.setColor(Color.BLACK);
-            g.setFont(new Font("Arial", Font.BOLD, 14));
-            g.drawString(""+number, round(x - (g.getFontMetrics().stringWidth(""+number))/2), round(y + (g.getFontMetrics().getHeight())/3));
+            g2D.setColor(Color.BLACK);
+            g2D.setFont(new Font("Arial", Font.BOLD, round(radius * 0.9f)));
+            g2D.drawString(""+number, round(x - (g2D.getFontMetrics().stringWidth(""+number))/2), round(y + (g2D.getFontMetrics().getHeight())/3));
         }
     }
 }

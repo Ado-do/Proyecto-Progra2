@@ -47,7 +47,6 @@ public class PoolGame implements Runnable {
         double timePerUpdate = 1000000000.0 / UPS_SET;
 
         long previusTime = System.nanoTime();
-     
         long timeLastCheck = System.currentTimeMillis();
 
         int frames = 0;

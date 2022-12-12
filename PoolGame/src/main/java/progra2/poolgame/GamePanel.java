@@ -7,18 +7,15 @@ import java.awt.*;
 import inputs.*;
 
 public class GamePanel extends JPanel {
-    private GameWindow gameWindow;
-
     private Table table;
     private SubGUI gui;
 
     private Integer fps;
     private Integer ups;
 
-    public GamePanel(GameWindow gameWindow) {
+    public GamePanel() {
         // * Inicializar
         super(true);
-        this.gameWindow = gameWindow;
 
         int tableWidth = 1400;
         int tableLength = tableWidth/2;
@@ -87,8 +84,5 @@ public class GamePanel extends JPanel {
     }
     public JPanel getSubGUI() {
         return gui;
-    }
-    public GameWindow getWindow() {
-        return gameWindow;
     }
 }
