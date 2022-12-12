@@ -18,8 +18,8 @@ public class GamePanel extends JPanel {
         super(true);
 
         int tableWidth = 1400;
-        int tableLength = tableWidth/2;
-        table = new Table(tableWidth, tableLength);
+        int tableHeight = tableWidth/2;
+        table = new Table(tableWidth, tableHeight);
         gui = new SubGUI();
 
         fps = 0;

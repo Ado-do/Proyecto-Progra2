@@ -33,6 +33,6 @@ public class Pocket extends Circle {
     }
 
     public void paint(Graphics2D g2D) {
-        this.fillCircle(g2D, Color.BLACK);
+        this.fillCircle(g2D, new Color(50, 50, 50));
     }
 }

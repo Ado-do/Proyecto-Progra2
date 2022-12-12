@@ -114,11 +114,12 @@ public class Cue {
         
         g2D.setStroke(stroke);
 
+        // Principal
         g2D.setColor(new Color(102,51,0));
         g2D.draw(cueLine);
-
+        // Punta
         Point cueLineP1 = new Point(Math.round(cueLine.x1), Math.round(cueLine.y1));
-        Point cueTipP2 = Angular.generaPunto(cueLineP1, LONG * 0.006f, mainAngle);
+        Point cueTipP2 = Angular.generaPunto(cueLineP1, LONG * 0.015f, mainAngle);
         Line2D cueTip = new Line2D.Float(cueLineP1, cueTipP2);
         g2D.setColor(Color.BLUE);
         g2D.draw(cueTip);

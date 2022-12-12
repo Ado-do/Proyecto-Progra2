@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Polygon;
 
 public class Table extends JPanel {
     public final Rectangle rectMain;
@@ -31,6 +32,7 @@ public class Table extends JPanel {
         
         // * PROPIEDADES
         this.rectMain = new Rectangle(width, height);
+
         Point pPlayfiled = new Point((width - round(width * 0.9f))/2, (height - round(height * 0.8f))/2);
         Dimension dim = new Dimension(rectMain.width-(pPlayfiled.x * 2), rectMain.height-(pPlayfiled.y * 2));
         this.rectPlayfield = new Rectangle(pPlayfiled, dim);
@@ -149,7 +151,6 @@ public class Table extends JPanel {
         int pocketRadius = round((rectMain.width * 0.06f) / 2);
         int offsetX = (rectMain.width/2) - rectPlayfield.x;
         float correctionMid = 0.2f;
-
         for (int i = 0; i < 3; i++) {
             int posY = (i != 1) ? (rectPlayfield.y) : (rectPlayfield.y - round(pocketRadius*correctionMid));
             arrayPockets.add(new Pocket(rectPlayfield.x + (offsetX*i), posY, pocketRadius, this));
@@ -168,21 +169,73 @@ public class Table extends JPanel {
         // * Borde
         g2D.setColor(new Color(184, 115, 51));
         g2D.fill(rectMain);
+        g2D.setColor(Color.black);
+        g2D.draw(rectMain);
         
-        int subBorder = round(((rectPlayfield.x * rectPlayfield.y) * 0.003f));
-        Point pSubBorder = new Point(rectPlayfield.x-subBorder, rectPlayfield.y-subBorder);
-        Dimension dimsSubBorder = new Dimension((rectMain.width - (rectPlayfield.x*2)) + subBorder*2, (rectMain.height - (rectPlayfield.y*2)) + subBorder*2);
-
+        int escaleSubBorder = round(((rectPlayfield.x * rectPlayfield.y) * 0.003f));
+        Point pSubBorder = new Point(rectPlayfield.x-escaleSubBorder, rectPlayfield.y-escaleSubBorder);
+        Dimension dimsSubBorder = new Dimension((rectMain.width - (rectPlayfield.x*2)) + escaleSubBorder*2, (rectMain.height - (rectPlayfield.y*2)) + escaleSubBorder*2);
         Rectangle rectSubBorder = new Rectangle(pSubBorder, dimsSubBorder);
         g2D.setColor(new Color(153, 102, 0));
         g2D.fill(rectSubBorder);
-        // g2D.fillRect(playfieldRect.width-subBorder, playfieldRect.height-subBorder, (mainRect.width - (playfieldRect.width*2)) + subBorder*2, (mainRect.height - (playfieldRect.height*2)) + subBorder*2);
+        g2D.setColor(Color.black);
+        g2D.draw(rectSubBorder);
 
         // * Mesa
         g2D.setColor(new Color(0, 200, 0));
         g2D.fill(rectPlayfield);
 
-        //TODO Dibujar diamantes de los bordes
+        // * Diamantes
+        Polygon diamond = new Polygon();
+        int diamX = rectPlayfield.x, diamY = rectSubBorder.y/2;
+        int diamWidth = rectPlayfield.y/8;
+        diamond.addPoint(diamX, diamY - diamWidth); //Norte
+        diamond.addPoint(diamX - diamWidth, diamY); //Oeste
+        diamond.addPoint(diamX, diamY + diamWidth); //Este
+        diamond.addPoint(diamX + diamWidth, diamY); //Sur
+
+        // Vertical
+        int deltaX1 = rectPlayfield.width/8;
+        int deltaY1 = rectSubBorder.height + rectSubBorder.y;
+        for (int i = 0; i < 8; i++) {
+            diamond.translate(deltaX1, 0);
+            if (i != 3 && i != 7) {
+                g2D.setColor(Color.yellow);
+                g2D.fill(diamond);
+                g2D.setColor(Color.black);
+                g2D.draw(diamond);
+            }
+            diamond.translate(0, deltaY1);
+            if (i != 3 && i != 7) {
+                g2D.setColor(Color.yellow);
+                g2D.fill(diamond);
+                g2D.setColor(Color.black);
+                g2D.draw(diamond);
+            }
+            deltaY1 *= -1;
+        }
+
+        // Horizontal
+        diamond.translate((rectPlayfield.x-rectSubBorder.x)+(rectSubBorder.x/2), (rectSubBorder.y/2)+(rectPlayfield.y-rectSubBorder.y));
+        int deltaY2 = rectPlayfield.height/4;
+        int deltaX2 = rectSubBorder.width + rectSubBorder.x;
+        for (int i = 0; i < 3; i++) {
+            diamond.translate(0, deltaY2);
+            if (i != 3) {
+                g2D.setColor(Color.yellow);
+                g2D.fill(diamond);
+                g2D.setColor(Color.black);
+                g2D.draw(diamond);
+            }
+            deltaX2 *= -1;
+            diamond.translate(deltaX2, 0);
+            if (i != 3) {
+                g2D.setColor(Color.yellow);
+                g2D.fill(diamond);
+                g2D.setColor(Color.black);
+                g2D.draw(diamond);
+            }
+        }
 
         // * Troneras
         for (Pocket pocket : arrayPockets) {
