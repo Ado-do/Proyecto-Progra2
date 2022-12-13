@@ -17,7 +17,6 @@ import geometricas.Circle;
 import geometricas.Vector2D;
 
 public class Ball extends Circle {
-    private final float FRICTION = 0.015f;
     private final int number;
     private final Color ballColor;
     private Vector2D vel;
@@ -35,7 +34,7 @@ public class Ball extends Circle {
             case 4: case 12: ballColor = new Color(255, 20, 147); break;
             case 5: case 13: ballColor = Color.orange; break;
             case 6: case 14: ballColor = Color.green; break;
-            case 7: case 15: ballColor = new Color(160, 0, 0); break;
+            case 7: case 15: ballColor = Color.red.darker(); break;
             case 8:          ballColor = Color.black; break;
             default:
                 Random r = new Random();
@@ -79,32 +78,33 @@ public class Ball extends Circle {
         } while (wrongLocation); // Repetir en caso de mala ubicación
     }
 
-    public void move() {
+    public void move(float friction) {
         // * MOVER BOLA SEGÚN VELOCIDAD
         x += vel.x;
         y += vel.y;
         this.syncBounds();
 
-        descel();
+        descel(friction);
     }
-    private void descel() {
+    private void descel(float friction) {
         // * APLICAR ROCE
         // La fuerza de la bola empieza a recibir el roce de la mesa
-        if (vel.getMagnitude() < FRICTION) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
+        if (vel.getMagnitude() < friction) { // Si la magnitud de la bola es menor al roce, significa que el roce venció el movimiento de la bola
             vel.escale(0);
         } else {                    // El roce esta afectando a la bola, pero aún no la detiene.
             Vector2D fricVec = new Vector2D(vel);
             fricVec.toUnitVector();
-            fricVec.escale(FRICTION);
+            fricVec.escale(friction);
             vel.subtractVector(fricVec);
         }
     }
 
-    public void collide(Ball b2) {
+    public void collide(Ball b2, float friction) {
+    // public void collide(Ball b2) {
         Ball b1 = this;
 
-        if (b1.vel.getMagnitude() < FRICTION) { // Bugfix
-            b1.vel.escale(0);
+        if (b1.vel.getMagnitude() < friction) {
+            b1.vel.escale(0); // Bugfix
         } else {
             // * Separar antes de calcular fuerzas resultantes
             separateBalls(b2);
@@ -149,36 +149,36 @@ public class Ball extends Circle {
     public void checkBounces(Rectangle rectMain, Rectangle rectPlayfield) {
         int width = rectMain.width;
         int height = rectMain.height;
-        int borderWidth = rectPlayfield.x;
-        int borderHeight = rectPlayfield.y;
+        int playX = rectPlayfield.x;
+        int playY = rectPlayfield.y;
 
         // * Bordes horizontales
         // Izquierda
-        if (((x - radius) < borderWidth) && (vel.x < 0)) {
-            x -= 2 * ((x - radius) - borderWidth);
+        if (((x - radius) < playX) && (vel.x < 0)) {
+            x -= 2 * ((x - radius) - playX);
             vel.x *= -1;
         } 
         // Derecha
-        else if (((x + radius) > (width - borderWidth)) && (vel.x > 0)) {
-            x -= 2 * ((x + radius) - (width - borderWidth));
+        else if (((x + radius) > (width - playX)) && (vel.x > 0)) {
+            x -= 2 * ((x + radius) - (width - playX));
             vel.x *= -1;
         }
 
         // * Bordes verticales
         // Arriba
-        if (((y - radius) < borderHeight) && (vel.y < 0)) {
-            y -= 2 * ((y - radius) - borderHeight);
+        if (((y - radius) < playY) && (vel.y < 0)) {
+            y -= 2 * ((y - radius) - playY);
             vel.y *= -1;
         // Abajo
-        } else if (((y + radius) > (height - borderHeight)) && (vel.y > 0)) {
-            y -= 2 * ((y + radius) - (height - borderHeight));
+        } else if (((y + radius) > (height - playY)) && (vel.y > 0)) {
+            y -= 2 * ((y + radius) - (height - playY));
             vel.y *= -1;
         }
         this.syncBounds();
     }
 
     public boolean intersecs(Circle otra) {
-        return (Angular.distEntre2Puntos(this.getLocation(), otra.getLocation()) < diameter);
+        return (Angular.distEntre2Puntos(this.getLocation(), otra.getLocation()) <= diameter);
     }
     public boolean isMoving() {
         return (vel.x != 0 || vel.y != 0);
@@ -228,6 +228,7 @@ public class Ball extends Circle {
             g2D.setFont(new Font("Arial", Font.BOLD, round(radius * 0.66f)));
             g2D.drawString(""+number, round(x - (g2D.getFontMetrics().stringWidth(""+number))/2), round(y + (g2D.getFontMetrics().getHeight())/3));
         }
+        
         this.drawCircle(g2D, Color.BLACK);
     }
     private void paintStripedBall(Graphics2D g2D) {

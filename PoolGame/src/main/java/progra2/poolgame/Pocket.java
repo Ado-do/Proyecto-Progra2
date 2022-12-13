@@ -1,6 +1,7 @@
 package progra2.poolgame;
 
 import java.util.ArrayList;
+
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Point;
@@ -32,5 +33,6 @@ public class Pocket extends Circle {
 
     public void paint(Graphics2D g2D) {
         this.fillCircle(g2D, Color.darkGray);
+        this.drawCircle(g2D, Color.black);
     }
 }

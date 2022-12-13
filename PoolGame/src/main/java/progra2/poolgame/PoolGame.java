@@ -31,7 +31,6 @@ public class PoolGame implements Runnable {
 
         startGameLoop();
     }
-
     public static PoolGame getGame() {
         if (game == null) {
             game = new PoolGame();
@@ -44,10 +43,11 @@ public class PoolGame implements Runnable {
         gameThread.start();
     }
 
+    
+
     private void render() {
         gamePanel.renderGame(fps);
     }
-
     private void update() {
         gamePanel.updateGame(ups);
     }

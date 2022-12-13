@@ -1,6 +1,7 @@
 package inputs;
 
 import javax.swing.event.MouseInputListener;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
@@ -9,6 +10,7 @@ import java.awt.Point;
 import progra2.poolgame.Table;
 import progra2.poolgame.Cue;
 import progra2.poolgame.Ball;
+
 import geometricas.Angular;
 import geometricas.Vector2D;
 
@@ -19,6 +21,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
 
     private Point pDirection;
     private Vector2D force;
+    private int hitArea = 80;
 
     public PoolInputHandler(Table table) {
         this.table = table;
@@ -27,6 +30,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
 
         this.force = new Vector2D();
         this.pDirection = new Point();
+        this.hitArea = Math.round(table.rectMain.width * 0.075f);
     }
 
     //* Eventos
@@ -40,10 +44,10 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     public void mouseDragged(MouseEvent e) {
         if (!table.hasMovement()) {
             float dist = (float) Angular.distEntre2Puntos(pDirection, e.getPoint());
-            int hitArea = 80;
 
             if (dist < hitArea) {
                 force.setVector(e.getX(), e.getY());
+                table.updateCue(pDirection, dist);
             }
         }
     }
@@ -58,7 +62,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             Point forceDirection = Angular.generaPunto(pDirection, dragVec.getMagnitude(), angle);
 
             Vector2D vel = new Vector2D((float)(forceDirection.getX() - pDirection.getX()), (float)(forceDirection.getY() - pDirection.getY()));
-            System.out.println("vel: "+vel.getMagnitude());
+            System.out.println("Vel: "+vel.getMagnitude());
 
             cue.hitBall(vel);
                     
@@ -67,7 +71,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     }
     @Override
     public void mouseMoved(MouseEvent e) {
-        table.updateMouseInfo(e);
+        table.updateCue(e.getPoint(), 0);
     }
     @Override
     public void mouseClicked(MouseEvent e) {}

@@ -1,5 +1,7 @@
 package progra2.poolgame;
 
+import java.util.ArrayList;
+
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
@@ -7,17 +9,16 @@ import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
 
 import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
 public class Cue {
-    private final float forceCorrection = (-1 * 0.12f); // Corregir e invertir dirección de fuerza del golpe a la bola
-    public final int LONG;
-    public final int DIAM;
-    public int distance; //TODO Cambiar según potencia de tiro (+ animación de pegar pelota)
+    private final float forceCorrection; // Corregir e invertir dirección de fuerza del golpe a la bola
+    private final int longitude;
+    private final int diameter;
+    private int baseDistance; //TODO Cambiar según potencia de tiro (+ animación de pegar pelota)
 
     private Table table;
     private ArrayList<Ball> arrayBalls;
@@ -33,9 +34,10 @@ public class Cue {
         this.arrayBalls = table.getArrayBalls();
         this.blanca = table.getBlanca();
         
-        this.LONG = Math.round(table.rectMain.width * 0.6f);
-        this.DIAM = Math.round(table.rectMain.height * 0.02f);
-        this.distance = blanca.getRadius();
+        this.longitude = Math.round(table.rectMain.width * 0.6f);
+        this.diameter = Math.round(table.rectMain.height * 0.02f);
+        this.baseDistance = blanca.getRadius();
+        this.forceCorrection = -(table.rectMain.width * 8e-5f); // 8e-5f == 0.00008f
         
         this.mainAngle = 0;
         this.cueLine = new Line2D.Float();
@@ -47,18 +49,18 @@ public class Cue {
         blanca.setVel(hitVel);
     }
     
-    public void updateMousePos(Point posMouse) {
+    public void update(Point posMouse, float hitForce) {
         // Generar angulo entre taco y blanca
         mainAngle = Angular.anguloPI(blanca.getLocation(), posMouse.getLocation());
 
-        setCueLine();
+        setCueLine(hitForce);
         setPathLine();
     }
-    private void setCueLine() {
+    private void setCueLine(float hitForce) {
         // * Linea de taco
         // Punto cercano a blanca, respecto al angulo que se formo desde el mouse y el centro de la bola blanca
-        Point cueP1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + distance, mainAngle);
-        Point cueP2 = Angular.generaPunto(cueP1, LONG, mainAngle);
+        Point cueP1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + baseDistance + hitForce, mainAngle);
+        Point cueP2 = Angular.generaPunto(cueP1, longitude, mainAngle);
         cueLine.setLine(cueP1, cueP2);
     }
     private void setPathLine() {
@@ -111,7 +113,7 @@ public class Cue {
         // * Dibujar taco
         Point cueLineP1 = new Point(Math.round(cueLine.x1), Math.round(cueLine.y1));
         Point cueLineP2 = new Point(Math.round(cueLine.x2), Math.round(cueLine.y2));
-        Stroke stroke = new BasicStroke(DIAM);
+        Stroke stroke = new BasicStroke(diameter);
         Stroke defaultStroke = g2D.getStroke();
         
         g2D.setStroke(stroke);
@@ -120,12 +122,12 @@ public class Cue {
         g2D.setColor(new Color(200, 157, 124));
         g2D.draw(cueLine);
         // Punta
-        Point cueTipP2 = Angular.generaPunto(cueLineP1, LONG * 0.015f, mainAngle);
+        Point cueTipP2 = Angular.generaPunto(cueLineP1, longitude * 0.015f, mainAngle);
         Line2D cueTip = new Line2D.Float(cueLineP1, cueTipP2);
         g2D.setColor(Color.blue);
         g2D.draw(cueTip);
         // Final
-        Point cueEndP1 = Angular.generaPunto(cueLineP2, LONG * 0.025f, mainAngle + 1f);
+        Point cueEndP1 = Angular.generaPunto(cueLineP2, longitude * 0.025f, mainAngle + 1f);
         Line2D cueEnd = new Line2D.Float(cueLineP2, cueEndP1);
         g2D.setColor(Color.black);
         g2D.draw(cueEnd);

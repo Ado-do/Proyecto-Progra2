@@ -2,7 +2,13 @@ package progra2.poolgame;
 
 import javax.swing.JPanel;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Toolkit;
 
 import inputs.*;
 
@@ -17,7 +23,7 @@ public class GamePanel extends JPanel {
         // * Inicializar
         super(true);
 
-        int tableWidth = 1400;
+        int tableWidth = 1600;
         int tableHeight = tableWidth/2;
         table = new Table(tableWidth, tableHeight);
         gui = new SubGUI();
@@ -39,8 +45,6 @@ public class GamePanel extends JPanel {
         
         this.add(gui, BorderLayout.SOUTH);
         this.add(table, BorderLayout.CENTER);
-        
-        // System.out.println("Tamaño GamePanel: "+this.getWidth()+"x"+this.getHeight()); //? TEST
     }
 
     public void renderGame(Integer fps) {
@@ -60,6 +64,8 @@ public class GamePanel extends JPanel {
         //! Configurar Render (Graphics2D tiene métodos de dibujado mas útiles y complejos)
         Graphics2D g2D = (Graphics2D) g;
 
+        // long drawStart = System.currentTimeMillis();
+
         // Para hacer los bordes de los dibujos mas suaves
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHints(rh);
@@ -74,6 +80,9 @@ public class GamePanel extends JPanel {
         g2D.drawString(contFPS, 5, g2D.getFontMetrics().getHeight());
         String contUPS = "UPS: " + ups.toString();
         g2D.drawString(contUPS, this.getWidth() - g2D.getFontMetrics().stringWidth(contUPS) - 5, g2D.getFontMetrics().getHeight());
+
+        // long passed = System.currentTimeMillis() - drawStart;
+        // System.out.println("Tiempo de render: "+passed);
 
         Toolkit.getDefaultToolkit().sync(); // * Para solucionar problemas de fluidez
     }

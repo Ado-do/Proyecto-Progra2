@@ -1,8 +1,8 @@
 package progra2.poolgame;
 
 import static java.lang.Math.round;
-
 import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 import java.awt.Dimension;
@@ -13,19 +13,25 @@ import java.awt.event.MouseEvent;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Polygon;
+import java.awt.GradientPaint;
+
+import geometricas.Circle;
 
 public class Table extends JPanel {
     public final Rectangle rectMain;
     public final Rectangle rectPlayfield;
-    
+    private final float friction;
+
+    private BallsFactory factory;
     private ArrayList<Ball> arrayBalls;
     private Ball blanca;
     private ArrayList<Pocket> arrayPockets;
     private Cue taco;
 
     private Point mousePosition;
+    private float hitForce;
+
     private boolean blancaPocketed;
-    private BallsFactory factory;
     
     public Table(int width, int height) {
         super(true);
@@ -33,30 +39,34 @@ public class Table extends JPanel {
         // * PROPIEDADES
         this.rectMain = new Rectangle(width, height);
 
-        Point pPlayfiled = new Point((width - round(width * 0.9f))/2, (height - round(height * 0.8f))/2);
-        Dimension dim = new Dimension(rectMain.width-(pPlayfiled.x * 2), rectMain.height-(pPlayfiled.y * 2));
-        this.rectPlayfield = new Rectangle(pPlayfiled, dim);
+        Point        pPlay = new Point(round((width - (width * 0.9f))/2), round((height - (height * 0.8f))/2));
+        Dimension  dimPlay = new Dimension(rectMain.width-(pPlay.x * 2), rectMain.height-(pPlay.y * 2));
+        this.rectPlayfield = new Rectangle(pPlay, dimPlay);
+        this.friction = (rectMain.width * 1e-5f); // 1e-5f == 0.00001f
 
         // * INICIALIZAR
         initClasses();
 
         // * CONFIGURAR JPANEL
+        Dimension min = new Dimension(1000, 500);
+        this.setMinimumSize(min);
         this.setPreferredSize(new Dimension(rectMain.width, rectMain.height));
     }
 
-    public void updateMouseInfo(MouseEvent e) {
-        mousePosition = e.getPoint();
+    public void updateCue(Point mousePos, float hitForce) {
+        this.mousePosition = mousePos;
+        this.hitForce = hitForce;
     }
 
     public void updateGame() {
-        taco.updateMousePos(mousePosition);
+        taco.update(mousePosition, hitForce);
 
         // * Si alguna bola esta en movimiento, entonces...
         if (hasMovement()) {
             // * Mover y revisar colisiones
             for (int i = 0; i < arrayBalls.size(); i++) {
                 Ball currentBall = arrayBalls.get(i);
-                currentBall.move();
+                currentBall.move(friction);
 
                 // Revisar si entro en tronera
                 for (Pocket pocket : arrayPockets) {
@@ -74,7 +84,8 @@ public class Table extends JPanel {
                     if (i == j) continue;
                     Ball nextBall = arrayBalls.get(j);
                     if (currentBall.intersecs(nextBall)) {
-                        currentBall.collide(nextBall);
+                        currentBall.collide(nextBall, friction);
+                        // currentBall.collide(nextBall);
                     }
                 }
             }
@@ -91,8 +102,13 @@ public class Table extends JPanel {
 
         this.paintTable(g2D); // * Mesa
         
-        for (Ball bola : arrayBalls) bola.paint(g2D); // * Bolas
-        
+        // * Bolas
+        for (Ball ball : arrayBalls) {
+            Circle shadow = new Circle(round(ball.x+3.5f), round(ball.y+3.5f), ball.getRadius());
+            shadow.fillCircle(g2D, Color.gray.darker());
+        }
+        for (Ball ball : arrayBalls) ball.paint(g2D);
+
         if (!this.hasMovement()) {
             taco.paint(g2D); // * Taco
         }
@@ -100,7 +116,10 @@ public class Table extends JPanel {
 
     public boolean hasMovement() {
         for (Ball ball : arrayBalls) {
-            if (ball.isMoving()) return true;
+            if (ball.isMoving()) {
+                System.out.println("Number "+ball.getNumber()+" is moving at "+ball.getVel().getMagnitude());
+                return true;
+            }
         }
         return false;
     }
@@ -157,18 +176,33 @@ public class Table extends JPanel {
         g2D.setColor(Color.black);
         g2D.draw(rectMain);
         
-        int escaleSubBorder = round(((rectPlayfield.x * rectPlayfield.y) * 0.003f));
-        Point pSubBorder = new Point(rectPlayfield.x-escaleSubBorder, rectPlayfield.y-escaleSubBorder);
+        int     escaleSubBorder = round(((rectPlayfield.x * rectPlayfield.y) * 0.004f));
+        Point        pSubBorder = new Point(rectPlayfield.x-escaleSubBorder, rectPlayfield.y-escaleSubBorder);
         Dimension dimsSubBorder = new Dimension((rectMain.width - (rectPlayfield.x*2)) + escaleSubBorder*2, (rectMain.height - (rectPlayfield.y*2)) + escaleSubBorder*2);
         Rectangle rectSubBorder = new Rectangle(pSubBorder, dimsSubBorder);
-        g2D.setColor(new Color(153, 102, 0));
+        // g2D.setColor(new Color(153, 102, 0));
+        g2D.setColor(Color.green.darker().darker());
         g2D.fill(rectSubBorder);
         g2D.setColor(Color.black);
         g2D.draw(rectSubBorder);
 
-        // * Mesa
-        g2D.setColor(new Color(0, 200, 0));
-        g2D.fill(rectPlayfield);
+        // * Area de juego
+        Dimension quartDim = new Dimension(rectPlayfield.width/2, rectPlayfield.height/2);
+        Point center = new Point(rectPlayfield.x + rectPlayfield.width/2, rectPlayfield.y + rectPlayfield.height/2);
+
+        g2D.setPaint(new GradientPaint(new Point(center.x - quartDim.width, center.y - quartDim.height), Color.green.darker(), center, Color.green));
+        g2D.fill(        new Rectangle(new Point(center.x - quartDim.width, center.y - quartDim.height), quartDim));
+
+        g2D.setPaint(new GradientPaint(new Point(center.x + quartDim.width, center.y - quartDim.height), Color.green.darker(), center, Color.green));
+        g2D.fill(        new Rectangle(new Point(center.x                 , center.y - quartDim.height), quartDim));
+
+        g2D.setPaint(new GradientPaint(new Point(center.x - quartDim.width, center.y + quartDim.height), Color.green.darker(), center, Color.green));
+        g2D.fill(        new Rectangle(new Point(center.x - quartDim.width, center.y                  ), quartDim));
+
+        g2D.setPaint(new GradientPaint(new Point(center.x + quartDim.width, center.y + quartDim.height), Color.green.darker(), center, Color.green));
+        g2D.fill(        new Rectangle(new Point(center.x                 , center.y                  ), quartDim));
+        // g2D.setColor(Color.green);
+        // g2D.fill(rectPlayfield);
 
         // * Diamantes
         Polygon diamond = new Polygon();
