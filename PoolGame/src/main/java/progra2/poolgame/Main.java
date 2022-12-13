@@ -20,6 +20,6 @@ package progra2.poolgame;
 
 public class Main {
     public static void main(String[] args) {
-        new PoolGame();
+        PoolGame.getGame();
     }
 }

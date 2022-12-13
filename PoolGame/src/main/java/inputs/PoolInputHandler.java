@@ -40,7 +40,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     public void mouseDragged(MouseEvent e) {
         if (!table.hasMovement()) {
             float dist = (float) Angular.distEntre2Puntos(pDirection, e.getPoint());
-            int hitArea = 100;
+            int hitArea = 80;
 
             if (dist < hitArea) {
                 force.setVector(e.getX(), e.getY());
@@ -53,11 +53,6 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             if (force.getMagnitude() == 0) {
                 force.setVector((float)pDirection.getX(), (float)pDirection.getY()); // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
             }
-            // System.out.println("release: "+force.getMagnitude());
-            // System.out.println("hold: "+(new Vector2D(pDirection)).getMagnitude());
-            // System.out.println("("+release.x+" - "+hold.x+", "+release.y+" - "+hold.y+")");
-            // System.out.println("("+(release.x - hold.x)+", "+(release.y - hold.y)+")");
-
             Vector2D dragVec = new Vector2D(force.x - pDirection.x, force.y - pDirection.y);
             float angle = Angular.anguloPI(blanca.getLocation(), pDirection);
             Point forceDirection = Angular.generaPunto(pDirection, dragVec.getMagnitude(), angle);
@@ -72,7 +67,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     }
     @Override
     public void mouseMoved(MouseEvent e) {
-        table.sendMouseInfo(e);
+        table.updateMouseInfo(e);
     }
     @Override
     public void mouseClicked(MouseEvent e) {}

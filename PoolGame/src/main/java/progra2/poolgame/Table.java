@@ -20,12 +20,12 @@ public class Table extends JPanel {
     
     private ArrayList<Ball> arrayBalls;
     private Ball blanca;
-    private int contBalls = 0;
     private ArrayList<Pocket> arrayPockets;
     private Cue taco;
 
     private Point mousePosition;
     private boolean blancaPocketed;
+    private BallsFactory factory;
     
     public Table(int width, int height) {
         super(true);
@@ -44,12 +44,12 @@ public class Table extends JPanel {
         this.setPreferredSize(new Dimension(rectMain.width, rectMain.height));
     }
 
-    public void sendMouseInfo(MouseEvent e) {
+    public void updateMouseInfo(MouseEvent e) {
         mousePosition = e.getPoint();
     }
 
     public void updateGame() {
-        taco.sendMousePos(mousePosition);
+        taco.updateMousePos(mousePosition);
 
         // * Si alguna bola esta en movimiento, entonces...
         if (hasMovement()) {
@@ -67,7 +67,7 @@ public class Table extends JPanel {
                 }
 
                 // Revisar rebotes con paredes
-                currentBall.checkBounces(this);
+                currentBall.checkBounces(rectMain, rectPlayfield);
                 
                 // Revisar colisiones
                 for (int j = 0; j < arrayBalls.size(); j++) {
@@ -81,7 +81,6 @@ public class Table extends JPanel {
         } else if (blancaPocketed) {
             Ball.setRandomLocation(blanca, this);
             arrayBalls.add(0, blanca);
-            taco.sendMousePos(mousePosition);
             blancaPocketed = false;
         }
 	}
@@ -122,30 +121,6 @@ public class Table extends JPanel {
 
     //! Subfunciones
     private void initClasses() {
-        // * Inicializar bolas
-        // Radio de bolas
-        int ballRadius = round((rectMain.width * 0.025f) / 2);
-        System.out.println("RADIO BOLAS: " + ballRadius);
-
-        arrayBalls = new ArrayList<Ball>();
-        blanca = new Ball(rectMain.width/4, rectMain.height/2, Color.white, ballRadius, contBalls++);
-        
-        //TODO Implementar las 16 bolas de pool
-        arrayBalls.add(blanca);
-        
-        arrayBalls.add(new Ball(rectMain.width * 3/4, rectMain.height/2, Color.yellow, ballRadius, contBalls++));
-        
-        arrayBalls.add(new Ball((rectMain.width * 3/4) + (ballRadius*2) - 2, (rectMain.height/2) - (ballRadius + 2), Color.black, ballRadius, contBalls++)); 
-        arrayBalls.add(new Ball((rectMain.width * 3/4) + (ballRadius*2) - 2, (rectMain.height/2) + (ballRadius + 2), Color.gray, ballRadius, contBalls++));
-        
-        arrayBalls.add(new Ball(((rectMain.width * 3/4) + (ballRadius*4) - 4), (rectMain.height/2) - ((ballRadius*2) + 2), Color.red, ballRadius, contBalls++));
-        arrayBalls.add(new Ball(((rectMain.width * 3/4) + (ballRadius*4) - 4), rectMain.height/2, Color.orange, ballRadius, contBalls++));
-        arrayBalls.add(new Ball(((rectMain.width * 3/4) + (ballRadius*4) - 4), (rectMain.height/2) + ((ballRadius*2) + 2), Color.blue, ballRadius, contBalls++));
-        //TODO Usar "fors" para crear automáticamente triangulo al iniciar según num de bolas (crear clase de para crear colores de bolas de pool random¿)
-        
-        // * Taco
-        taco = new Cue(this, arrayBalls, blanca);
-
         // * Troneras
         arrayPockets = new ArrayList<Pocket>();
         int pocketRadius = round((rectMain.width * 0.06f) / 2);
@@ -153,14 +128,24 @@ public class Table extends JPanel {
         float correctionMid = 0.2f;
         for (int i = 0; i < 3; i++) {
             int posY = (i != 1) ? (rectPlayfield.y) : (rectPlayfield.y - round(pocketRadius*correctionMid));
-            arrayPockets.add(new Pocket(rectPlayfield.x + (offsetX*i), posY, pocketRadius, this));
+            arrayPockets.add(new Pocket(rectPlayfield.x + (offsetX*i), posY, pocketRadius));
         }
         for (int i = 0; i < 3; i++) {
             int posY = (i != 1) ? (rectMain.height - rectPlayfield.y) : ((rectMain.height - rectPlayfield.y) + round(pocketRadius*correctionMid));
-            arrayPockets.add(new Pocket(rectPlayfield.x + (offsetX*i), posY, pocketRadius, this));
+            arrayPockets.add(new Pocket(rectPlayfield.x + (offsetX*i), posY, pocketRadius));
         }
 
-        // * Posicion inicial de taco
+        // * Bolas
+        arrayBalls = new ArrayList<Ball>();
+
+        factory = new BallsFactory(this);
+        factory.getRackedBalls(arrayBalls);
+        // factory.getRandomBalls(arrayBalls, 30);
+        blanca = arrayBalls.get(0);
+
+        // * Taco
+        taco = new Cue(this);
+
         Point defaultPosition = blanca.getLocation();
         defaultPosition.x -= blanca.getRadius();
         mousePosition = new Point(defaultPosition);

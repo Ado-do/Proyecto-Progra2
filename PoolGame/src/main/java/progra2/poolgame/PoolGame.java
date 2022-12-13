@@ -2,7 +2,11 @@ package progra2.poolgame;
 
 import java.awt.GraphicsEnvironment;
 
+//! Patron de diseño "Singleton"
+
 public class PoolGame implements Runnable {
+    private static PoolGame game;
+
     private final int FPS_SET;
     private final int UPS_SET = 120;
 
@@ -13,7 +17,7 @@ public class PoolGame implements Runnable {
     private GamePanel   gamePanel;
     private Thread      gameThread;
 
-    public PoolGame() {
+    private PoolGame() {
         gameWindow = new GameWindow();
         gamePanel = gameWindow.getPanel();
         gamePanel.requestFocusInWindow();
@@ -28,13 +32,20 @@ public class PoolGame implements Runnable {
         startGameLoop();
     }
 
+    public static PoolGame getGame() {
+        if (game == null) {
+            game = new PoolGame();
+        }
+        return game;
+    }
+
     private void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
     private void render() {
-        gamePanel.render(fps);
+        gamePanel.renderGame(fps);
     }
 
     private void update() {

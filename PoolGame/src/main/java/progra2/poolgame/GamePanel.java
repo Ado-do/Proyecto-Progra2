@@ -43,7 +43,7 @@ public class GamePanel extends JPanel {
         // System.out.println("Tamaño GamePanel: "+this.getWidth()+"x"+this.getHeight()); //? TEST
     }
 
-    public void render(Integer fps) {
+    public void renderGame(Integer fps) {
         this.fps = fps;
 
         this.repaint();

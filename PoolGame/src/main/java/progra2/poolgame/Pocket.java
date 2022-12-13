@@ -9,14 +9,12 @@ import geometricas.Angular;
 import geometricas.Circle;
 
 public class Pocket extends Circle {
-    private Table table;
 
-    public Pocket(int x, int y, int radius, Table table) {
+    public Pocket(int x, int y, int radius) {
         super(x, y, radius);
-        this.table = table;
     }
     public void receive(ArrayList<Ball> array, Ball ball) {
-        if (ball.getColor() == Color.WHITE) {
+        if (ball.getNumber() == 0) {
             //TODO Descontar puntos y devolver bola a mesa
             ball.getVel().escale(0);
             array.remove(ball);
@@ -33,6 +31,6 @@ public class Pocket extends Circle {
     }
 
     public void paint(Graphics2D g2D) {
-        this.fillCircle(g2D, new Color(50, 50, 50));
+        this.fillCircle(g2D, Color.darkGray);
     }
 }
