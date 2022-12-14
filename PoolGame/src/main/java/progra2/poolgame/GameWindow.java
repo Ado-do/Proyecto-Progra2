@@ -6,19 +6,22 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
+import progra2.poolgame.PoolGame.Modes;
+import progra2.poolgame.PoolGame.Players;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 
 public class GameWindow extends JFrame {
     private GamePanel gamePanel;
 
-    public GameWindow() {
+    public GameWindow(Players players, Modes mode, int ballsNum) {
         super("PoolGame");
-        this.gamePanel = new GamePanel();
+        this.gamePanel = new GamePanel(players, mode, ballsNum);
 
         // * ICONO
         try { this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
-        } catch (Exception e) { System.out.println("Exception: Error al cargar icono de la ventana"); };
+        } catch (Exception e) { System.out.println("Exception: Error al cargar icono de la ventana"); }
 
         // * CONFIGURAR JFRAME (VENTANA)
         this.setResizable(false);
@@ -39,7 +42,6 @@ public class GameWindow extends JFrame {
         // * AGREGAR JPANEL PRINCIPAL DEL JUEGO
         this.add(gamePanel);
         this.pack();
-        System.out.println("Tamaño GameWindow: "+this.getWidth()+"x"+this.getHeight());
         
         // * DESPUÉS DE CONFIGURAR, HACER VISIBLE LA VENTANA
         this.setLocationRelativeTo(null);

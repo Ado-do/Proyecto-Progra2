@@ -15,13 +15,13 @@ import geometricas.Angular;
 import geometricas.Vector2D;
 
 public class PoolInputHandler implements MouseInputListener, KeyListener {
+    private final int hitArea;
     private Table table;
     private Cue cue;
     private Ball blanca;
 
     private Point pDirection;
     private Vector2D force;
-    private int hitArea = 80;
 
     public PoolInputHandler(Table table) {
         this.table = table;
@@ -30,7 +30,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
 
         this.force = new Vector2D();
         this.pDirection = new Point();
-        this.hitArea = Math.round(table.rectMain.width * 0.075f);
+        this.hitArea = Math.round(table.main.width * 0.075f);
     }
 
     //* Eventos
@@ -75,10 +75,8 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     }
     @Override
     public void mouseClicked(MouseEvent e) {}
-
     @Override
     public void mouseEntered(MouseEvent e) {}
-
     @Override
     public void mouseExited(MouseEvent e) {}
 
@@ -86,10 +84,13 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     public void keyTyped(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
+
                 break;
             case KeyEvent.VK_D:
+
                 break;
             case KeyEvent.VK_SPACE:
+
                 break;
             default: break;
         }

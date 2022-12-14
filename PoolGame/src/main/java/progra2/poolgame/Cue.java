@@ -16,28 +16,27 @@ import geometricas.Vector2D;
 
 public class Cue {
     private final float forceCorrection; // Corregir e invertir dirección de fuerza del golpe a la bola
-    private final int longitude;
-    private final int diameter;
-    private int baseDistance; //TODO Cambiar según potencia de tiro (+ animación de pegar pelota)
+    private final int longitude, diameter;
+    private final int baseDistance;
 
     private Table table;
     private ArrayList<Ball> arrayBalls;
     private Ball blanca;
 
     private float mainAngle;
-    private Line2D.Float cueLine;
-    private Line2D.Float pathLine;
+    private Line2D.Float cueLine, pathLine;
     private Circle ballPreview;
     
     public Cue(Table table) {
         this.table = table;
+
         this.arrayBalls = table.getArrayBalls();
         this.blanca = table.getBlanca();
         
-        this.longitude = Math.round(table.rectMain.width * 0.6f);
-        this.diameter = Math.round(table.rectMain.height * 0.02f);
+        this.longitude = Math.round(table.main.width * 0.6f);
+        this.diameter = Math.round(table.main.height * 0.02f);
         this.baseDistance = blanca.getRadius();
-        this.forceCorrection = -(table.rectMain.width * 8e-5f); // 8e-5f == 0.00008f
+        this.forceCorrection = -(table.main.width * 8e-5f); // 8e-5f == 0.00008f
         
         this.mainAngle = 0;
         this.cueLine = new Line2D.Float();
@@ -88,7 +87,7 @@ public class Cue {
                 }
             }
             // Verificar si intersecta con paredes de area de juego
-            if (!table.rectPlayfield.contains(intersecTest.getBounds())) {
+            if (!table.playfield.contains(intersecTest.getBounds())) {
                 pathP2 = Angular.generaPunto(pathP1, dist-2, oppositeAngle);
                 intersecTest.setLocation(pathP2);
 

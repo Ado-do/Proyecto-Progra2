@@ -46,8 +46,8 @@ public class Ball extends Circle {
     public static void setRandomLocation(Ball b1, Table table) {
         ArrayList<Ball> arrayBalls = table.getArrayBalls();
         ArrayList<Pocket> arrayPockets = table.getArrayPockets();
-        int borderWidth = table.rectPlayfield.x,  width = table.rectMain.width;
-        int borderHeight = table.rectPlayfield.y, height = table.rectMain.height;
+        int borderWidth = table.playfield.x,  width = table.main.width;
+        int borderHeight = table.playfield.y, height = table.main.height;
         
         int Xmax = width-borderWidth-b1.getRadius(),   Xmin = borderWidth + b1.getRadius();
         int Ymax = height-borderHeight-b1.getRadius(), Ymin = borderHeight + b1.getRadius();

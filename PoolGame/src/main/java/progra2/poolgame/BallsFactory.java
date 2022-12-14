@@ -11,7 +11,7 @@ public class BallsFactory {
 
     public BallsFactory(Table table) {
         this.table = table;
-        radius = Math.round((table.rectMain.width * 0.025f) / 2);
+        radius = Math.round((table.main.width * 0.025f) / 2);
         diam = radius*2;
     }
 
@@ -19,8 +19,8 @@ public class BallsFactory {
     public void getRackedBalls(ArrayList<Ball> arrayBalls) {
         arrayBalls.clear();
 
-        Rectangle main = table.rectMain;
-        Rectangle play = table.rectPlayfield;
+        Rectangle main = table.main;
+        Rectangle play = table.playfield;
         
         int b0X = play.x + play.width/4;
         int b0Y = main.height/2;
@@ -54,7 +54,7 @@ public class BallsFactory {
         for (int i = 0; i < n; i++) {
             Ball b;
             if (i == 0) {
-                b = new Ball(table.rectMain.width/2, table.rectMain.height/2, radius, i);
+                b = new Ball(table.main.width/2, table.main.height/2, radius, i);
             } else {
                 b = new Ball(0, 0, radius, i);
                 Ball.setRandomLocation(b, table);

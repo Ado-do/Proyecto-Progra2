@@ -7,21 +7,24 @@ import java.awt.GraphicsEnvironment;
 public class PoolGame implements Runnable {
     private static PoolGame game;
 
+    public enum Players { ONE, TWO };
+    public enum Modes { STANDARD, RANDOM };
+
+    public Players players;
+    public Modes mode;
+
     private final int FPS_SET;
     private final int UPS_SET = 120;
 
     private Integer fps;
     private Integer ups;
 
+    private MenuWindow  menuWindow;
     private GameWindow  gameWindow;
     private GamePanel   gamePanel;
     private Thread      gameThread;
 
     private PoolGame() {
-        gameWindow = new GameWindow();
-        gamePanel = gameWindow.getPanel();
-        gamePanel.requestFocusInWindow();
-
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         int hz = ge.getDefaultScreenDevice().getDisplayMode().getRefreshRate();
         FPS_SET = (hz > 120) ? 120 : hz;
@@ -29,21 +32,32 @@ public class PoolGame implements Runnable {
         fps = FPS_SET;
         ups = UPS_SET;
 
-        startGameLoop();
+        menuWindow = new MenuWindow();
     }
-    public static PoolGame getGame() {
+
+    public static PoolGame getInstance() {
         if (game == null) {
             game = new PoolGame();
         }
         return game;
     }
 
+    public void startGame(Players players, Modes mode, int ballsNum) {
+        this.players = players;
+        this.mode = mode;
+
+        gameWindow = new GameWindow(players, mode, ballsNum);
+        gamePanel = gameWindow.getPanel();
+        gamePanel.requestFocusInWindow();
+
+        startGameLoop();
+    }
+
     private void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
+        System.out.println("Game loop iniciado");
     }
-
-    
 
     private void render() {
         gamePanel.renderGame(fps);
