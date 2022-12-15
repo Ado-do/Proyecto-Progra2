@@ -21,7 +21,7 @@ public class Cue {
 
     private Table table;
     private ArrayList<Ball> arrayBalls;
-    private Ball blanca;
+    private Ball cueBall;
 
     private float mainAngle;
     private Line2D.Float cueLine, pathLine;
@@ -31,34 +31,33 @@ public class Cue {
         this.table = table;
 
         this.arrayBalls = table.getArrayBalls();
-        this.blanca = table.getBlanca();
+        this.cueBall = table.getCueBall();
         
         this.longitude = Math.round(table.main.width * 0.6f);
         this.diameter = Math.round(table.main.height * 0.02f);
-        this.baseDistance = blanca.getRadius();
+        this.baseDistance = cueBall.getRadius();
         this.forceCorrection = -(table.main.width * 8e-5f); // 8e-5f == 0.00008f
         
-        this.mainAngle = 0;
+        this.mainAngle = 1f;
         this.cueLine = new Line2D.Float();
         this.pathLine = new Line2D.Float();
     }
 
     public void hitBall(Vector2D hitVel) {
         hitVel.escale(forceCorrection);
-        blanca.setVel(hitVel);
+        cueBall.setVel(hitVel);
     }
     
-    public void update(Point posMouse, float hitForce) {
-        // Generar angulo entre taco y blanca
-        mainAngle = Angular.anguloPI(blanca.getLocation(), posMouse.getLocation());
+    public void update(float cueAngle, float cueDistance) {
+        mainAngle = cueAngle;
 
-        setCueLine(hitForce);
+        setCueLine(cueDistance);
         setPathLine();
     }
     private void setCueLine(float hitForce) {
         // * Linea de taco
         // Punto cercano a blanca, respecto al angulo que se formo desde el mouse y el centro de la bola blanca
-        Point cueP1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + baseDistance + hitForce, mainAngle);
+        Point cueP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + baseDistance + hitForce, mainAngle);
         Point cueP2 = Angular.generaPunto(cueP1, longitude, mainAngle);
         cueLine.setLine(cueP1, cueP2);
     }
@@ -66,19 +65,19 @@ public class Cue {
         // * Linea de trayectoria
         float oppositeAngle = mainAngle + 1f;
 
-        Point pathP1 = Angular.generaPunto(blanca.getLocation(), blanca.getRadius() + 5, oppositeAngle);
+        Point pathP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + 5, oppositeAngle);
 
         Point pathP2;
         boolean collition = false;
         int dist = 0;
         do {
             pathP2 = Angular.generaPunto(pathP1, ++dist, oppositeAngle);
-            Circle intersecTest = new Circle(pathP2.x, pathP2.y, blanca.getRadius());
+            Circle intersecTest = new Circle(pathP2.x, pathP2.y, cueBall.getRadius());
 
             // Verificar si intersecta con una bola
             for (int i = 0; i < arrayBalls.size(); i++) {
                 Ball ball = arrayBalls.get(i);
-                if (ball == blanca) continue;
+                if (ball == cueBall) continue;
 
                 if (ball.intersecs(intersecTest)) {
                     ballPreview = intersecTest;
@@ -97,13 +96,11 @@ public class Cue {
         } while (!collition);
 
         pathLine.setLine(pathP1, pathP2);
-        /////TODO Cambiar el 600 por la distancia con el objeto con el que habrá colisión
-        //TODO NI UNA WEA PQ SOY UN PUTO GENIOOOOOOOOOOOOOO (toy feli pq me salio)
     }
 
     public void paint(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
-        if (blanca != null) {
+        if (cueBall != null) {
             paintCue(g2D);
             paintPath(g2D);
         }
@@ -123,7 +120,7 @@ public class Cue {
         // Punta
         Point cueTipP2 = Angular.generaPunto(cueLineP1, longitude * 0.015f, mainAngle);
         Line2D cueTip = new Line2D.Float(cueLineP1, cueTipP2);
-        g2D.setColor(Color.blue);
+        g2D.setColor(new Color(0, 150, 200));
         g2D.draw(cueTip);
         // Final
         Point cueEndP1 = Angular.generaPunto(cueLineP2, longitude * 0.025f, mainAngle + 1f);

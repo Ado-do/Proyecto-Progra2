@@ -16,11 +16,9 @@ public class Pocket extends Circle {
     }
     public void receive(ArrayList<Ball> array, Ball ball) {
         if (ball.getNumber() == 0) {
-            //TODO Descontar puntos y devolver bola a mesa
             ball.getVel().escale(0);
             array.remove(ball);
         } else {
-            //TODO Contar puntos
             array.remove(ball);
         }
     }

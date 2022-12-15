@@ -6,18 +6,16 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
-import progra2.poolgame.PoolGame.Modes;
-import progra2.poolgame.PoolGame.Players;
-
+import progra2.poolgame.PoolGame.GameModes;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 
 public class GameWindow extends JFrame {
     private GamePanel gamePanel;
 
-    public GameWindow(Players players, Modes mode, int ballsNum) {
+    public GameWindow(GameModes gameMode, int ballsNum) {
         super("PoolGame");
-        this.gamePanel = new GamePanel(players, mode, ballsNum);
+        this.gamePanel = new GamePanel(gameMode, ballsNum);
 
         // * ICONO
         try { this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());

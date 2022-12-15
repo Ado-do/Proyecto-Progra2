@@ -7,71 +7,76 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.Point;
 
+import progra2.poolgame.GamePanel;
 import progra2.poolgame.Table;
-import progra2.poolgame.Cue;
-import progra2.poolgame.Ball;
 
 import geometricas.Angular;
 import geometricas.Vector2D;
 
 public class PoolInputHandler implements MouseInputListener, KeyListener {
-    private final int hitArea;
+    private GamePanel gamePanel;
     private Table table;
-    private Cue cue;
-    private Ball blanca;
+    
+    private final int maxHitForce;
+    private final float angleDelta = 0.0015f;
+    private Point pDirection, pForce;
+    private float cueAngle;
 
-    private Point pDirection;
-    private Vector2D force;
+    public PoolInputHandler(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
+        this.table = gamePanel.getTable();
+        
+        this.maxHitForce = Math.round(table.main.width * 0.075f);
 
-    public PoolInputHandler(Table table) {
-        this.table = table;
-        this.cue = table.getCue();
-        this.blanca = table.getBlanca();
-
-        this.force = new Vector2D();
         this.pDirection = new Point();
-        this.hitArea = Math.round(table.main.width * 0.075f);
+        this.pForce = new Point();
+
+        this.cueAngle = 1f;
     }
 
     //* Eventos
     @Override
     public void mousePressed(MouseEvent e) {
-        if (!table.hasMovement()) {
+        if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
             pDirection = e.getPoint();
         }
     }
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!table.hasMovement()) {
+        if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
             float dist = (float) Angular.distEntre2Puntos(pDirection, e.getPoint());
 
-            if (dist < hitArea) {
-                force.setVector(e.getX(), e.getY());
-                table.updateCue(pDirection, dist);
+            if (dist < maxHitForce) {
+                pForce.setLocation(e.getPoint());
+                cueAngle = Angular.anguloPI(table.getCueBall().getLocation(), pDirection);
+
+                table.updateCue(cueAngle, dist);
             }
         }
     }
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!table.hasMovement()) {
-            if (force.getMagnitude() == 0) {
-                force.setVector((float)pDirection.getX(), (float)pDirection.getY()); // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
+        if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
+            if (pForce.x == 0 && pForce.y == 0) {
+                pForce.setLocation(pDirection);; // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
             }
-            Vector2D dragVec = new Vector2D(force.x - pDirection.x, force.y - pDirection.y);
-            float angle = Angular.anguloPI(blanca.getLocation(), pDirection);
+            float angle = Angular.anguloPI(table.getCueBall().getLocation(), pDirection);
+
+            Vector2D dragVec = new Vector2D(pForce.x - pDirection.x, pForce.y - pDirection.y);
             Point forceDirection = Angular.generaPunto(pDirection, dragVec.getMagnitude(), angle);
 
             Vector2D vel = new Vector2D((float)(forceDirection.getX() - pDirection.getX()), (float)(forceDirection.getY() - pDirection.getY()));
             System.out.println("Vel: "+vel.getMagnitude());
 
-            cue.hitBall(vel);
-                    
-            force.escale(0);
+            table.getCue().hitBall(vel);
         }
     }
     @Override
     public void mouseMoved(MouseEvent e) {
-        table.updateCue(e.getPoint(), 0);
+        if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
+            cueAngle = Angular.anguloPI(table.getCueBall().getLocation(), e.getPoint());
+            table.updateCue(cueAngle, 0);
+        }
     }
     @Override
     public void mouseClicked(MouseEvent e) {}
@@ -81,23 +86,27 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     public void mouseExited(MouseEvent e) {}
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-
-                break;
-            case KeyEvent.VK_D:
-
-                break;
-            case KeyEvent.VK_SPACE:
-
-                break;
-            default: break;
-        }
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
-    public void keyPressed(KeyEvent e) {}
+    public void keyPressed(KeyEvent e) {
+        if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A     -> cueAngle += angleDelta;
+                case KeyEvent.VK_LEFT  -> cueAngle += angleDelta;
+                case KeyEvent.VK_D     -> cueAngle -= angleDelta;
+                case KeyEvent.VK_RIGHT -> cueAngle -= angleDelta;
+                case KeyEvent.VK_SPACE -> {
+                    float x = (float)(maxHitForce*Math.cos(cueAngle*Math.PI));
+                    float y = (float)(maxHitForce*Math.sin(((cueAngle*Math.PI)+Math.PI)));
+                    table.getCue().hitBall(new Vector2D(x, y));
+                }
+                case KeyEvent.VK_R -> gamePanel.restartGame();
+                case KeyEvent.VK_P -> gamePanel.pauseGame();
+            }
+            table.updateCue(cueAngle, 0);
+        }
+    }
 
     @Override
     public void keyReleased(KeyEvent e) {}

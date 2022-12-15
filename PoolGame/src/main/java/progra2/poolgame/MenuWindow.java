@@ -15,8 +15,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-import progra2.poolgame.PoolGame.Modes;
-import progra2.poolgame.PoolGame.Players;
+import progra2.poolgame.PoolGame.GameModes;
 
 public class MenuWindow extends JFrame {
     
@@ -32,7 +31,7 @@ public class MenuWindow extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // * AGREGAR COMPONENTS
-        MenuPanel mp = new MenuPanel(this);
+        MenuPanel mp = new MenuPanel();
         this.add(mp);
         this.pack();
         this.getRootPane().setDefaultButton(mp.start);
@@ -42,39 +41,33 @@ public class MenuWindow extends JFrame {
         this.setVisible(true);
     } 
 
-    public void exitMenu(Players players, Modes mode, int numBalls) {
-        PoolGame.getInstance().startGame(players, mode, numBalls);
+    public void exitMenu(GameModes gameMode, int numBalls) {
+        PoolGame.getInstance().startGame(gameMode, numBalls);
 
         this.setVisible(false);
         this.dispose();
     }
 
     private class MenuPanel extends JPanel {
-        private MenuWindow mw;
-
-        private Players players;
-        private Modes mode;
-
         private ButtonGroup playersGroup, modeGroup;
         private JToggleButton onePlayer, twoPlayer;
-        private JToggleButton standartMode, randomMode;
+        private JToggleButton standardMode, randomMode;
         private JSpinner ballsNum;
         private JButton start;
 
         private int auxBallsNum;
 
-        public MenuPanel(MenuWindow mw) {
+        public MenuPanel() {
             super(new GridBagLayout());
-            this.mw = mw;
             // this.setPreferredSize(new Dimension(400, 300));
 
             auxBallsNum = 16;
 
-            initComponents();
+            addComponents();
             addActionListeners();
         }
             
-        private void initComponents() {
+        private void addComponents() {
             GridBagConstraints gbc;
     
             // * TÍTULO
@@ -122,13 +115,13 @@ public class MenuWindow extends JFrame {
             this.add(textMode, gbc);
 
             modeGroup = new ButtonGroup();
-            standartMode = new JToggleButton("Modo estandar");
+            standardMode = new JToggleButton("Modo estandar");
             gbc = new GridBagConstraints();
             gbc.gridy = 2; gbc.gridx = 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.insets = new Insets(0, 3, 0, 3);
-            modeGroup.add(standartMode);
-            this.add(standartMode, gbc);
+            modeGroup.add(standardMode);
+            this.add(standardMode, gbc);
 
             randomMode = new JToggleButton("Modo aleatorio");
             gbc = new GridBagConstraints();
@@ -168,20 +161,18 @@ public class MenuWindow extends JFrame {
         private void addActionListeners() {
             onePlayer.addActionListener(a -> {
                 System.out.println("Singleplayer");
-                if (standartMode.isSelected() || randomMode.isSelected()) {
+                if (standardMode.isSelected() || randomMode.isSelected()) {
                     start.setEnabled(true);
                 }
-                players = Players.ONE;
             });
             twoPlayer.addActionListener(e -> {
                 System.out.println("Multiplayer");
-                if (standartMode.isSelected() || randomMode.isSelected()) {
+                if (standardMode.isSelected() || randomMode.isSelected()) {
                     start.setEnabled(true);
                 }
-                players = Players.TWO;
             });
 
-            standartMode.addActionListener(a -> {
+            standardMode.addActionListener(a -> {
                 System.out.println("Modo de juego estandar");
                 if (onePlayer.isSelected() || twoPlayer.isSelected()) {
                     start.setEnabled(true);
@@ -191,8 +182,6 @@ public class MenuWindow extends JFrame {
                     ballsNum.setValue(16);
                     ballsNum.setEnabled(false);
                 }
-                
-                mode = Modes.STANDARD;
             });
 
             randomMode.addActionListener(e -> {
@@ -204,12 +193,26 @@ public class MenuWindow extends JFrame {
                     ballsNum.setValue(auxBallsNum);
                     ballsNum.setEnabled(true);
                 }
-                mode = Modes.RANDOM;
             });
 
             start.addActionListener(e -> {
                 System.out.println("start");
-                mw.exitMenu(players, mode, (int)ballsNum.getValue());
+                GameModes mode;
+                
+                if (onePlayer.isSelected()) {
+                    if (standardMode.isSelected()) {
+                        mode = GameModes.STANDARD;
+                    } else {
+                        mode = GameModes.RANDOM;
+                    }
+                } else {
+                    if (standardMode.isSelected()) {
+                        mode = GameModes.STANDARD_MULTIPLAYER;
+                    } else {
+                        mode = GameModes.RANDOM_MULTIPLAYER;
+                    }
+                }
+                exitMenu(mode, (int)ballsNum.getValue());
             });
         }
     }

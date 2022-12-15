@@ -7,11 +7,7 @@ import java.awt.GraphicsEnvironment;
 public class PoolGame implements Runnable {
     private static PoolGame game;
 
-    public enum Players { ONE, TWO };
-    public enum Modes { STANDARD, RANDOM };
-
-    public Players players;
-    public Modes mode;
+    public enum GameModes { STANDARD, RANDOM, STANDARD_MULTIPLAYER, RANDOM_MULTIPLAYER }
 
     private final int FPS_SET;
     private final int UPS_SET = 120;
@@ -19,7 +15,6 @@ public class PoolGame implements Runnable {
     private Integer fps;
     private Integer ups;
 
-    private MenuWindow  menuWindow;
     private GameWindow  gameWindow;
     private GamePanel   gamePanel;
     private Thread      gameThread;
@@ -32,7 +27,7 @@ public class PoolGame implements Runnable {
         fps = FPS_SET;
         ups = UPS_SET;
 
-        menuWindow = new MenuWindow();
+        new MenuWindow();
     }
 
     public static PoolGame getInstance() {
@@ -42,11 +37,8 @@ public class PoolGame implements Runnable {
         return game;
     }
 
-    public void startGame(Players players, Modes mode, int ballsNum) {
-        this.players = players;
-        this.mode = mode;
-
-        gameWindow = new GameWindow(players, mode, ballsNum);
+    public void startGame(GameModes gameMode, int ballsNum) {
+        gameWindow = new GameWindow(gameMode, ballsNum);
         gamePanel = gameWindow.getPanel();
         gamePanel.requestFocusInWindow();
 

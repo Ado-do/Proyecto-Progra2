@@ -1,6 +1,7 @@
 package progra2.poolgame;
 
 import static java.lang.Math.round;
+
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -15,23 +16,27 @@ import java.awt.Polygon;
 import java.awt.GradientPaint;
 
 import geometricas.Circle;
-import progra2.poolgame.PoolGame.Modes;
-import progra2.poolgame.PoolGame.Players;
+import progra2.poolgame.PoolGame.GameModes;
 
 public class Table extends JPanel {
     public final Rectangle main, playfield;
     private final float friction;
 
     private BallsFactory factory;
+
     private ArrayList<Ball> arrayBalls;
-    private Ball blanca;
+    private Ball cueBall;
     private ArrayList<Pocket> arrayPockets;
-    private Cue taco;
+    private Cue cue;
 
-    private Point mousePosition;
-    private float hitForce;
+    private float cueAngle;
+    private float cueDistance;
 
-    private boolean blancaPocketed;
+    private int score;
+    private int countBallsPocketed;
+    private boolean cueBallPocketed;
+    private boolean inGame;
+    private boolean paused;
     
     public Table(int width, int height) {
         super(true);
@@ -44,65 +49,87 @@ public class Table extends JPanel {
         this.playfield = new Rectangle(pPlay, dimPlay);
         this.friction = (main.width * 1e-5f); // 1e-5f == 0.00001f
 
+        this.score = 0;
+        this.countBallsPocketed = 0;
+        this.cueBallPocketed = false;
+        this.inGame = false;
+        this.paused = false;
+
         // * INICIALIZAR
         this.initTable();
 
         // * CONFIGURAR JPANEL
-        Dimension min = new Dimension(1000, 500);
-        this.setMinimumSize(min);
         this.setPreferredSize(new Dimension(main.width, main.height));
     }
 
-    public void initGame(Players players, Modes mode, int numBalls) {
+    public void initGame(GameModes gameMode, int numBalls) {
         // * Ubicar bolas en mesa
-        this.rackBalls(mode, numBalls);
+        this.rackBalls(gameMode, numBalls);
 
         // * Taco
-        taco = new Cue(this);
+        cue = new Cue(this);
+
+        
+        inGame = true;
     }
 
     public void updateGame() {
-        taco.update(mousePosition, hitForce);
+        if (inGame || !paused) {
+            cue.update(cueAngle, cueDistance);
 
-        // * Si alguna bola esta en movimiento, entonces...
-        if (hasMovement()) {
-            // * Mover y revisar colisiones
-            for (int i = 0; i < arrayBalls.size(); i++) {
-                Ball currentBall = arrayBalls.get(i);
-                currentBall.move(friction);
+            // * Si alguna bola esta en movimiento, entonces...
+            if (hasMovement()) {
+                // * Mover y revisar colisiones
+                for (int i = 0; i < arrayBalls.size(); i++) {
+                    Ball currentBall = arrayBalls.get(i);
+                    currentBall.move(friction);
 
-                // Revisar si entro en tronera
-                for (Pocket pocket : arrayPockets) {
-                    if (pocket.isPocketed(currentBall)) {
-                        if (currentBall == blanca) 
-                            blancaPocketed = true;
-                        pocket.receive(arrayBalls, currentBall);
+                    // Revisar si entro en tronera
+                    for (Pocket pocket : arrayPockets) {
+                        if (pocket.isPocketed(currentBall)) {
+                            if (currentBall == cueBall)
+                                cueBallPocketed = true;
+                            pocket.receive(arrayBalls, currentBall);
+                            countBallsPocketed++;
+                        }
+                    }
+
+                    // Revisar rebotes con paredes
+                    currentBall.checkBounces(main, playfield);
+                    
+                    // Revisar colisiones
+                    for (int j = 0; j < arrayBalls.size(); j++) {
+                        if (i == j) continue;
+                        Ball nextBall = arrayBalls.get(j);
+                        
+                        if (currentBall.intersecs(nextBall)) 
+                            currentBall.collide(nextBall, friction);
                     }
                 }
-
-                // Revisar rebotes con paredes
-                currentBall.checkBounces(main, playfield);
-                
-                // Revisar colisiones
-                for (int j = 0; j < arrayBalls.size(); j++) {
-                    if (i == j) continue;
-                    Ball nextBall = arrayBalls.get(j);
-                    
-                    if (currentBall.intersecs(nextBall)) {
-                        currentBall.collide(nextBall, friction);
-                        // currentBall.collide(nextBall);
-                    }
+            } else {
+                checkScore();
+                if (cueBallPocketed) {
+                    Ball.setRandomLocation(cueBall, this);
+                    arrayBalls.add(0, cueBall);
+                    cueBallPocketed = false;
                 }
             }
-        } else if (blancaPocketed) {
-            Ball.setRandomLocation(blanca, this);
-            arrayBalls.add(0, blanca);
-            blancaPocketed = false;
         }
 	}
-    public void updateCue(Point mousePos, float hitForce) {
-        this.mousePosition = mousePos;
-        this.hitForce = hitForce;
+    private void checkScore() {
+        if (countBallsPocketed > 0) {
+            if (cueBallPocketed) {
+                score -= 20;
+                countBallsPocketed--;
+            }
+            score += countBallsPocketed * 50;
+            countBallsPocketed = 0;
+        }
+    }
+
+    public void updateCue(float cueAngle, float cueDistance) {
+        this.cueAngle = cueAngle;
+        this.cueDistance = cueDistance;
     }
 
     @Override
@@ -111,34 +138,28 @@ public class Table extends JPanel {
 
         this.paintTable(g2D); // * Mesa
         
-        // * Bolas
-        for (Ball ball : arrayBalls) {
-            Circle shadow = new Circle(round(ball.x+3.5f), round(ball.y+3.5f), ball.getRadius());
-            shadow.fillCircle(g2D, Color.gray.darker());
-        }
-        for (Ball ball : arrayBalls) ball.paint(g2D);
-
-        if (!this.hasMovement() && blanca != null) {
-            taco.paint(g2D); // * Taco
-        }
+        if (inGame) 
+            this.paintGame(g2D); // * Juego   
     }
 
     public boolean hasMovement() {
         for (Ball ball : arrayBalls) {
-            if (ball.isMoving()) {
-                // System.out.println("Number "+ball.getNumber()+" is moving at "+ball.getVel().getMagnitude());
+            if (ball.isMoving()) 
                 return true;
-            }
         }
         return false;
     }
 
+    public boolean isInGame() {
+        return inGame;
+    }
+
     // * Getters
-    public Ball getBlanca() {
-        return blanca;
+    public Ball getCueBall() {
+        return cueBall;
     }
     public Cue getCue() {
-        return taco;
+        return cue;
     }
     public ArrayList<Ball> getArrayBalls() {
         return arrayBalls;
@@ -146,8 +167,12 @@ public class Table extends JPanel {
     public ArrayList<Pocket> getArrayPockets() {
         return arrayPockets;
     }
+    public int getScore() {
+        return score;
+    }
 
     //! Subfunciones
+    // * Inicializar mesa
     private void initTable() {
         // * Troneras
         arrayPockets = new ArrayList<Pocket>();
@@ -167,21 +192,23 @@ public class Table extends JPanel {
         arrayBalls = new ArrayList<Ball>();
         factory = new BallsFactory(this);
 
-        // * Mouse position
-        mousePosition = new Point(0, main.height/2);
+        // * Angulo inicial del taco
+        cueAngle = 1f;
     }
-
-    private void rackBalls(Modes mode, int numBalls) {
-        if (mode == Modes.STANDARD) {
+    
+    // * Inicializar elementos de juego (initGame)
+    private void rackBalls(GameModes gameMode, int numBalls) {
+        if (gameMode == GameModes.STANDARD || gameMode == GameModes.STANDARD_MULTIPLAYER) {
             factory.getRackedBalls(arrayBalls);
         } else 
-        if (mode == Modes.RANDOM) {
+        if (gameMode == GameModes.RANDOM || gameMode == GameModes.RANDOM_MULTIPLAYER) {
             factory.getRandomBalls(arrayBalls, numBalls);
         }
         
-        blanca = arrayBalls.get(0);
+        cueBall = arrayBalls.get(0);
     }
 
+    // * Paint elementos de juego (paint)
     private void paintTable(Graphics2D g2D) {
         // * Borde
         g2D.setColor(new Color(184, 115, 51));
@@ -214,8 +241,6 @@ public class Table extends JPanel {
 
         g2D.setPaint(new GradientPaint(new Point(center.x + quartDim.width, center.y + quartDim.height), Color.green.darker(), center, Color.green));
         g2D.fill(        new Rectangle(new Point(center.x                 , center.y                  ), quartDim));
-        // g2D.setColor(Color.green);
-        // g2D.fill(rectPlayfield);
 
         // * Diamantes
         Polygon diamond = new Polygon();
@@ -273,5 +298,24 @@ public class Table extends JPanel {
         for (Pocket pocket : arrayPockets) {
             pocket.paint(g2D);
         }
+    }
+    private void paintGame(Graphics2D g2D) {
+        // * Bolas
+        for (Ball ball : arrayBalls) {
+            Circle shadow = new Circle(round(ball.x+3.5f), round(ball.y+3.5f), ball.getRadius());
+            shadow.fillCircle(g2D, Color.gray.darker());
+        }
+        for (Ball ball : arrayBalls) ball.paint(g2D);
+
+        // * Taco
+        if (!this.hasMovement() && cueBall != null) {
+            cue.paint(g2D);
+        }
+    }
+    public boolean isPaused() {
+        return paused;
+    }
+    public void setPaused(boolean pause) {
+        this.paused = pause;
     }
 }
