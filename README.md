@@ -118,7 +118,11 @@ Grupo 22 – Integrantes:
 
 ### DIAGRAMA UML
 
+<img src="/desing/UML-Proyecto-progra-2.png" alt="UML">
+
 ### DIAGRAMA DE CASOS DE USO
+
+<img src="/desing/UML-casos-de-uso-.png" alt="CASOS">
 
 ### DESICIONES TOMADAS COMO EQUIPO
 
