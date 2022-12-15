@@ -129,32 +129,7 @@ También decidimos que los controles del juego sean mayoritariamente por el mous
 ### PROBLEMAS QUE TUVIMOS COMO EQUIPO Y AUTOCRITICA.
 
 > El mayor problema que tuvimos como equipo fue la organización y como repartir equitativamente las tareas, ya que esto perjudicaba y hacia que uno llevara la carga de los demás, ahora tenemos nuevos métodos para poder enfrentarnos a esta clase de problema.
-
-
-
-
-
-### Controles
-
-En menús:
-
-* Mouse¿
-* <kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>←</kbd> y <kbd>→</kbd>: Moverse por el menú
-* <kbd>ENTER</kbd> y <kbd>ESPACIO</kbd>: Confirmar
-* <kbd>ESC</kbd>: Salir del juego
-
-En partida:
-
-* Mouse: Mover para elegir dirección y arrastrar para elegir potencia
-* <kbd>ESC</kbd>: Pausar
-* <kbd>R</kbd>: Reiniciar
-
-<p align="right">(<a href="#top">volver a inicio</a>)</p>
-
-### Diagramas
-
-<img src="/diagramas/Diagramauso.png" alt="DiagramaUso">
-Prototipo Diagrama de uso
+> 
 
 <!-- ACKNOWLEDGMENTS -->
 ## Links útiles
