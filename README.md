@@ -52,11 +52,6 @@
 
 <p align="right">(<a href="#top">volver a inicio</a>)</p>
 
-### Enunciado
-
-* Tema 6: Mesa de pool
-
-> En el panel central, con vista aérea, deben aparecer bolas en posiciones randómicas, una blanca y otras de color. El taco debe aparecer automáticamente apuntando a la bola blanca y debe ser manejado con troles GUI (teclado y mouse), para golpear bola blanca. Las bolas deben tener la física de impactos, inercia y roce.  En las esquinas debe haber troneras donde pueden caer. La cantidad de bolas debe ser definible por interfaz GUI. Habrá bandas para rebote de las bolas y si caen en las troneras, otorgan puntos.  Reiniciar se debe hacer por controles GUI. Si se cae la bola de color y la blanca no hay puntaje, si cae la blanca se resta puntaje.
 
 <!-- ROADMAP -->
 ## Objetivos
@@ -108,12 +103,36 @@ Dependencias para poder compilar
 * Tener java instalado¿
 * ...
 
-### Instalación
+## INFORME
 
-Aquí dar instrucción para configurar, compilar e iniciar juego
+### Proyecto de Programacion 2; Pool Game
 
-1. Descargar el repositorio
-2. ...
+Grupo 22 – Integrantes:
+-	Alonso Isaías Bustos Espinoza
+-	Lirayen María Martínez Kramm
+-	Cristóbal Joaquín Figueroa Burgos
+
+### ENUNCIADO;
+
+> En el panel central, con vista aérea, deben aparecer bolas en posiciones randómicas, una blanca y otras de color. El taco debe aparecer automáticamente apuntando a la bola blanca y debe ser manejado con troles GUI (teclado y mouse), para golpear bola blanca. Las bolas deben tener la física de impactos, inercia y roce.  En las esquinas debe haber troneras donde pueden caer. La cantidad de bolas debe ser definible por interfaz GUI. Habrá bandas para rebote de las bolas y si caen en las troneras, otorgan puntos.  Reiniciar se debe hacer por controles GUI. Si se cae la bola de color y la blanca no hay puntaje, si cae la blanca se resta puntaje.
+
+### DIAGRAMA UML
+
+### DIAGRAMA DE CASOS DE USO
+
+### DESICIONES TOMADAS COMO EQUIPO
+
+> Como equipo hemos tenido que tomar decisiones como crear una clase nueva llamada Vector2D para poder simular procesos físicos en nuestro programa que nos faciliten la tarea de crear colisiones, movimiento, etc.
+La decisión de iniciar las bolas de manera triangular como en la vida real y agregando un botón para permitir la aparición de las bolas aleatoriamente, todo mediante una clase que creamos tipo Factory que crea un arreglo de bolas ordenadas de manera aleatoria o estándar.
+También decidimos que los controles del juego sean mayoritariamente por el mouse ya que utilizar teclas para mover el taco o disparar hacen que el juego se vea menos fluido.
+
+### PROBLEMAS QUE TUVIMOS COMO EQUIPO Y AUTOCRITICA.
+
+> El mayor problema que tuvimos como equipo fue la organización y como repartir equitativamente las tareas, ya que esto perjudicaba y hacia que uno llevara la carga de los demás, ahora tenemos nuevos métodos para poder enfrentarnos a esta clase de problema.
+
+
+
+
 
 ### Controles
 
