@@ -17,7 +17,7 @@ import inputs.*;
 import progra2.poolgame.PoolGame.GameModes;
 
 public class GamePanel extends JPanel {
-    private final int tableWidth = 1600;
+    private final int tableWidth = 1500;
     private final GameModes gameMode;
     private int ballsNum;
 

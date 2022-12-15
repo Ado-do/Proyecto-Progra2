@@ -19,7 +19,8 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     
     private final int maxHitForce;
     private final float angleDelta = 0.0015f;
-    private Point pDirection, pForce;
+    private Point pDirection;
+    private Vector2D pForce;
     private float cueAngle;
 
     public PoolInputHandler(GamePanel gamePanel) {
@@ -29,7 +30,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         this.maxHitForce = Math.round(table.main.width * 0.075f);
 
         this.pDirection = new Point();
-        this.pForce = new Point();
+        this.pForce = new Vector2D();
 
         this.cueAngle = 1f;
     }
@@ -47,7 +48,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             float dist = (float) Angular.distEntre2Puntos(pDirection, e.getPoint());
 
             if (dist < maxHitForce) {
-                pForce.setLocation(e.getPoint());
+                pForce.setVector((float)e.getX(), (float)e.getY());
                 cueAngle = Angular.anguloPI(table.getCueBall().getLocation(), pDirection);
 
                 table.updateCue(cueAngle, dist);
@@ -55,10 +56,10 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         }
     }
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) { //! BUG
         if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
-            if (pForce.x == 0 && pForce.y == 0) {
-                pForce.setLocation(pDirection);; // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
+            if (pForce.getMagnitude() == 0) {
+                pForce.setVector((float)pDirection.getX(), (float)pDirection.getY()); // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
             }
             float angle = Angular.anguloPI(table.getCueBall().getLocation(), pDirection);
 

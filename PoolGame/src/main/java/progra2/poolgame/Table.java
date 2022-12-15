@@ -69,7 +69,11 @@ public class Table extends JPanel {
         // * Taco
         cue = new Cue(this);
 
-        
+        score = 0;
+        countBallsPocketed = 0;
+        cueBallPocketed = false;
+        paused = false;
+
         inGame = true;
     }
 
