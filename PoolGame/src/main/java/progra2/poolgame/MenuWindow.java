@@ -15,8 +15,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-import progra2.poolgame.PoolGame.GameModes;
-
 public class MenuWindow extends JFrame {
     
     public MenuWindow() {
@@ -55,13 +53,13 @@ public class MenuWindow extends JFrame {
         private JSpinner ballsNum;
         private JButton start;
 
-        private int auxBallsNum;
+        private int holdBallsNum;
 
         public MenuPanel() {
             super(new GridBagLayout());
             // this.setPreferredSize(new Dimension(400, 300));
 
-            auxBallsNum = 16;
+            holdBallsNum = 16;
 
             addComponents();
             addActionListeners();
@@ -139,7 +137,7 @@ public class MenuWindow extends JFrame {
             gbc.insets = new Insets(10, 10, 10, 10);
             this.add(ballsText, gbc);
 
-            ballsNum = new JSpinner(new SpinnerNumberModel(auxBallsNum, 1, 32, 1));
+            ballsNum = new JSpinner(new SpinnerNumberModel(holdBallsNum, 1, 32, 1));
             ballsNum.setEnabled(false);
             gbc = new GridBagConstraints();
             gbc.gridy = 3; gbc.gridx = 1;
@@ -178,7 +176,7 @@ public class MenuWindow extends JFrame {
                     start.setEnabled(true);
                 }
                 if (ballsNum.isEnabled()) {
-                    auxBallsNum = (int) ballsNum.getValue();
+                    holdBallsNum = (int) ballsNum.getValue();
                     ballsNum.setValue(16);
                     ballsNum.setEnabled(false);
                 }
@@ -190,13 +188,13 @@ public class MenuWindow extends JFrame {
                     start.setEnabled(true);
                 }
                 if (!ballsNum.isEnabled()) {
-                    ballsNum.setValue(auxBallsNum);
+                    ballsNum.setValue(holdBallsNum);
                     ballsNum.setEnabled(true);
                 }
             });
 
             start.addActionListener(e -> {
-                System.out.println("start");
+                System.out.println("Start game!");
                 GameModes mode;
                 
                 if (onePlayer.isSelected()) {

@@ -13,6 +13,8 @@ import progra2.poolgame.Table;
 import geometricas.Angular;
 import geometricas.Vector2D;
 
+//TODO Separar en PoolMouseHandler y PoolKeyboardListener
+
 public class PoolInputHandler implements MouseInputListener, KeyListener {
     private GamePanel gamePanel;
     private Table table;
@@ -79,15 +81,6 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             table.updateCue(cueAngle, 0);
         }
     }
-    @Override
-    public void mouseClicked(MouseEvent e) {}
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-    @Override
-    public void mouseExited(MouseEvent e) {}
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -110,5 +103,13 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     }
 
     @Override
+    public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    @Override
+    public void mouseExited(MouseEvent e) {}
+    @Override
     public void keyReleased(KeyEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
 }

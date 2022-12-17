@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 
+//TODO Remplazar por InterfacePanel
+
 // public abstract class GameGUI extends JPanel {
 public class GameGUI extends JPanel {
     protected JLabel scoreLabel;

@@ -16,7 +16,6 @@ import java.awt.Polygon;
 import java.awt.GradientPaint;
 
 import geometricas.Circle;
-import progra2.poolgame.PoolGame.GameModes;
 
 public class Table extends JPanel {
     public final Rectangle main, playfield;
@@ -26,7 +25,7 @@ public class Table extends JPanel {
 
     private ArrayList<Ball> arrayBalls;
     private Ball cueBall;
-    private ArrayList<Pocket> arrayPockets;
+    private Pockets pockets;
     private Cue cue;
 
     private float cueAngle;
@@ -86,33 +85,35 @@ public class Table extends JPanel {
                 // * Mover y revisar colisiones
                 for (int i = 0; i < arrayBalls.size(); i++) {
                     Ball currentBall = arrayBalls.get(i);
+
+                    // 1) Mover bola
                     currentBall.move(friction);
 
-                    // Revisar si entro en tronera
-                    for (Pocket pocket : arrayPockets) {
-                        if (pocket.isPocketed(currentBall)) {
-                            if (currentBall == cueBall)
-                                cueBallPocketed = true;
-                            pocket.receive(arrayBalls, currentBall);
-                            countBallsPocketed++;
-                        }
-                    }
-
-                    // Revisar rebotes con paredes
+                    // 2) Revisar rebotes con paredes
                     currentBall.checkBounces(main, playfield);
-                    
-                    // Revisar colisiones
+
+                    // 3) Revisar colisiones entre bolas
                     for (int j = 0; j < arrayBalls.size(); j++) {
-                        if (i == j) continue;
+                        if (i == j) 
+                            continue;
                         Ball nextBall = arrayBalls.get(j);
                         
                         if (currentBall.intersecs(nextBall)) 
                             currentBall.collide(nextBall, friction);
                     }
+
+                    // 4) Revisar si entro en tronera
+                    if (pockets.isPocketed(currentBall)) {
+                        if (currentBall == cueBall)
+                            cueBallPocketed = true;
+                        pockets.receive(arrayBalls, currentBall);
+                        countBallsPocketed++;
+                    }
                 }
             } else {
-                checkScore();
+                this.checkScore();
                 if (cueBallPocketed) {
+                    cueBall.getVel().escale(0);
                     Ball.setRandomLocation(cueBall, this);
                     arrayBalls.add(0, cueBall);
                     cueBallPocketed = false;
@@ -120,6 +121,12 @@ public class Table extends JPanel {
             }
         }
 	}
+
+    public void updateCue(float cueAngle, float cueDistance) {
+        this.cueAngle = cueAngle;
+        this.cueDistance = cueDistance;
+    }
+
     private void checkScore() {
         if (countBallsPocketed > 0) {
             if (cueBallPocketed) {
@@ -131,11 +138,6 @@ public class Table extends JPanel {
         }
     }
 
-    public void updateCue(float cueAngle, float cueDistance) {
-        this.cueAngle = cueAngle;
-        this.cueDistance = cueDistance;
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
@@ -143,7 +145,7 @@ public class Table extends JPanel {
         this.paintTable(g2D); // * Mesa
         
         if (inGame) 
-            this.paintGame(g2D); // * Juego   
+            this.paintGame(g2D); // * Elementos de juego
     }
 
     public boolean hasMovement() {
@@ -168,8 +170,8 @@ public class Table extends JPanel {
     public ArrayList<Ball> getArrayBalls() {
         return arrayBalls;
     }
-    public ArrayList<Pocket> getArrayPockets() {
-        return arrayPockets;
+    public Pockets getPockets() {
+        return pockets;
     }
     public int getScore() {
         return score;
@@ -179,18 +181,7 @@ public class Table extends JPanel {
     // * Inicializar mesa
     private void initTable() {
         // * Troneras
-        arrayPockets = new ArrayList<Pocket>();
-        int pocketRadius = round((main.width * 0.06f) / 2);
-        int offsetX = (main.width/2) - playfield.x;
-        float correctionMid = 0.2f;
-        for (int i = 0; i < 3; i++) {
-            int posY = (i != 1) ? (playfield.y) : (playfield.y - round(pocketRadius*correctionMid));
-            arrayPockets.add(new Pocket(playfield.x + (offsetX*i), posY, pocketRadius));
-        }
-        for (int i = 0; i < 3; i++) {
-            int posY = (i != 1) ? (main.height - playfield.y) : ((main.height - playfield.y) + round(pocketRadius*correctionMid));
-            arrayPockets.add(new Pocket(playfield.x + (offsetX*i), posY, pocketRadius));
-        }
+        pockets = new Pockets(this);
 
         // * Bolas array y factory
         arrayBalls = new ArrayList<Ball>();
@@ -299,9 +290,7 @@ public class Table extends JPanel {
         }
 
         // * Troneras
-        for (Pocket pocket : arrayPockets) {
-            pocket.paint(g2D);
-        }
+        pockets.paint(g2D);
     }
     private void paintGame(Graphics2D g2D) {
         // * Bolas

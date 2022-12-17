@@ -45,7 +45,7 @@ public class Ball extends Circle {
 
     public static void setRandomLocation(Ball b1, Table table) {
         ArrayList<Ball> arrayBalls = table.getArrayBalls();
-        ArrayList<Pocket> arrayPockets = table.getArrayPockets();
+        Pockets pockets = table.getPockets();
         int borderWidth = table.playfield.x,  width = table.main.width;
         int borderHeight = table.playfield.y, height = table.main.height;
         
@@ -69,11 +69,8 @@ public class Ball extends Circle {
                 }
             }
             // Verificar si intersecta con una tronera
-            for (Pocket pocket : arrayPockets) {
-                if (pocket.isPocketed(b1)) {
-                    wrongLocation = true;
-                    break;
-                }
+            if (pockets.isPocketed(b1)) {
+                wrongLocation = true;
             }
         } while (wrongLocation); // Repetir en caso de mala ubicación
     }

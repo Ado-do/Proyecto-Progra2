@@ -2,12 +2,15 @@ package progra2.poolgame;
 
 import java.awt.GraphicsEnvironment;
 
-//! Patron de diseño "Singleton"
 
+enum GameModes { STANDARD, RANDOM, STANDARD_MULTIPLAYER, RANDOM_MULTIPLAYER }
+
+//! Patron de diseño "Singleton"
 public class PoolGame implements Runnable {
     private static PoolGame game;
 
-    public enum GameModes { STANDARD, RANDOM, STANDARD_MULTIPLAYER, RANDOM_MULTIPLAYER }
+    //TODO Acceder a este campo desde cualquier clase para consultar el modo de juego actual
+    public static GameModes gameMode; 
 
     private final int FPS_SET;
     private final int UPS_SET = 120;
@@ -42,7 +45,7 @@ public class PoolGame implements Runnable {
         gamePanel = gameWindow.getPanel();
         gamePanel.requestFocusInWindow();
 
-        startGameLoop();
+        this.startGameLoop();
     }
 
     private void startGameLoop() {
@@ -73,7 +76,16 @@ public class PoolGame implements Runnable {
         double deltaF = 0;
 
         boolean running = true;
-        // * GAMELOOP
+
+        //! Patron de diseño "Game loop"
+        /* //* GAME LOOP
+         * El game loop es el bucle principal del juego, en el cual se ejecutan los métodos de renderizado y actualización
+         * del juego, ademas de controlar el tiempo de ejecución de estos métodos. El game loop se ejecuta en un hilo
+         * aparte del hilo principal de la aplicación, por lo que no afecta el rendimiento de la interfaz gráfica.
+         * Este controla el tiempo de ejecución de los métodos de renderizado y actualización del juego, para asegurar 
+         * que se ejecuten en el tiempo establecido, y no se ejecuten mas veces de lo necesario (si no se limitara, 
+         * se ejecutarían tantas veces como el procesador pudiera, lo que afectaría el rendimiento del juego, haciéndolo menos estable)
+         */
         while (running) {
             long currentTime = System.nanoTime();
 
@@ -99,14 +111,14 @@ public class PoolGame implements Runnable {
 
             // * Revisar intervalo de print de FPS
             long currentTimeMilli = System.currentTimeMillis();
-            if (currentTimeMilli - timeLastCheck >= 1000) { // * Intervalo de tiempo en que se muestran FPS (1000mills = 1s)
+
+            // Intervalo de tiempo en que se muestran FPS (1000mills = 1s)
+            if (currentTimeMilli - timeLastCheck >= 1000) {
                 timeLastCheck = System.currentTimeMillis();
 
                 fps = frames;
                 ups = updates;
                 
-                // System.out.println("FPS: " + frames + " | UPS: " + updates);
-
                 frames = 0;
                 updates = 0;
             }

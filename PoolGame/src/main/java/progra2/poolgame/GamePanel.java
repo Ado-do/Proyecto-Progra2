@@ -14,7 +14,6 @@ import java.awt.Font;
 import java.awt.Toolkit;
 
 import inputs.*;
-import progra2.poolgame.PoolGame.GameModes;
 
 public class GamePanel extends JPanel {
     private final int tableWidth = 1500;
@@ -38,13 +37,16 @@ public class GamePanel extends JPanel {
         // * Inicializar campos
         this.gameMode = gameMode;
         this.ballsNum = ballsNum;
+
         this.table = new Table(tableWidth, tableWidth/2);
-        this.fps = 0; this.ups = 0;
+        this.fps = 0; 
+        this.ups = 0;
         this.pause = false;
 
         // * Configurar JPanel
         this.setLayout(new BorderLayout());
         this.addPoolListener();
+        
         JPanel mainGUI = new JPanel(new BorderLayout());
         mainGUI.setPreferredSize(new Dimension(0, 100));
         this.add(table, BorderLayout.CENTER);
@@ -54,7 +56,7 @@ public class GamePanel extends JPanel {
         this.addMainGUIComponents(mainGUI, gameMode);
 
         // * Iniciar modo de juego
-        initGameMode();
+        this.initGameMode();
     }
     private void addMainGUIComponents(JPanel main, GameModes gameMode) {
         // * Pausa
