@@ -12,6 +12,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import java.awt.GridBagLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
@@ -69,7 +70,8 @@ public class MenuWindow extends JFrame {
             GridBagConstraints gbc;
     
             // * TÍTULO
-            JLabel bienvenida = new JLabel("Bienvenido!", SwingConstants.CENTER);
+            JLabel bienvenida = new JLabel("Bienvenido a nuestro proyecto \"PoolGame en Java\"!", SwingConstants.CENTER);
+            bienvenida.setFont(new Font("Arial", Font.BOLD, 15));
             gbc = new GridBagConstraints();
             gbc.gridy = 0; gbc.gridx = 0;
             gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -78,10 +80,35 @@ public class MenuWindow extends JFrame {
             gbc.insets = new Insets(20, 0, 20, 0);
             this.add(bienvenida, gbc);
     
+            // * MODO ESTÁNDAR/MODO ALEATORIO
+            JLabel textMode = new JLabel("Modo de juego:", SwingConstants.RIGHT);
+            gbc = new GridBagConstraints();
+            gbc.gridy = 1; gbc.gridx = 0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(10, 10, 10, 10);
+            this.add(textMode, gbc);
+
+            modeGroup = new ButtonGroup();
+            standardMode = new JToggleButton("Modo estandar");
+            gbc = new GridBagConstraints();
+            gbc.gridy = 1; gbc.gridx = 1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(0, 3, 0, 3);
+            modeGroup.add(standardMode);
+            this.add(standardMode, gbc);
+
+            randomMode = new JToggleButton("Modo aleatorio");
+            gbc = new GridBagConstraints();
+            gbc.gridy = 1; gbc.gridx = 2;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(0, 3, 0, 3);
+            modeGroup.add(randomMode);
+            this.add(randomMode, gbc);
+
             // * MODO SINGLEPLAYER/MULTIPLAYER
             JLabel textPlayers = new JLabel("Número de jugadores:", SwingConstants.RIGHT);
             gbc = new GridBagConstraints();
-            gbc.gridy = 1; gbc.gridx = 0;
+            gbc.gridy = 2; gbc.gridx = 0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.insets = new Insets(10, 10, 10, 10);
             this.add(textPlayers, gbc);
@@ -89,7 +116,7 @@ public class MenuWindow extends JFrame {
             playersGroup = new ButtonGroup();
             onePlayer = new JToggleButton("Un jugador");
             gbc = new GridBagConstraints();
-            gbc.gridy = 1; gbc.gridx = 1;
+            gbc.gridy = 2; gbc.gridx = 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.insets = new Insets(0, 3, 0, 3);
             playersGroup.add(onePlayer);
@@ -98,36 +125,11 @@ public class MenuWindow extends JFrame {
             twoPlayer = new JToggleButton("Dos jugadores");
             twoPlayer.setEnabled(false); //TODO Implementar multiplayer
             gbc = new GridBagConstraints();
-            gbc.gridy = 1; gbc.gridx = 2;
+            gbc.gridy = 2; gbc.gridx = 2;
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.insets = new Insets(0, 3, 0, 3);
             playersGroup.add(twoPlayer);
             this.add(twoPlayer, gbc);
-
-            // * MODO ESTÁNDAR/MODO ALEATORIO
-            JLabel textMode = new JLabel("Modo de juego:", SwingConstants.RIGHT);
-            gbc = new GridBagConstraints();
-            gbc.gridy = 2; gbc.gridx = 0;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.insets = new Insets(10, 10, 10, 10);
-            this.add(textMode, gbc);
-
-            modeGroup = new ButtonGroup();
-            standardMode = new JToggleButton("Modo estandar");
-            gbc = new GridBagConstraints();
-            gbc.gridy = 2; gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.insets = new Insets(0, 3, 0, 3);
-            modeGroup.add(standardMode);
-            this.add(standardMode, gbc);
-
-            randomMode = new JToggleButton("Modo aleatorio");
-            gbc = new GridBagConstraints();
-            gbc.gridy = 2; gbc.gridx = 2;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.insets = new Insets(0, 3, 0, 3);
-            modeGroup.add(randomMode);
-            this.add(randomMode, gbc);
 
             // * CANTIDAD DE BOLAS
             JLabel ballsText = new JLabel("Cantidad de bolas:", SwingConstants.RIGHT);
@@ -204,11 +206,7 @@ public class MenuWindow extends JFrame {
                         mode = GameModes.RANDOM;
                     }
                 } else {
-                    if (standardMode.isSelected()) {
-                        mode = GameModes.STANDARD_MULTIPLAYER;
-                    } else {
-                        mode = GameModes.RANDOM_MULTIPLAYER;
-                    }
+                    mode = GameModes.STANDARD_MULTIPLAYER;
                 }
                 exitMenu(mode, (int)ballsNum.getValue());
             });

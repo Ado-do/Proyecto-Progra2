@@ -38,6 +38,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     }
 
     //* Eventos
+    //TODO Bugfix de cuando no se arrastra el mouse (bola ultrarapida)
     @Override
     public void mousePressed(MouseEvent e) {
         if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {

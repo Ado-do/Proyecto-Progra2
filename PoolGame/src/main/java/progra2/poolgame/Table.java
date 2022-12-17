@@ -12,10 +12,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Stroke;
 import java.awt.Polygon;
 import java.awt.GradientPaint;
+import java.awt.BasicStroke;
 
 import geometricas.Circle;
+
+//TODO Quitar el "extends JPanel" y pasar propiedades a GamePanel
 
 public class Table extends JPanel {
     public final Rectangle main, playfield;
@@ -59,6 +63,17 @@ public class Table extends JPanel {
 
         // * CONFIGURAR JPANEL
         this.setPreferredSize(new Dimension(main.width, main.height));
+    }
+    private void initTable() {
+        // * Troneras
+        pockets = new Pockets(this);
+
+        // * Bolas array y factory
+        arrayBalls = new ArrayList<Ball>();
+        factory = new BallsFactory(this);
+
+        // * Angulo inicial del taco
+        cueAngle = 1f;
     }
 
     public void initGame(GameModes gameMode, int numBalls) {
@@ -121,7 +136,6 @@ public class Table extends JPanel {
             }
         }
 	}
-
     public void updateCue(float cueAngle, float cueDistance) {
         this.cueAngle = cueAngle;
         this.cueDistance = cueDistance;
@@ -138,16 +152,6 @@ public class Table extends JPanel {
         }
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2D = (Graphics2D) g;
-
-        this.paintTable(g2D); // * Mesa
-        
-        if (inGame) 
-            this.paintGame(g2D); // * Elementos de juego
-    }
-
     public boolean hasMovement() {
         for (Ball ball : arrayBalls) {
             if (ball.isMoving()) 
@@ -155,9 +159,11 @@ public class Table extends JPanel {
         }
         return false;
     }
-
     public boolean isInGame() {
         return inGame;
+    }
+    public boolean isPaused() {
+        return paused;
     }
 
     // * Getters
@@ -177,27 +183,36 @@ public class Table extends JPanel {
         return score;
     }
 
-    //! Subfunciones
-    // * Inicializar mesa
-    private void initTable() {
-        // * Troneras
-        pockets = new Pockets(this);
-
-        // * Bolas array y factory
-        arrayBalls = new ArrayList<Ball>();
-        factory = new BallsFactory(this);
-
-        // * Angulo inicial del taco
-        cueAngle = 1f;
+    // * Setters
+    public void setPaused(boolean pause) {
+        this.paused = pause;
     }
-    
+
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2D = (Graphics2D) g;
+
+        // * Mesa
+        this.paintTable(g2D);
+        // * Elementos de juego
+        if (inGame) 
+            this.paintGame(g2D);
+
+        // * Contorno
+        Stroke d = g2D.getStroke();
+        g2D.setStroke(new BasicStroke(3));
+        g2D.setColor(Color.black);
+        g2D.draw(main);
+        g2D.setStroke(d);
+    }
+
+    //! Subfunciones    
     // * Inicializar elementos de juego (initGame)
     private void rackBalls(GameModes gameMode, int numBalls) {
-        if (gameMode == GameModes.STANDARD || gameMode == GameModes.STANDARD_MULTIPLAYER) {
-            factory.getRackedBalls(arrayBalls);
-        } else 
-        if (gameMode == GameModes.RANDOM || gameMode == GameModes.RANDOM_MULTIPLAYER) {
-            factory.getRandomBalls(arrayBalls, numBalls);
+        switch (gameMode) {
+            case STANDARD             -> factory.getRackedBalls(arrayBalls);
+            case STANDARD_MULTIPLAYER -> factory.getRackedBalls(arrayBalls);
+            case RANDOM               -> factory.getRandomBalls(arrayBalls, numBalls);
         }
         
         cueBall = arrayBalls.get(0);
@@ -208,8 +223,6 @@ public class Table extends JPanel {
         // * Borde
         g2D.setColor(new Color(184, 115, 51));
         g2D.fill(main);
-        g2D.setColor(Color.black);
-        g2D.draw(main);
         
         int     escaleSubBorder = round(((playfield.x * playfield.y) * 0.004f));
         Point        pSubBorder = new Point(playfield.x-escaleSubBorder, playfield.y-escaleSubBorder);
@@ -246,47 +259,36 @@ public class Table extends JPanel {
         diamond.addPoint(diamX, diamY + diamWidth); //Este
         diamond.addPoint(diamX + diamWidth, diamY); //Sur
 
+        int deltaX, deltaY;
         // Vertical
-        int deltaX1 = playfield.width/8;
-        int deltaY1 = rectSubBorder.height + rectSubBorder.y;
+        deltaX = round(playfield.width/8f);
+        deltaY = rectSubBorder.height + rectSubBorder.y;
         for (int i = 0; i < 8; i++) {
-            diamond.translate(deltaX1, 0);
+            diamond.translate(deltaX, 0);
             if (i != 3 && i != 7) {
-                g2D.setColor(Color.yellow);
-                g2D.fill(diamond);
-                g2D.setColor(Color.black);
-                g2D.draw(diamond);
+                g2D.setColor(Color.yellow); g2D.fill(diamond);
+                g2D.setColor(Color.black);  g2D.draw(diamond);
             }
-            diamond.translate(0, deltaY1);
+            diamond.translate(0, deltaY);
             if (i != 3 && i != 7) {
-                g2D.setColor(Color.yellow);
-                g2D.fill(diamond);
-                g2D.setColor(Color.black);
-                g2D.draw(diamond);
+                g2D.setColor(Color.yellow); g2D.fill(diamond);
+                g2D.setColor(Color.black);  g2D.draw(diamond);
             }
-            deltaY1 *= -1;
+            deltaY *= -1;
         }
 
         // Horizontal
-        diamond.translate((playfield.x-rectSubBorder.x)+(rectSubBorder.x/2), (rectSubBorder.y/2)+(playfield.y-rectSubBorder.y));
-        int deltaY2 = playfield.height/4;
-        int deltaX2 = rectSubBorder.width + rectSubBorder.x;
+        diamond.translate((playfield.x-rectSubBorder.x)+round(rectSubBorder.x/2f), round(rectSubBorder.y/2f)+(playfield.y-rectSubBorder.y));
+        deltaY = round(playfield.height/4f);
+        deltaX = rectSubBorder.width + rectSubBorder.x;
         for (int i = 0; i < 3; i++) {
-            diamond.translate(0, deltaY2);
-            if (i != 3) {
-                g2D.setColor(Color.yellow);
-                g2D.fill(diamond);
-                g2D.setColor(Color.black);
-                g2D.draw(diamond);
-            }
-            deltaX2 *= -1;
-            diamond.translate(deltaX2, 0);
-            if (i != 3) {
-                g2D.setColor(Color.yellow);
-                g2D.fill(diamond);
-                g2D.setColor(Color.black);
-                g2D.draw(diamond);
-            }
+            diamond.translate(0, deltaY);
+            g2D.setColor(Color.yellow); g2D.fill(diamond);
+            g2D.setColor(Color.black);  g2D.draw(diamond);
+            deltaX *= -1;
+            diamond.translate(deltaX, 0);
+            g2D.setColor(Color.yellow); g2D.fill(diamond);
+            g2D.setColor(Color.black);  g2D.draw(diamond);
         }
 
         // * Troneras
@@ -304,11 +306,5 @@ public class Table extends JPanel {
         if (!this.hasMovement() && cueBall != null) {
             cue.paint(g2D);
         }
-    }
-    public boolean isPaused() {
-        return paused;
-    }
-    public void setPaused(boolean pause) {
-        this.paused = pause;
     }
 }

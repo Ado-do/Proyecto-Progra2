@@ -30,6 +30,8 @@ public class GamePanel extends JPanel {
 
     public boolean pause;
 
+    //TODO GamePanel contendra solo a Table y la dibujara
+
     public GamePanel(GameModes gameMode, int ballsNum) {
         // * Inicializar
         super(true);
@@ -65,7 +67,6 @@ public class GamePanel extends JPanel {
         pausa.setFont(new Font("Arial", Font.PLAIN, Math.round(tableWidth * 0.025f)));
         pausa.setFocusable(false);
         pausa.addActionListener(e -> pauseGame());
-
         main.add(pausa, BorderLayout.WEST);
 
         // * Reiniciar
@@ -78,11 +79,8 @@ public class GamePanel extends JPanel {
 
         // * GUI de juego
         switch (gameMode) {
-            // case STANDARD -> gui = new StandardGameGUI();
             case STANDARD -> gui = new GameGUI();
-            // case RANDOM   -> gui = new RandomGameGUI();
             case RANDOM   -> gui = new GameGUI();
-            case RANDOM_MULTIPLAYER -> throw new UnsupportedOperationException("Unimplemented case: " + gameMode);
             case STANDARD_MULTIPLAYER -> throw new UnsupportedOperationException("Unimplemented case: " + gameMode);
             default -> throw new IllegalArgumentException("Unexpected value: " + gameMode);
         }
@@ -107,6 +105,7 @@ public class GamePanel extends JPanel {
         scoreLabel.setText("Score: 0");
         table.initGame(gameMode, ballsNum);
     }
+
     public void pauseGame() {
         if (!pause) {
             pause = true;
@@ -127,6 +126,7 @@ public class GamePanel extends JPanel {
 
         updateGUI();
     }
+
     private void updateGUI() {
         scoreLabel.setText("Score: " + table.getScore());
     }

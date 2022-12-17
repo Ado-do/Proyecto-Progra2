@@ -27,7 +27,7 @@ public class GameWindow extends JFrame {
         JPanel containerPanel = new JPanel();
         
         this.gamePanel = new GamePanel(gameMode, ballsNum);
-        // this.interfacePanel = new InterfacePanel(this.gamePanel);
+        // this.interfacePanel = new InterfacePanel();
         containerPanel.add(gamePanel);
         // containerPanel.add(interfacePanel);
 

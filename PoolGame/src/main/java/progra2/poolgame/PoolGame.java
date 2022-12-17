@@ -2,8 +2,21 @@ package progra2.poolgame;
 
 import java.awt.GraphicsEnvironment;
 
+/*
+ * STANDARD: Modo de juego con pool standard (16 bolas)
+ *     - Singleplayer: Ganas el juego al meter todas las bolas antes de los 90 segundos.
+ *                     Ganas puntaje al meter bolas, teniendo bonus por meter bolas seguidas.
+ *                     +50 pts y +5seg por bola metida.
+ *     - Multiplayer: Gana el que gane mas puntos según reglas de pool convencional
+ * RANDOM: Modo de juego con pool random (bolas aleatorias)
+ *     - Singleplayer: Ganas el juego al meter todas las bolas antes de los 90 segundos.
+ *                     Ganas puntaje al meter bolas, teniendo bonus por meter bolas seguidas.
+ *                    +50 pts y +5seg por bola metida.
+ *    - Multiplayer: *Sin modalidad multiplayer*
+ */
 
-enum GameModes { STANDARD, RANDOM, STANDARD_MULTIPLAYER, RANDOM_MULTIPLAYER }
+enum GameModes { STANDARD, STANDARD_MULTIPLAYER, RANDOM }
+
 
 //! Patron de diseño "Singleton"
 public class PoolGame implements Runnable {
