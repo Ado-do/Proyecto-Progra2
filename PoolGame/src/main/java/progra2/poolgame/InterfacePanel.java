@@ -12,10 +12,13 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 public class InterfacePanel extends JPanel {
-    protected JLabel scoreLabel;
+    private GamePanel gamePanel;
+    private JLabel scoreLabel;
 
-    public InterfacePanel() {
-        super();
+    public InterfacePanel(GamePanel gamePanel) {
+        super(true);
+
+        this.gamePanel = gamePanel;
 
         // * CONFIGURAR PANEL
         this.setLayout(new BorderLayout());
@@ -35,7 +38,7 @@ public class InterfacePanel extends JPanel {
         // pausa.setPreferredSize(new Dimension(tableWidth/6, 0));
         pausa.setFont(new Font("Arial", Font.PLAIN, 16));
         pausa.setFocusable(false);
-        // pausa.addActionListener(e -> pauseGame());
+        pausa.addActionListener(e -> gamePanel.pauseGame());
         this.add(pausa, BorderLayout.WEST);
 
         // * Este
@@ -43,7 +46,7 @@ public class InterfacePanel extends JPanel {
         restart.setFont(new Font("Arial", Font.PLAIN, 16));
         // restart.setPreferredSize(new Dimension(tableWidth/6, 0));
         restart.setFocusable(false);
-        // restart.addActionListener(e -> restartGame());
+        restart.addActionListener(e -> gamePanel.restartGame());
         this.add(restart, BorderLayout.EAST);
 
         // * Centro

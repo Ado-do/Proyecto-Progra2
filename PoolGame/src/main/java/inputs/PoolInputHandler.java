@@ -101,10 +101,14 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
                     float y = (float)((maxHitForce*0.9f)*(Math.sin(((cueAngle*Math.PI)+Math.PI))));
                     table.getCue().shotBall(new Vector2D(x, y));
                 }
+            }
+            table.updateCue(cueAngle, 0);
+        }
+        if (table.isInGame()) {
+            switch (e.getKeyCode()) {
                 case KeyEvent.VK_R -> gamePanel.restartGame();
                 case KeyEvent.VK_P -> gamePanel.pauseGame();
             }
-            table.updateCue(cueAngle, 0);
         }
     }
 

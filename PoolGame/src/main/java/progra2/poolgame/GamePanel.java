@@ -14,7 +14,7 @@ import java.awt.Toolkit;
 import inputs.*;
 
 public class GamePanel extends JPanel {
-    private final int tableWidth = 1500;
+    private final int tableWidth = 1400;
     private final GameModes gameMode;
     private int ballsNum;
 
@@ -66,11 +66,13 @@ public class GamePanel extends JPanel {
     }
 
     public void restartGame() {
-        scoreLabel.setText("Score: 0");
+        // scoreLabel.setText("Score: 0"); //TODO Arreglar score
         table.initGame(gameMode, ballsNum);
     }
 
+    //TODO Arreglar pausa
     public void pauseGame() {
+        System.out.println("Pausa: " + pause);
         if (!pause) {
             pause = true;
             table.setPaused(pause);

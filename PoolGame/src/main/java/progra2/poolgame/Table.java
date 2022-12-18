@@ -90,7 +90,7 @@ public class Table extends JPanel {
     }
 
     public void updateGame() {
-        if (inGame || !paused) {
+        if (inGame && !paused) {
             cue.update(cueAngle, cueDistance);
 
             // * Si alguna bola esta en movimiento, entonces...
