@@ -20,7 +20,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     private Table table;
     
     private final int maxHitForce;
-    private final float angleDelta = 0.0015f;
+    private final float angleDelta = 0.0075f;
     private Point pDirection;
     private Vector2D pForce;
     private float cueAngle;
@@ -29,7 +29,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         this.gamePanel = gamePanel;
         this.table = gamePanel.getTable();
         
-        this.maxHitForce = Math.round(table.main.width * 0.075f);
+        this.maxHitForce = Math.round(table.main.width * 0.1f);
 
         this.pDirection = new Point();
         this.pForce = new Vector2D();
@@ -72,7 +72,8 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             Vector2D vel = new Vector2D((float)(forceDirection.getX() - pDirection.getX()), (float)(forceDirection.getY() - pDirection.getY()));
             System.out.println("Vel: "+vel.getMagnitude());
 
-            table.getCue().hitBall(vel);
+            table.getCue().shotBall(vel);
+            table.updateCue(angle, 0);
         }
     }
     @Override
@@ -87,14 +88,18 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
     public void keyPressed(KeyEvent e) {
         if (table.isInGame() && !table.hasMovement() && !table.isPaused()) {
             switch (e.getKeyCode()) {
+                case KeyEvent.VK_W     -> cueAngle -= 0.5f;
+                case KeyEvent.VK_UP    -> cueAngle -= 0.5f;
+                case KeyEvent.VK_S     -> cueAngle += 0.5f;
+                case KeyEvent.VK_DOWN  -> cueAngle += 0.5f;
                 case KeyEvent.VK_A     -> cueAngle += angleDelta;
                 case KeyEvent.VK_LEFT  -> cueAngle += angleDelta;
                 case KeyEvent.VK_D     -> cueAngle -= angleDelta;
                 case KeyEvent.VK_RIGHT -> cueAngle -= angleDelta;
                 case KeyEvent.VK_SPACE -> {
-                    float x = (float)(maxHitForce*Math.cos(cueAngle*Math.PI));
-                    float y = (float)(maxHitForce*Math.sin(((cueAngle*Math.PI)+Math.PI)));
-                    table.getCue().hitBall(new Vector2D(x, y));
+                    float x = (float)((maxHitForce*0.9f)*(Math.cos(cueAngle*Math.PI)));
+                    float y = (float)((maxHitForce*0.9f)*(Math.sin(((cueAngle*Math.PI)+Math.PI))));
+                    table.getCue().shotBall(new Vector2D(x, y));
                 }
                 case KeyEvent.VK_R -> gamePanel.restartGame();
                 case KeyEvent.VK_P -> gamePanel.pauseGame();

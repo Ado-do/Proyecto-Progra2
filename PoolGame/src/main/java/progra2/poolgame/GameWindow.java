@@ -9,6 +9,7 @@ import javax.swing.KeyStroke;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
 
 public class GameWindow extends JFrame {
     private GamePanel gamePanel;
@@ -22,14 +23,15 @@ public class GameWindow extends JFrame {
         this.setResizable(false);
         this.setIcon(); // Icono de la ventana
         this.asiggnESC(); // Asignar tecla "ESC" para cerrar juego
-        
+
         // * AGREGAR JPANELS PRINCIPALES
-        JPanel containerPanel = new JPanel();
+        JPanel containerPanel = new JPanel(new BorderLayout());
         
         this.gamePanel = new GamePanel(gameMode, ballsNum);
-        // this.interfacePanel = new InterfacePanel();
-        containerPanel.add(gamePanel);
-        // containerPanel.add(interfacePanel);
+        this.interfacePanel = new InterfacePanel();
+
+        containerPanel.add(gamePanel, BorderLayout.CENTER);
+        containerPanel.add(interfacePanel, BorderLayout.SOUTH);
 
         this.add(containerPanel);
         this.pack();

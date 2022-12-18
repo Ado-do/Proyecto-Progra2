@@ -43,7 +43,7 @@ public class Cue {
         this.pathLine = new Line2D.Float();
     }
 
-    public void hitBall(Vector2D hitVel) {
+    public void shotBall(Vector2D hitVel) {
         hitVel.escale(forceCorrection);
         cueBall.setVel(hitVel);
     }
@@ -68,8 +68,8 @@ public class Cue {
         Point pathP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + 5, oppositeAngle);
 
         Point pathP2;
-        boolean collition = false;
         int dist = 0;
+        boolean collition = false;
         do {
             pathP2 = Angular.generaPunto(pathP1, ++dist, oppositeAngle);
             Circle intersecTest = new Circle(pathP2.x, pathP2.y, cueBall.getRadius());
@@ -109,10 +109,10 @@ public class Cue {
         // * Dibujar taco
         Point cueLineP1 = new Point(Math.round(cueLine.x1), Math.round(cueLine.y1));
         Point cueLineP2 = new Point(Math.round(cueLine.x2), Math.round(cueLine.y2));
-        Stroke stroke = new BasicStroke(diameter);
-        Stroke defaultStroke = g2D.getStroke();
+        Stroke newStroke = new BasicStroke(diameter);
+        Stroke oldStroke = g2D.getStroke();
         
-        g2D.setStroke(stroke);
+        g2D.setStroke(newStroke);
 
         // Principal
         g2D.setColor(new Color(200, 157, 124));
@@ -128,20 +128,20 @@ public class Cue {
         g2D.setColor(Color.black);
         g2D.draw(cueEnd);
 
-        g2D.setStroke(defaultStroke);
+        g2D.setStroke(oldStroke);
     }
     private void paintPath(Graphics2D g2D) {
         // * Dibujar linea de trayectoria
         float[] patron = {10f, 4f};
-        Stroke stroke = new BasicStroke(2.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, patron, 0f);
-        Stroke defaultStroke = g2D.getStroke(); // Guardamos la borde predeterminada
+        Stroke newStroke = new BasicStroke(2.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, patron, 0f);
+        Stroke oldStroke = g2D.getStroke(); // Guardamos la borde predeterminada
         
-        g2D.setStroke(stroke); // Utilizar borde con patron de la linea de trayectoria
-        g2D.setColor(Color.WHITE);
+        g2D.setStroke(newStroke); // Utilizar borde con patron de la linea de trayectoria
+        g2D.setColor(Color.white);
         g2D.draw(pathLine);
-        g2D.setStroke(defaultStroke); // Regresamos al borde predeterminado
+        g2D.setStroke(oldStroke); // Regresamos al borde predeterminado
 
         // * Dibujar vista previa de colisión de blanca
-        ballPreview.drawCircle(g2D, Color.WHITE);
+        ballPreview.drawCircle(g2D, Color.white);
     }
 }

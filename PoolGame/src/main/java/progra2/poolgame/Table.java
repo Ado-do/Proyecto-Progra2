@@ -12,10 +12,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Stroke;
 import java.awt.Polygon;
 import java.awt.GradientPaint;
-import java.awt.BasicStroke;
 
 import geometricas.Circle;
 
@@ -199,11 +197,8 @@ public class Table extends JPanel {
             this.paintGame(g2D);
 
         // * Contorno
-        Stroke d = g2D.getStroke();
-        g2D.setStroke(new BasicStroke(3));
         g2D.setColor(Color.black);
         g2D.draw(main);
-        g2D.setStroke(d);
     }
 
     //! Subfunciones    

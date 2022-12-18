@@ -1,10 +1,8 @@
 package progra2.poolgame;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
-import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -21,7 +19,6 @@ public class GamePanel extends JPanel {
     private int ballsNum;
 
     private Table table;
-    private GameGUI gui;
     private JLabel scoreLabel;
     // private JLabel ballsNumLabel;
 
@@ -30,7 +27,7 @@ public class GamePanel extends JPanel {
 
     public boolean pause;
 
-    //TODO GamePanel contendra solo a Table y la dibujara
+    //TODO GamePanel contendrá solo a Table y la dibujara
 
     public GamePanel(GameModes gameMode, int ballsNum) {
         // * Inicializar
@@ -46,48 +43,15 @@ public class GamePanel extends JPanel {
         this.pause = false;
 
         // * Configurar JPanel
-        this.setLayout(new BorderLayout());
+        this.setPreferredSize(new Dimension(tableWidth, tableWidth/2));
         this.addPoolListener();
         
-        JPanel mainGUI = new JPanel(new BorderLayout());
-        mainGUI.setPreferredSize(new Dimension(0, 100));
-        this.add(table, BorderLayout.CENTER);
-        this.add(mainGUI, BorderLayout.SOUTH);
-
-        // * Agregar componentes a mainGUI
-        this.addMainGUIComponents(mainGUI, gameMode);
+        this.add(table);
 
         // * Iniciar modo de juego
         this.initGameMode();
     }
-    private void addMainGUIComponents(JPanel main, GameModes gameMode) {
-        // * Pausa
-        JButton pausa = new JButton("PAUSA");
-        pausa.setPreferredSize(new Dimension(tableWidth/6, 0));
-        pausa.setFont(new Font("Arial", Font.PLAIN, Math.round(tableWidth * 0.025f)));
-        pausa.setFocusable(false);
-        pausa.addActionListener(e -> pauseGame());
-        main.add(pausa, BorderLayout.WEST);
 
-        // * Reiniciar
-        JButton restart = new JButton("REINICIAR");
-        restart.setFont(new Font("Arial", Font.PLAIN, Math.round(tableWidth * 0.025f)));
-        restart.setPreferredSize(new Dimension(tableWidth/6, 0));
-        restart.setFocusable(false);
-        restart.addActionListener(e -> restartGame());
-        main.add(restart, BorderLayout.EAST);
-
-        // * GUI de juego
-        switch (gameMode) {
-            case STANDARD -> gui = new GameGUI();
-            case RANDOM   -> gui = new GameGUI();
-            case STANDARD_MULTIPLAYER -> throw new UnsupportedOperationException("Unimplemented case: " + gameMode);
-            default -> throw new IllegalArgumentException("Unexpected value: " + gameMode);
-        }
-        main.add(gui, BorderLayout.CENTER);
-
-        scoreLabel = gui.getScoreLabel();
-    }
     private void addPoolListener() {
         // * Listeners
         PoolInputHandler poolInputs = new PoolInputHandler(this);
@@ -124,25 +88,21 @@ public class GamePanel extends JPanel {
         this.ups = ups;
         table.updateGame();
 
-        updateGUI();
-    }
-
-    private void updateGUI() {
-        scoreLabel.setText("Score: " + table.getScore());
+        //TODO updateGUI();
     }
 
     @Override
     public void paint(Graphics g) {
         //! Configurar Render (Graphics2D tiene métodos de dibujado mas útiles y complejos)
         Graphics2D g2D = (Graphics2D) g;
-        // Para hacer los bordes de los dibujos mas suaves
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2D.setRenderingHints(rh);
+        g2D.setRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
 
-        // * Dibujar todo
         super.paint(g2D);
+
+        // * FPS - UPS
         this.paintInfo(g2D);
 
+        // * PAUSA
         if (pause) {
             g2D.setColor(Color.WHITE);
             g2D.setFont(new Font("Arial", Font.BOLD, 50));
@@ -152,21 +112,18 @@ public class GamePanel extends JPanel {
         Toolkit.getDefaultToolkit().sync(); // Para solucionar problemas de fluidez
     }
     private void paintInfo(Graphics2D g2D) {
-        // Info de monitorio (fps - ups)
-        g2D.setColor(Color.GREEN);
+        // * Info de monitorio (fps - ups)
+        g2D.setColor(Color.black);
         g2D.setFont(new Font("Arial", Font.BOLD, 16));
         String contFPS = "FPS: " + fps.toString();
-        g2D.drawString(contFPS, 5, g2D.getFontMetrics().getHeight());
+        g2D.drawString(contFPS, 5, g2D.getFontMetrics().getHeight()+2);
         String contUPS = "UPS: " + ups.toString();
-        g2D.drawString(contUPS, this.getWidth() - g2D.getFontMetrics().stringWidth(contUPS) - 5, g2D.getFontMetrics().getHeight());
+        g2D.drawString(contUPS, this.getWidth() - g2D.getFontMetrics().stringWidth(contUPS) - 5, g2D.getFontMetrics().getHeight()+2);
     }
 
     // * Getters
     public Table getTable() {
         return table;
-    }
-    public JPanel getSubGUI() {
-        return gui;
     }
     public JLabel getScoreLabel() {
         return scoreLabel;
