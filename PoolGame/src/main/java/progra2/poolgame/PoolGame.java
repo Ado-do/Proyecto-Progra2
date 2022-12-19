@@ -90,10 +90,10 @@ public class PoolGame implements Runnable {
     public void pauseGame() {
         JButton bPause = ip.getPauseButton();
         if (state == GameState.PLAYING) {
-            this.pauseGame();
+            state = GameState.PAUSED;
             bPause.setText("REANUDAR");
         } else if (state == GameState.PAUSED) {
-            this.resumeGame();
+            state = GameState.PLAYING;
             bPause.setText("PAUSA");
         }
     }
