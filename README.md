@@ -8,7 +8,7 @@
     <img src="/imgs/ss.png" alt="Logo">
   </a>
   <p align="center">
-    Mesa de Pool en Java
+    "Mesa de Pool en Java"
   </p>
 </div>
 
@@ -93,11 +93,11 @@
 
 ### Diagrama UML
 
-<img src="/diagramas/diagramasUML.png" alt="UML">
+<img src="/imgs/diagramasUML.png" alt="UML">
 
 ### Diagrama de casos de usos
 
-<img src="/diagramas/diagramaCasos.png" alt="CASOS">
+<img src="/imgs/diagramaCasos.png" alt="CASOS">
 
 ### Decisiones tomadas como equipo
 
