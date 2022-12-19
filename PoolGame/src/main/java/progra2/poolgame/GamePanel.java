@@ -17,14 +17,14 @@ public class GamePanel extends JPanel {
 
     private Integer fps;
     private Integer ups;
-
+    
     public GamePanel() {
         // * Inicializar
         super(true);
 
         // * Inicializar campos
         this.table = PoolGame.table;
-        this.fps = 0; 
+        this.fps = 0;
         this.ups = 0;
 
         // * Configurar JPanel

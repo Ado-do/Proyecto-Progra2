@@ -116,16 +116,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
                 }
                 //? Hacer click en el botón de pausa de ip o pausar el juego con método de PoolGame
                 // case KeyEvent.VK_P -> PoolGame.ip.getPauseButton().doClick();
-                case KeyEvent.VK_P -> {
-                    JButton bPause = PoolGame.ip.getPauseButton();
-                    if (PoolGame.state == GameState.PLAYING) {
-                        PoolGame.getInstance().pauseGame();
-                        bPause.setText("REANUDAR");
-                    } else if (PoolGame.state == GameState.PAUSED) {
-                        PoolGame.getInstance().resumeGame();
-                        bPause.setText("PAUSA");
-                    }
-                }
+                case KeyEvent.VK_P -> PoolGame.getInstance().pauseGame();
             }
         }
     }

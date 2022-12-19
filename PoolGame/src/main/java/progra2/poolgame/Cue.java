@@ -70,7 +70,8 @@ public class Cue {
         // * Linea de trayectoria
         float oppositeAngle = angle + 1f;
 
-        Point pathP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + 5, oppositeAngle);
+        Point pathP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius(), oppositeAngle);
+        // Point pathP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + 5, oppositeAngle);
 
         Point pathP2;
         int dist = 0;

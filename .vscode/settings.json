@@ -112,6 +112,7 @@
             "h3", "p", "details", "summary", "ol",
             "li"]
         }
-      }
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
     
 }

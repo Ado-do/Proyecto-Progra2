@@ -38,15 +38,7 @@ public class InterfacePanel extends JPanel {
         pauseButton.setPreferredSize(new Dimension(tableWidth/8, 0));
         pauseButton.setFont(new Font("Arial", Font.PLAIN, 16));
         pauseButton.setFocusable(false);
-        pauseButton.addActionListener(e -> {
-            if (PoolGame.state == GameState.PLAYING) {
-                PoolGame.getInstance().pauseGame();
-                pauseButton.setText("REANUDAR");
-            } else if (PoolGame.state == GameState.PAUSED) {
-                PoolGame.getInstance().resumeGame();
-                pauseButton.setText("PAUSA");
-            }
-        });
+        pauseButton.addActionListener(e -> PoolGame.getInstance().pauseGame());
         this.add(pauseButton, BorderLayout.WEST);
 
         // * Este
