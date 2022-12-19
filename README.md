@@ -5,7 +5,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   </a>
-    <img src="/design/ss.png" alt="Logo">
+    <img src="/imgs/ss.png" alt="Logo">
   </a>
   <p align="center">
     Mesa de Pool en Java
