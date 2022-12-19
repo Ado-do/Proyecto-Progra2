@@ -97,7 +97,7 @@ public class PoolGame implements Runnable {
         menuWindow = new MenuWindow();
     }
     
-    // * Métodos de monitoreo de juego
+    // * Métodos de loop
     private void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();

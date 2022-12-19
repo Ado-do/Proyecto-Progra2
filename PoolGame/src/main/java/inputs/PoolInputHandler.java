@@ -61,7 +61,7 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         }
     }
     @Override
-    public void mouseReleased(MouseEvent e) { //! BUG
+    public void mouseReleased(MouseEvent e) {
         if (PoolGame.state == GameState.PLAYING && !table.hasMovement() && mouseDragged) {
             if (vForce.getMagnitude() == 0) {
                 vForce.setVector((float)pDirection.getX(), (float)pDirection.getY()); // Bugfix de cuando no se arrastra el mouse (sino la bola se vuelve loca)
@@ -110,8 +110,10 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
                 table.updateCue(cueAngle, 0);
             }
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_R -> PoolGame.getInstance().restartGame();
-
+                case KeyEvent.VK_R -> {
+                    cueAngle = 1f;
+                    PoolGame.getInstance().restartGame();
+                }
                 //? Hacer click en el botón de pausa de ip o pausar el juego con método de PoolGame
                 // case KeyEvent.VK_P -> PoolGame.ip.getPauseButton().doClick();
                 case KeyEvent.VK_P -> {

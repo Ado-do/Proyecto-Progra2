@@ -13,6 +13,7 @@
         "CODIGO",
         "configurarle",
         "descolisonar",
+        "DESICIONES",
         "fors",
         "Gameloop",
         "GAMELOOP",
@@ -21,6 +22,8 @@
         "JFRAME",
         "JPANEL",
         "JPANELS",
+        "liraa",
+        "Lirayen",
         "millseg",
         "Multijugador",
         "nanoseg",
@@ -28,10 +31,13 @@
         "posicion",
         "puntaje",
         "puntomedio",
+        "randómicas",
         "Settear",
         "subcirculo",
         "Subfunciones",
-        "ubicandolas"
+        "syntaxis",
+        "ubicandolas",
+        "Zzar"
     ],
     "better-comments.tags": [
 
@@ -97,5 +103,14 @@
         "jdk.*",
         "org.graalvm.*",
         "io.micrometer.shaded.*"
-    ]
+    ],
+    "markdownlint.config": {
+        "MD033": {
+          "allowed_elements": [
+            "nobr", "sup", "a", "div", "br", "img",
+            "h3", "p", "details", "summary", "ol",
+            "li"]
+        }
+      }
+    
 }
