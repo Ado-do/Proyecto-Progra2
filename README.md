@@ -93,7 +93,7 @@
 
 ### Diagrama UML
 
-<img src="/imgs/diagramasUML.png" alt="UML">
+<img src="/imgs/diagramaUML.png" alt="UML">
 
 ### Diagrama de casos de usos
 
