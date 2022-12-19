@@ -7,60 +7,97 @@ import java.awt.GraphicsEnvironment;
  *     - Singleplayer: Ganas el juego al meter todas las bolas antes de los 90 segundos.
  *                     Ganas puntaje al meter bolas, teniendo bonus por meter bolas seguidas.
  *                     +50 pts y +5seg por bola metida.
- *     - Multiplayer: Gana el que gane mas puntos según reglas de pool convencional
+ *     - Multiplayer: El jugador 1 parte lanzado la bola blanco, se define si juega con lisas o rayadas dependiendo
+                     de la cantidad de bolas que meta al principio (Si juega y mete una rayada juega con las rayadas, y asco
+                     con las lisas), El jugador 2 tiene su turno cuando el jugador 1, meta la  blanca, no meta ninguna bola,
+                     el jugador pierde cuando; El rival mete todas sus bolas o él mete la bola negra (La bola negra se mete
+                     al final).
  * RANDOM: Modo de juego con pool random (bolas aleatorias)
  *     - Singleplayer: Ganas el juego al meter todas las bolas antes de los 90 segundos.
  *                     Ganas puntaje al meter bolas, teniendo bonus por meter bolas seguidas.
  *                    +50 pts y +5seg por bola metida.
- *    - Multiplayer: *Sin modalidad multiplayer*
+ *     - Multiplayer: *Sin modalidad multiplayer*
  */
 
 enum GameModes { STANDARD, STANDARD_MULTIPLAYER, RANDOM }
 
-
 //! Patron de diseño "Singleton"
 public class PoolGame implements Runnable {
-    private static PoolGame game;
-
-    //TODO Acceder a este campo desde cualquier clase para consultar el modo de juego actual
-    public static GameModes gameMode; 
-
     private final int FPS_SET;
     private final int UPS_SET = 120;
-
     private Integer fps;
     private Integer ups;
 
-    private GameWindow  gameWindow;
-    private GamePanel   gamePanel;
-    private Thread      gameThread;
+    private static PoolGame game;
+    public static GameModes mode;
+    public static GameState state;
+    
+    public static GamePanel gp;
+    public static InterfacePanel ip;
+    
+    private MenuWindow menuWindow;
+    private GameWindow gameWindow;
+    private Thread     gameThread;
+    
+    // * Variables de juego
+    private final int tableWidth = 1400;
+    public static Table table;
+
+    // private Player player1;
+    // private Player player2;
 
     private PoolGame() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         int hz = ge.getDefaultScreenDevice().getDisplayMode().getRefreshRate();
         FPS_SET = (hz > 120) ? 120 : hz;
-
         fps = FPS_SET;
         ups = UPS_SET;
 
-        new MenuWindow();
+        table = new Table(tableWidth);
+        
+        gameWindow = new GameWindow();
+        gp = gameWindow.getGamePanel();
+        ip = gameWindow.getInterfacePanel();
+        
+        menuWindow = new MenuWindow();
+        PoolGame.state = GameState.MENU;
     }
-
     public static PoolGame getInstance() {
         if (game == null) {
             game = new PoolGame();
+            game.startGameLoop();
         }
         return game;
     }
 
-    public void startGame(GameModes gameMode, int ballsNum) {
-        gameWindow = new GameWindow(gameMode, ballsNum);
-        gamePanel = gameWindow.getPanel();
-        gamePanel.requestFocusInWindow();
-
-        this.startGameLoop();
+    // * Métodos de juego
+    public void openMenu() {
+        menuWindow = new MenuWindow();
+        PoolGame.state = GameState.MENU;
     }
 
+    public void startGame(int ballsNum) {
+        // * Inicializar jugadores dependiendo de modo de juego
+        // player1 = new Player(null);
+        // player2 = new Player(new Color(255, 0, 0));
+        
+        table.startGame(ballsNum);
+        gp.requestFocusInWindow();
+        PoolGame.state = GameState.PLAYING;
+    }
+    public void pauseGame() {
+        PoolGame.state = GameState.PAUSED;
+    }
+    public void resumeGame() {
+        PoolGame.state = GameState.PLAYING;
+    }
+    public void restartGame() {
+        PoolGame.state = GameState.MENU;
+        table.clean();
+        menuWindow = new MenuWindow();
+    }
+    
+    // * Métodos de monitoreo de juego
     private void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -68,10 +105,16 @@ public class PoolGame implements Runnable {
     }
 
     private void render() {
-        gamePanel.renderGame(fps);
+        gp.render(fps);
     }
     private void update() {
-        gamePanel.updateGame(ups);
+        gp.update(ups);
+
+        // * Revisar termino de juego
+        // if (gamePanel.isGameOver()) {
+        //     this.state = GameState.GAME_OVER;
+        //     gameWindow.gameOver();
+        // }
     }
 
     @Override

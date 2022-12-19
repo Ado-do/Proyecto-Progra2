@@ -12,11 +12,8 @@ import geometricas.Circle;
 public class Pockets {
     private ArrayList<Circle> arrayPockets;
     
-    public Pockets(Table poolTable) {
+    public Pockets(Rectangle main, Rectangle playfield) {
         this.arrayPockets = new ArrayList<Circle>();
-
-        Rectangle main = poolTable.main;
-        Rectangle playfield = poolTable.playfield;
 
         int pocketRadius = Math.round((main.width * 0.06f) / 2);
         int offsetX = (main.width/2) - playfield.x;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Stroke;
@@ -19,28 +20,31 @@ public class Cue {
     private final int longitude, diameter;
     private final int baseDistance;
 
-    private Table table;
+    private Rectangle playfield;
     private ArrayList<Ball> arrayBalls;
     private Ball cueBall;
 
-    private float mainAngle;
+    private float angle;
     private Line2D.Float cueLine, pathLine;
     private Circle ballPreview;
-    
-    public Cue(Table table) {
-        this.table = table;
 
-        this.arrayBalls = table.getArrayBalls();
-        this.cueBall = table.getCueBall();
+    private Color color;
+
+    public Cue(Color color) {
+        this.playfield = PoolGame.table.playfield;
+        this.arrayBalls = PoolGame.table.getArrayBalls();
+        this.cueBall = PoolGame.table.getCueBall();
         
-        this.longitude = Math.round(table.main.width * 0.6f);
-        this.diameter = Math.round(table.main.height * 0.02f);
+        this.longitude = Math.round(PoolGame.table.main.width * 0.6f);
+        this.diameter = Math.round(PoolGame.table.main.height * 0.02f);
         this.baseDistance = cueBall.getRadius();
-        this.forceCorrection = -(table.main.width * 8e-5f); // 8e-5f == 0.00008f
+        this.forceCorrection = -(PoolGame.table.main.width * 8e-5f); // 8e-5f == 0.00008f
         
-        this.mainAngle = 1f;
+        this.angle = 1f;
         this.cueLine = new Line2D.Float();
         this.pathLine = new Line2D.Float();
+
+        this.color = color;
     }
 
     public void shotBall(Vector2D hitVel) {
@@ -49,21 +53,22 @@ public class Cue {
     }
     
     public void update(float cueAngle, float cueDistance) {
-        mainAngle = cueAngle;
+        angle = cueAngle;
 
         setCueLine(cueDistance);
         setPathLine();
     }
+
     private void setCueLine(float hitForce) {
         // * Linea de taco
         // Punto cercano a blanca, respecto al angulo que se formo desde el mouse y el centro de la bola blanca
-        Point cueP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + baseDistance + hitForce, mainAngle);
-        Point cueP2 = Angular.generaPunto(cueP1, longitude, mainAngle);
+        Point cueP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + baseDistance + hitForce, angle);
+        Point cueP2 = Angular.generaPunto(cueP1, longitude, angle);
         cueLine.setLine(cueP1, cueP2);
     }
     private void setPathLine() {
         // * Linea de trayectoria
-        float oppositeAngle = mainAngle + 1f;
+        float oppositeAngle = angle + 1f;
 
         Point pathP1 = Angular.generaPunto(cueBall.getLocation(), cueBall.getRadius() + 5, oppositeAngle);
 
@@ -86,7 +91,7 @@ public class Cue {
                 }
             }
             // Verificar si intersecta con paredes de area de juego
-            if (!table.playfield.contains(intersecTest.getBounds())) {
+            if (!playfield.contains(intersecTest.getBounds())) {
                 pathP2 = Angular.generaPunto(pathP1, dist-2, oppositeAngle);
                 intersecTest.setLocation(pathP2);
 
@@ -115,15 +120,17 @@ public class Cue {
         g2D.setStroke(newStroke);
 
         // Principal
-        g2D.setColor(new Color(200, 157, 124));
+        g2D.setColor((color != null) ? color : new Color(200, 157, 124));
         g2D.draw(cueLine);
+        
         // Punta
-        Point cueTipP2 = Angular.generaPunto(cueLineP1, longitude * 0.015f, mainAngle);
+        Point cueTipP2 = Angular.generaPunto(cueLineP1, longitude * 0.015f, angle);
         Line2D cueTip = new Line2D.Float(cueLineP1, cueTipP2);
         g2D.setColor(new Color(0, 150, 200));
         g2D.draw(cueTip);
+        
         // Final
-        Point cueEndP1 = Angular.generaPunto(cueLineP2, longitude * 0.025f, mainAngle + 1f);
+        Point cueEndP1 = Angular.generaPunto(cueLineP2, longitude * 0.025f, angle + 1f);
         Line2D cueEnd = new Line2D.Float(cueLineP2, cueEndP1);
         g2D.setColor(Color.black);
         g2D.draw(cueEnd);

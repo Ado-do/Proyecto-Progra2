@@ -1,13 +1,16 @@
 package progra2.poolgame;
 
+import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
@@ -15,6 +18,8 @@ import java.awt.GridBagLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
 
 public class MenuWindow extends JFrame {
     
@@ -28,6 +33,7 @@ public class MenuWindow extends JFrame {
         // * CONFIGURAR JFRAME (VENTANA)
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.asiggnESC(); // Asignar tecla "ESC" para cerra||r juego
 
         // * AGREGAR COMPONENTS
         MenuPanel mp = new MenuPanel();
@@ -40,11 +46,24 @@ public class MenuWindow extends JFrame {
         this.setVisible(true);
     } 
 
-    public void exitMenu(GameModes gameMode, int numBalls) {
-        PoolGame.getInstance().startGame(gameMode, numBalls);
+    public void startGame(int numBalls) {
+        PoolGame.getInstance().startGame(numBalls);
 
         this.setVisible(false);
         this.dispose();
+    }
+
+    private void asiggnESC() {
+        KeyStroke esc = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(esc, "ESC");
+        this.getRootPane().getActionMap().put("ESC", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                setVisible(false);
+                dispose();
+                System.exit(0);
+            }
+        });
     }
 
     private class MenuPanel extends JPanel {
@@ -70,13 +89,14 @@ public class MenuWindow extends JFrame {
             GridBagConstraints gbc;
     
             // * TÍTULO
-            JLabel bienvenida = new JLabel("Bienvenido a nuestro proyecto \"PoolGame en Java\"!", SwingConstants.CENTER);
+            String text = "<html>Bienvenido a nuestro proyecto<br><center>\"PoolGame en Java\"</center><html>";
+            // String text = "\"PoolGame en Java\"";
+            JLabel bienvenida = new JLabel(text, SwingConstants.CENTER);
             bienvenida.setFont(new Font("Arial", Font.BOLD, 15));
             gbc = new GridBagConstraints();
             gbc.gridy = 0; gbc.gridx = 0;
             gbc.gridwidth = GridBagConstraints.REMAINDER;
             gbc.anchor = GridBagConstraints.PAGE_START;
-            // gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.insets = new Insets(20, 0, 20, 0);
             this.add(bienvenida, gbc);
     
@@ -160,20 +180,17 @@ public class MenuWindow extends JFrame {
 
         private void addActionListeners() {
             onePlayer.addActionListener(a -> {
-                System.out.println("Singleplayer");
                 if (standardMode.isSelected() || randomMode.isSelected()) {
                     start.setEnabled(true);
                 }
             });
             twoPlayer.addActionListener(e -> {
-                System.out.println("Multiplayer");
                 if (standardMode.isSelected() || randomMode.isSelected()) {
                     start.setEnabled(true);
                 }
             });
 
             standardMode.addActionListener(a -> {
-                System.out.println("Modo de juego estandar");
                 if (onePlayer.isSelected() || twoPlayer.isSelected()) {
                     start.setEnabled(true);
                 }
@@ -185,7 +202,6 @@ public class MenuWindow extends JFrame {
             });
 
             randomMode.addActionListener(e -> {
-                System.out.println("Modo de juego aleatorio");
                 if (onePlayer.isSelected() || twoPlayer.isSelected()) {
                     start.setEnabled(true);
                 }
@@ -196,19 +212,17 @@ public class MenuWindow extends JFrame {
             });
 
             start.addActionListener(e -> {
-                System.out.println("Start game!");
-                GameModes mode;
-                
                 if (onePlayer.isSelected()) {
                     if (standardMode.isSelected()) {
-                        mode = GameModes.STANDARD;
+                        PoolGame.mode = GameModes.STANDARD;
                     } else {
-                        mode = GameModes.RANDOM;
+                        PoolGame.mode = GameModes.RANDOM;
                     }
                 } else {
-                    mode = GameModes.STANDARD_MULTIPLAYER;
+                    PoolGame.mode = GameModes.STANDARD_MULTIPLAYER;
                 }
-                exitMenu(mode, (int)ballsNum.getValue());
+
+                startGame((int)ballsNum.getValue());
             });
         }
     }

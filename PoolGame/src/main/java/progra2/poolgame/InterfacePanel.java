@@ -12,13 +12,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 public class InterfacePanel extends JPanel {
-    private GamePanel gamePanel;
+    private JButton pauseButton;
     private JLabel scoreLabel;
 
-    public InterfacePanel(GamePanel gamePanel) {
+    public InterfacePanel() {
         super(true);
-
-        this.gamePanel = gamePanel;
 
         // * CONFIGURAR PANEL
         this.setLayout(new BorderLayout());
@@ -33,21 +31,31 @@ public class InterfacePanel extends JPanel {
     }
 
     protected void addComponents() {
+        int tableWidth = PoolGame.table.main.width;
+
         // * Oeste
-        JButton pausa = new JButton("PAUSA");
-        // pausa.setPreferredSize(new Dimension(tableWidth/6, 0));
-        pausa.setFont(new Font("Arial", Font.PLAIN, 16));
-        pausa.setFocusable(false);
-        pausa.addActionListener(e -> gamePanel.pauseGame());
-        this.add(pausa, BorderLayout.WEST);
+        pauseButton = new JButton("PAUSA");
+        pauseButton.setPreferredSize(new Dimension(tableWidth/8, 0));
+        pauseButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        pauseButton.setFocusable(false);
+        pauseButton.addActionListener(e -> {
+            if (PoolGame.state == GameState.PLAYING) {
+                PoolGame.getInstance().pauseGame();
+                pauseButton.setText("REANUDAR");
+            } else if (PoolGame.state == GameState.PAUSED) {
+                PoolGame.getInstance().resumeGame();
+                pauseButton.setText("PAUSA");
+            }
+        });
+        this.add(pauseButton, BorderLayout.WEST);
 
         // * Este
-        JButton restart = new JButton("REINICIAR");
-        restart.setFont(new Font("Arial", Font.PLAIN, 16));
-        // restart.setPreferredSize(new Dimension(tableWidth/6, 0));
-        restart.setFocusable(false);
-        restart.addActionListener(e -> gamePanel.restartGame());
-        this.add(restart, BorderLayout.EAST);
+        JButton restartButton = new JButton("REINICIAR");
+        restartButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        restartButton.setPreferredSize(new Dimension(tableWidth/8, 0));
+        restartButton.setFocusable(false);
+        restartButton.addActionListener(e -> PoolGame.getInstance().restartGame());
+        this.add(restartButton, BorderLayout.EAST);
 
         // * Centro
         JPanel center = new JPanel();
@@ -63,8 +71,8 @@ public class InterfacePanel extends JPanel {
         bottom.add(scoreLabel);
     }
 
-    public JLabel getScoreLabel() {
-        return scoreLabel;
+    public void updateScore(int score) {
+        scoreLabel.setText("Score: " + score);
     }
 
     @Override
@@ -72,5 +80,10 @@ public class InterfacePanel extends JPanel {
         super.paint(g);
         g.setColor(Color.black);
         g.drawRect(0, 0, this.getWidth(), this.getHeight());
+    }
+
+    // * Getters
+    public JButton getPauseButton() {
+        return pauseButton;
     }
 }

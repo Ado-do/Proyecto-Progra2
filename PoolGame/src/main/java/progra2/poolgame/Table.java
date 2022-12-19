@@ -4,11 +4,11 @@ import static java.lang.Math.round;
 
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
+// import javax.swing.JPanel;
 
 import java.awt.Dimension;
 import java.awt.Color;
-import java.awt.Graphics;
+// import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -17,32 +17,29 @@ import java.awt.GradientPaint;
 
 import geometricas.Circle;
 
-//TODO Quitar el "extends JPanel" y pasar propiedades a GamePanel
-
-public class Table extends JPanel {
+public class Table {
     public final Rectangle main, playfield;
     private final float friction;
 
-    private BallsFactory factory;
+    private BallsFactory factory; // Para inicializar arreglo de bolas
 
-    private ArrayList<Ball> arrayBalls;
-    private Ball cueBall;
-    private Pockets pockets;
-    private Cue cue;
+    private ArrayList<Ball> arrayBalls; // Arreglo de bolas
+    private Ball cueBall; // Bola blanca
+    private Pockets pockets; // Troneras
+    private Cue cue; // Taco
 
-    private float cueAngle;
-    private float cueDistance;
-
-    private int score;
-    private int countBallsPocketed;
-    private boolean cueBallPocketed;
-    private boolean inGame;
-    private boolean paused;
+    //? Debería estar en taco
+    private float cueAngle; // Angulo del taco
+    private float cueDistance; // Distancia del taco a la bola blanca
     
-    public Table(int width, int height) {
-        super(true);
-        
+    //? Debería estar en PoolGame
+    private int score; // Puntaje
+    private boolean cueBallPocketed; // Bola blanca en tronera
+    private int countBallsPocketed; // Cantidad de bolas en tronera
+    
+    public Table(int width) {
         // * PROPIEDADES
+        int height = width/2;
         this.main = new Rectangle(width, height);
 
         Point pPlay = new Point(round((width - (width * 0.9f))/2), round((height - (height * 0.8f))/2));
@@ -53,84 +50,83 @@ public class Table extends JPanel {
         this.score = 0;
         this.countBallsPocketed = 0;
         this.cueBallPocketed = false;
-        this.inGame = false;
-        this.paused = false;
 
         // * INICIALIZAR
         this.initTable();
-
-        // * CONFIGURAR JPANEL
-        this.setPreferredSize(new Dimension(main.width, main.height));
     }
     private void initTable() {
         // * Troneras
-        pockets = new Pockets(this);
+        pockets = new Pockets(main, playfield);
 
         // * Bolas array y factory
         arrayBalls = new ArrayList<Ball>();
-        factory = new BallsFactory(this);
+        factory = new BallsFactory(main, playfield);
 
         // * Angulo inicial del taco
         cueAngle = 1f;
     }
 
-    public void initGame(GameModes gameMode, int numBalls) {
+    public void startGame(int numBalls) {
         // * Ubicar bolas en mesa
-        this.rackBalls(gameMode, numBalls);
+        this.rackBalls(PoolGame.mode, numBalls);
 
         // * Taco
-        cue = new Cue(this);
+        cue = new Cue(null);
 
         score = 0;
         countBallsPocketed = 0;
         cueBallPocketed = false;
-        paused = false;
+    }
+    public void clean() {
+        arrayBalls.clear();
+        cue = null;
 
-        inGame = true;
+        score = 0;
+        countBallsPocketed = 0;
+        cueBallPocketed = false;
     }
 
-    public void updateGame() {
-        if (inGame && !paused) {
-            cue.update(cueAngle, cueDistance);
+    public void update() {
+        cue.update(cueAngle, cueDistance);
 
-            // * Si alguna bola esta en movimiento, entonces...
-            if (hasMovement()) {
-                // * Mover y revisar colisiones
-                for (int i = 0; i < arrayBalls.size(); i++) {
-                    Ball currentBall = arrayBalls.get(i);
+        // * Si alguna bola esta en movimiento, entonces...
+        if (hasMovement()) {
+            // * Mover y revisar colisiones
+            for (int i = 0; i < arrayBalls.size(); i++) {
+                Ball currentBall = arrayBalls.get(i);
 
-                    // 1) Mover bola
-                    currentBall.move(friction);
+                // 1) Mover bola
+                currentBall.move(friction);
 
-                    // 2) Revisar rebotes con paredes
-                    currentBall.checkBounces(main, playfield);
+                // 2) Revisar rebotes con paredes
+                currentBall.checkBounces(main, playfield);
 
-                    // 3) Revisar colisiones entre bolas
-                    for (int j = 0; j < arrayBalls.size(); j++) {
-                        if (i == j) 
-                            continue;
-                        Ball nextBall = arrayBalls.get(j);
-                        
-                        if (currentBall.intersecs(nextBall)) 
-                            currentBall.collide(nextBall, friction);
-                    }
-
-                    // 4) Revisar si entro en tronera
-                    if (pockets.isPocketed(currentBall)) {
-                        if (currentBall == cueBall)
-                            cueBallPocketed = true;
-                        pockets.receive(arrayBalls, currentBall);
-                        countBallsPocketed++;
-                    }
+                // 3) Revisar colisiones entre bolas
+                for (int j = 0; j < arrayBalls.size(); j++) {
+                    if (i == j) 
+                        continue;
+                    Ball nextBall = arrayBalls.get(j);
+                    
+                    if (currentBall.intersecs(nextBall)) 
+                        currentBall.collide(nextBall, friction);
                 }
-            } else {
-                this.checkScore();
-                if (cueBallPocketed) {
-                    cueBall.getVel().escale(0);
-                    Ball.setRandomLocation(cueBall, this);
-                    arrayBalls.add(0, cueBall);
-                    cueBallPocketed = false;
+
+                // 4) Revisar si entro en tronera
+                if (pockets.isPocketed(currentBall)) {
+                    if (currentBall == cueBall)
+                        cueBallPocketed = true;
+                    pockets.receive(arrayBalls, currentBall);
+                    countBallsPocketed++;
                 }
+            }
+        } else {
+            this.checkScore();
+
+            if (cueBallPocketed) {
+                cueBall.getVel().escale(0); // Detener bola blanca
+                Ball.setRandomLocation(cueBall); // Ubicar bola blanca en mesa
+                arrayBalls.add(0, cueBall); // Agregar bola blanca al arreglo
+                cueBallPocketed = false; 
             }
         }
 	}
@@ -147,6 +143,8 @@ public class Table extends JPanel {
             }
             score += countBallsPocketed * 50;
             countBallsPocketed = 0;
+
+            PoolGame.ip.updateScore(score);
         }
     }
 
@@ -156,12 +154,6 @@ public class Table extends JPanel {
                 return true;
         }
         return false;
-    }
-    public boolean isInGame() {
-        return inGame;
-    }
-    public boolean isPaused() {
-        return paused;
     }
 
     // * Getters
@@ -181,19 +173,12 @@ public class Table extends JPanel {
         return score;
     }
 
-    // * Setters
-    public void setPaused(boolean pause) {
-        this.paused = pause;
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2D = (Graphics2D) g;
-
+    public void paint(Graphics2D g2D) {
         // * Mesa
         this.paintTable(g2D);
+        
         // * Elementos de juego
-        if (inGame) 
+        if (PoolGame.state == GameState.PLAYING || PoolGame.state == GameState.PAUSED)
             this.paintGame(g2D);
 
         // * Contorno

@@ -90,5 +90,12 @@
             "italic": false
         }
     ],
-    "better-comments.highlightPlainText": true
+    "better-comments.highlightPlainText": true,
+    "java.completion.filteredTypes": [
+        "com.sun.*",
+        "sun.*",
+        "jdk.*",
+        "org.graalvm.*",
+        "io.micrometer.shaded.*"
+    ]
 }

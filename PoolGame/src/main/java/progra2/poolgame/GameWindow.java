@@ -4,7 +4,6 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import java.awt.event.KeyEvent;
@@ -15,7 +14,7 @@ public class GameWindow extends JFrame {
     private GamePanel gamePanel;
     private InterfacePanel interfacePanel;
 
-    public GameWindow(GameModes gameMode, int ballsNum) {
+    public GameWindow() {
         super("PoolGame");
         
         // * CONFIGURAR JFRAME (VENTANA)
@@ -25,33 +24,25 @@ public class GameWindow extends JFrame {
         this.asiggnESC(); // Asignar tecla "ESC" para cerrar juego
 
         // * AGREGAR JPANELS PRINCIPALES
-        JPanel containerPanel = new JPanel(new BorderLayout());
+        this.gamePanel = new GamePanel();
+        this.interfacePanel = new InterfacePanel();
         
-        this.gamePanel = new GamePanel(gameMode, ballsNum);
-        this.interfacePanel = new InterfacePanel(gamePanel);
-
-        containerPanel.add(gamePanel, BorderLayout.CENTER);
-        containerPanel.add(interfacePanel, BorderLayout.SOUTH);
-
-        this.add(containerPanel);
+        this.add(gamePanel, BorderLayout.CENTER);
+        this.add(interfacePanel, BorderLayout.SOUTH);
         this.pack();
-        
+
         // * DESPUÉS DE CONFIGURAR, HACER VISIBLE LA VENTANA
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
-
     
-    public GamePanel getPanel() {
+    public GamePanel getGamePanel() {
         return gamePanel;
     }
 
     private void setIcon() {
-        try { 
-            this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
-        } catch (Exception e) { 
-            System.out.println("Exception: Error al cargar icono de la ventana"); 
-        }
+        try { this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
+        } catch (Exception e) { System.out.println(e + ": Error al cargar icono de la ventana"); }
     }
 
     private void asiggnESC() {
@@ -66,4 +57,8 @@ public class GameWindow extends JFrame {
             }
         });
     }
+
+	public InterfacePanel getInterfacePanel() {
+		return interfacePanel;
+	}
 }

@@ -16,9 +16,12 @@ import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
+enum BallType { SOLID, STRIPE }
+
 public class Ball extends Circle {
     private final int number;
     private final Color ballColor;
+    private final BallType ballType;
     private Vector2D vel;
 
     public Ball(int posX, int posY, int radius, int number) {
@@ -26,6 +29,7 @@ public class Ball extends Circle {
         this.number = number;
         this.vel = new Vector2D();
 
+        // Asignar color y tipo de bola
         switch (number) {
             case 0:          ballColor = Color.white; break;
             case 1: case 9:  ballColor = Color.yellow; break;
@@ -41,13 +45,26 @@ public class Ball extends Circle {
                 ballColor = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
                 break;
         }
+
+        // Tipo de bola
+        if (number <= 8) {
+            ballType = BallType.SOLID;
+        } else 
+        if (number <= 15) {
+            ballType = BallType.STRIPE;
+        } else {
+        if (number % 2 == 0) 
+            ballType = BallType.SOLID;
+        else 
+            ballType = BallType.STRIPE;
+        }
     }
 
-    public static void setRandomLocation(Ball b1, Table table) {
-        ArrayList<Ball> arrayBalls = table.getArrayBalls();
-        Pockets pockets = table.getPockets();
-        int borderWidth = table.playfield.x,  width = table.main.width;
-        int borderHeight = table.playfield.y, height = table.main.height;
+    public static void setRandomLocation(Ball b1) {
+        ArrayList<Ball> arrayBalls = PoolGame.table.getArrayBalls();
+        Pockets pockets = PoolGame.table.getPockets();
+        int borderWidth  = PoolGame.table.playfield.x, width  = PoolGame.table.main.width;
+        int borderHeight = PoolGame.table.playfield.y, height = PoolGame.table.main.height;
         
         int Xmax = width-borderWidth-b1.getRadius(),   Xmin = borderWidth + b1.getRadius();
         int Ymax = height-borderHeight-b1.getRadius(), Ymin = borderHeight + b1.getRadius();
@@ -97,7 +114,6 @@ public class Ball extends Circle {
     }
 
     public void collide(Ball b2, float friction) {
-    // public void collide(Ball b2) {
         Ball b1 = this;
 
         if (b1.vel.getMagnitude() < friction) {
@@ -203,30 +219,30 @@ public class Ball extends Circle {
     // * Paint
     public void paint(Graphics2D g2D) {
         // Dibujar bola completamente o rayada
-        if (number <= 8) {
-            this.fillCircle(g2D, ballColor);
-        } else
-        if (number <= 15) {
-            this.paintStripedBall(g2D);
-        } else {
-            if (number % 2 == 0) 
-                this.fillCircle(g2D, ballColor);
-            else 
-                this.paintStripedBall(g2D);
+        switch (ballType) {
+            case SOLID  -> paintSolidBall(g2D);
+            case STRIPE -> paintStripedBall(g2D);
         }
 
         // Dibujar subcirculo blanco y numero;
         if (number != 0) {
-            Circle subCircle = new Circle(round(x), round(y), round(radius * 0.55f));
-            subCircle.fillCircle(g2D, Color.white);
-            subCircle.drawCircle(g2D, Color.black);
-            
-            g2D.setColor(Color.BLACK);
-            g2D.setFont(new Font("Arial", Font.BOLD, round(radius * 0.66f)));
-            g2D.drawString(""+number, round(x - (g2D.getFontMetrics().stringWidth(""+number))/2), round(y + (g2D.getFontMetrics().getHeight())/3));
+            paintNumber(g2D);
         }
         
         this.drawCircle(g2D, Color.BLACK);
+    }
+
+    private void paintNumber(Graphics2D g2D) {
+        Circle subCircle = new Circle(round(x), round(y), round(radius * 0.55f));
+        subCircle.fillCircle(g2D, Color.white);
+        subCircle.drawCircle(g2D, Color.black);
+        
+        g2D.setColor(Color.BLACK);
+        g2D.setFont(new Font("Arial", Font.BOLD, round(radius * 0.66f)));
+        g2D.drawString(""+number, round(x - (g2D.getFontMetrics().stringWidth(""+number))/2), round(y + (g2D.getFontMetrics().getHeight())/3));
+    }
+    private void paintSolidBall(Graphics2D g2D) {
+        this.fillCircle(g2D, ballColor);
     }
     private void paintStripedBall(Graphics2D g2D) {
         this.fillCircle(g2D, Color.white);
