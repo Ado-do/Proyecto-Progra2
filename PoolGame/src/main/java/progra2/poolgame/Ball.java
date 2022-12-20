@@ -16,12 +16,12 @@ import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
-enum BallType { SOLID, STRIPE, NONE }
+enum BallType { SOLID, STRIPE }
 
 public class Ball extends Circle {
     private final int number;
     private final Color ballColor;
-    public final BallType ballType;
+    private final BallType ballType;
     private Vector2D vel;
 
     public Ball(int posX, int posY, int radius, int number) {
@@ -49,14 +49,13 @@ public class Ball extends Circle {
         // Tipo de bola
         if (number <= 8) {
             ballType = BallType.SOLID;
-        } else 
-        if (number <= 15) {
+        } else if (number <= 15) {
             ballType = BallType.STRIPE;
         } else {
-        if (number % 2 == 0) 
-            ballType = BallType.SOLID;
-        else 
-            ballType = BallType.STRIPE;
+            if (number % 2 == 0) 
+                ballType = BallType.SOLID;
+            else 
+                ballType = BallType.STRIPE;
         }
     }
 
@@ -214,6 +213,9 @@ public class Ball extends Circle {
     }
     public int getNumber() {
         return number;
+    }
+    public BallType getBallType() {
+        return ballType;
     }
 
     // * Paint

@@ -5,10 +5,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Aibe
- */
 public class test {
     public test() {
     }
@@ -33,7 +29,5 @@ public class test {
     // The methods must be annotated with annotation @Test. For example:
     //
     // @Test
-    // public void hello() {}
-
-       
+    // public void hello() {}       
 }

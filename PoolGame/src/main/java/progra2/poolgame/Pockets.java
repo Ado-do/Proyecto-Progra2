@@ -11,9 +11,11 @@ import geometricas.Circle;
 
 public class Pockets {
     private ArrayList<Circle> arrayPockets;
+    private ArrayList<Ball> ballsInHole;
     
     public Pockets(Rectangle main, Rectangle playfield) {
         this.arrayPockets = new ArrayList<Circle>();
+        this.ballsInHole = new ArrayList<Ball>();
 
         int pocketRadius = Math.round((main.width * 0.06f) / 2);
         int offsetX = (main.width/2) - playfield.x;
@@ -43,8 +45,30 @@ public class Pockets {
         return false;
     }
 
-    public void receive(ArrayList<Ball> array, Ball ball) {
-        array.remove(ball);
+    public void receive(Ball ball) {
+        ballsInHole.add(ball);
+    }
+    
+    public ArrayList<Ball> getBallsOfType(BallType type) {
+        ArrayList<Ball> balls = new ArrayList<Ball>();
+        for (Ball ball : ballsInHole) {
+            if (ball.getBallType() == type) {
+                balls.add(ball);
+            }
+        }
+        for (Ball ball : ballsInHole) {
+            if (ball.getBallType() == type) {
+                ballsInHole.remove(ball);
+            }
+        }
+        return balls;
+    }
+    
+    public ArrayList<Ball> getAllBalls() {
+        ArrayList<Ball> balls = new ArrayList<Ball>();
+        balls.addAll(ballsInHole); // Pasar bolas a arreglo que se retornará
+        ballsInHole.clear(); // Limpiar arreglo de bolas
+        return balls;
     }
 
     public void paint(Graphics2D g2D) {

@@ -27,9 +27,12 @@ public class Table {
     private Ball cueBall; // Bola blanca
     private Pockets pockets; // Troneras
     private Cue cue; // Taco
+
     private Player player1;
     private Player player2;
+
     private Player currentPlayer;
+
     //? Debería estar en taco
     private float cueAngle; // Angulo del taco
     private float cueDistance; // Distancia del taco a la bola blanca
@@ -39,6 +42,8 @@ public class Table {
     private boolean cueBallPocketed; // Bola blanca en tronera
     private int countBallsPocketed; // Cantidad de bolas en tronera
     
+    private boolean chosenBall;
+
     public Table(int width) {
         // * PROPIEDADES
         int height = width/2;
@@ -51,6 +56,7 @@ public class Table {
         this.score = 0;
         this.countBallsPocketed = 0;
         this.cueBallPocketed = false;
+        this.chosenBall = false;
 
         // * INICIALIZAR
         this.initTable();
@@ -76,7 +82,7 @@ public class Table {
         player1 = new Player();
         player2 = new Player(new Color(255, 0, 0));
         currentPlayer = player1;
-        cue = currentPlayer.cue;
+        cue = currentPlayer.getCue();
         
 
         score = 0;
@@ -95,9 +101,8 @@ public class Table {
     public void update() {
         cue.update(cueAngle, cueDistance);
 
-        // * Si alguna bola esta en movimiento, entonces...
+        // * Mesa en movimiento
         if (hasMovement()) {
-            // * Mover y revisar colisiones
             for (int i = 0; i < arrayBalls.size(); i++) {
                 Ball currentBall = arrayBalls.get(i);
 
@@ -119,30 +124,64 @@ public class Table {
 
                 // 4) Revisar si entro en tronera
                 if (pockets.isPocketed(currentBall)) {
-                    if (currentBall == cueBall)
-                        cueBallPocketed = true;
-                    pockets.receive(arrayBalls, currentBall);
-                    countBallsPocketed++;
-                    player1.saveBall(currentBall);
-                    
-                }
-                player1.chooseBallType();
-                if(currentPlayer.ballType == currentBall.ballType && pockets.isPocketed(currentBall)) {
-                    currentPlayer = player1;
-                }else if(currentBall.ballType != currentBall.ballType && pockets.isPocketed(currentBall)){
-                    currentPlayer = player2;
-                }
-                System.out.println(player1.ballType);
-                cue = currentPlayer.cue;
-            }    
-        } else {
-            this.checkScore();
+                    if (currentBall == cueBall) {
+                        cueBallPocketed = true;                    
+                    }
+                    pockets.receive(currentBall);
+                    arrayBalls.remove(currentBall);
 
-            if (cueBallPocketed) {
-                cueBall.getVel().escale(0); // Detener bola blanca
-                Ball.setRandomLocation(cueBall); // Ubicar bola blanca en mesa
-                arrayBalls.add(0, cueBall); // Agregar bola blanca al arreglo
-                cueBallPocketed = false; 
+                    countBallsPocketed++;
+                }
+
+                // if (currentPlayer.getBalltype() == currentBall.getBallType() && pockets.isPocketed(currentBall)) {
+                //     currentPlayer = player1;
+                // } else if (currentBall.getBallType() != currentBall.getBallType() && pockets.isPocketed(currentBall)){
+                //     currentPlayer = player2;
+                // }
+                // System.out.println(player1.ballType);
+                // cue = currentPlayer.getCue();
+            }
+
+        // * Mesa sin movimiento
+        } else {
+
+            // * Si alguna bola cayo en troneras
+            if (countBallsPocketed != 0) {
+
+                // * Players reciben bolas de tronera
+                // Si aun no se han asignado tipo de bola
+                if (!chosenBall) {
+                    currentPlayer.receiveBalls(pockets.getAllBalls()); // Recibir bolas de tronera
+                    chosenBall = currentPlayer.chooseBallType();
+
+                    // Si se eligió bola, dar bola del tipo diferente al otro jugador
+                    if (chosenBall) { 
+                        if (currentPlayer == player1)
+                            currentPlayer.giveDifferentBalls(player2);
+                        else 
+                            currentPlayer.giveDifferentBalls(player1);
+                    }
+                // Si ya se eligió tipo de bola
+                } else {
+                    currentPlayer.receiveBalls(pockets.getAllBalls()); // Recibir bolas de tronera
+
+                    if (currentPlayer == player1)
+                        currentPlayer.giveDifferentBalls(player2);
+                    else 
+                        currentPlayer.giveDifferentBalls(player1);
+                }
+
+                // Contar puntaje
+                checkScore();
+                countBallsPocketed = 0;
+
+                // Si la bola blanca cayo en tronera
+                if (cueBallPocketed) {
+                    cueBall.getVel().escale(0); // Detener bola blanca
+                    Ball.setRandomLocation(cueBall); // Ubicar bola blanca en mesa
+                    arrayBalls.add(0, cueBall); // Agregar bola blanca al arreglo
+                    cueBallPocketed = false; 
+                }
             }
         }
 	}
@@ -152,16 +191,13 @@ public class Table {
     }
 
     private void checkScore() {
-        if (countBallsPocketed > 0) {
-            if (cueBallPocketed) {
-                score -= 20;
-                countBallsPocketed--;
-            }
-            score += countBallsPocketed * 50;
-            countBallsPocketed = 0;
-
-            PoolGame.ip.updateScore(score);
+        if (cueBallPocketed) {
+            score -= 20;
+            countBallsPocketed--;
         }
+        score += countBallsPocketed * 50;
+
+        PoolGame.ip.updateScore(score);
     }
 
     public boolean hasMovement() {
@@ -300,7 +336,7 @@ public class Table {
 
         // * Taco
         if (!this.hasMovement() && cueBall != null) {
-            currentPlayer.cue.paint(g2D);
+            currentPlayer.getCue().paint(g2D);
         }
     }
 }

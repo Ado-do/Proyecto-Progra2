@@ -118,6 +118,7 @@ public class MenuWindow extends JFrame {
             this.add(standardMode, gbc);
 
             randomMode = new JToggleButton("Modo aleatorio");
+            randomMode.setEnabled(false); //TODO No implementado
             gbc = new GridBagConstraints();
             gbc.gridy = 1; gbc.gridx = 2;
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -135,6 +136,7 @@ public class MenuWindow extends JFrame {
 
             playersGroup = new ButtonGroup();
             onePlayer = new JToggleButton("Un jugador");
+            onePlayer.setEnabled(false); //TODO No implementado
             gbc = new GridBagConstraints();
             gbc.gridy = 2; gbc.gridx = 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -143,7 +145,7 @@ public class MenuWindow extends JFrame {
             this.add(onePlayer, gbc);
 
             twoPlayer = new JToggleButton("Dos jugadores");
-            //twoPlayer.setEnabled(false); //TODO Implementar multiplayer
+            // twoPlayer.setEnabled(false); //TODO Implementar multiplayer
             gbc = new GridBagConstraints();
             gbc.gridy = 2; gbc.gridx = 2;
             gbc.fill = GridBagConstraints.HORIZONTAL;

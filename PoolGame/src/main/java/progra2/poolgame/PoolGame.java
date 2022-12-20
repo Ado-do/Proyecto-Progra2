@@ -4,6 +4,11 @@ import java.awt.GraphicsEnvironment;
 
 import javax.swing.JButton;
 
+/**
+ *
+ * @author Aibe
+ */
+
 /*
  * STANDARD: Modo de juego con pool standard (16 bolas)
  *     - Singleplayer: Ganas el juego al meter todas las bolas antes de los 90 segundos.
