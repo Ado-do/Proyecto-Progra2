@@ -180,7 +180,16 @@ public class Table {
                     cueBall.getVel().escale(0); // Detener bola blanca
                     Ball.setRandomLocation(cueBall); // Ubicar bola blanca en mesa
                     arrayBalls.add(0, cueBall); // Agregar bola blanca al arreglo
-                    cueBallPocketed = false; 
+                    cueBallPocketed = false;
+                    if(!IsCurrentPlayer(player1)) { // Si se mete la bola a la tronera se cambia de player
+                        currentPlayer = player1; 
+                        System.out.println("soy player1");
+                    }
+                    else if(!IsCurrentPlayer(player2)) {
+                        currentPlayer = player2;
+                        System.out.println("soy player2");
+                    }
+                     
                 }
             }
         }
@@ -207,6 +216,14 @@ public class Table {
         }
         return false;
     }
+    public boolean IsCurrentPlayer( Player player) { // FUNCION PARA SABER SI EL PLAYER QUE SE INGRESA ES EL QUE ESTA EN TURNO
+        if(currentPlayer == player) {
+            return true;
+        } else {
+            return false;
+        }
+
+     }
 
     // * Getters
     public Ball getCueBall() {
