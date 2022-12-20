@@ -4,19 +4,24 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Player {
-    private Cue Taco;
+    public Cue cue;
     
     private ArrayList<Ball> ballInHole;
-    private BallType ballType;
+    public BallType ballType;
 
     public Player() {
         ballInHole = new ArrayList<Ball>();
-        Taco = new Cue(null);
+        cue = new Cue(null);
     }
     public Player(Color color) {
         ballInHole = new ArrayList<Ball>();
-        Taco = new Cue(color);
+        cue = new Cue(color);
     }
+    public Player(Cue cue) {
+        ballInHole = new ArrayList<Ball>();
+        this.cue = cue;
+    }
+
 
     public void saveBall(Ball ballPocketed) {
         ballInHole.add(ballPocketed);
@@ -34,16 +39,18 @@ public class Player {
 
         if (ballSolid > ballStripe) {
             ballType = BallType.SOLID;
-        } else
-        if (ballSolid < ballStripe) {
+        } if (ballSolid < ballStripe) {
             ballType = BallType.STRIPE;
-        } else {
-            //! HACER WEAS
-        }
+       
     }
+}
 
     // * Setters
     public void setBallType(BallType ballType) {
         this.ballType = ballType;
     }
+    // * getters
+    public Cue getCuePlayer() {
+        return this.cue;
+    } 
 }

@@ -27,7 +27,9 @@ public class Table {
     private Ball cueBall; // Bola blanca
     private Pockets pockets; // Troneras
     private Cue cue; // Taco
-
+    private Player player1;
+    private Player player2;
+    private Player currentPlayer;
     //? Debería estar en taco
     private float cueAngle; // Angulo del taco
     private float cueDistance; // Distancia del taco a la bola blanca
@@ -46,7 +48,6 @@ public class Table {
         Dimension dimPlay = new Dimension(main.width-(pPlay.x * 2), main.height-(pPlay.y * 2));
         this.playfield = new Rectangle(pPlay, dimPlay);
         this.friction = (main.width * 1e-5f); // 1e-5f == 0.00001f
-
         this.score = 0;
         this.countBallsPocketed = 0;
         this.cueBallPocketed = false;
@@ -57,10 +58,11 @@ public class Table {
     private void initTable() {
         // * Troneras
         pockets = new Pockets(main, playfield);
-
+        
         // * Bolas array y factory
         arrayBalls = new ArrayList<Ball>();
         factory = new BallsFactory(main, playfield);
+        
 
         // * Angulo inicial del taco
         cueAngle = 1f;
@@ -71,7 +73,11 @@ public class Table {
         this.rackBalls(PoolGame.mode, numBalls);
 
         // * Taco
-        cue = new Cue(null);
+        player1 = new Player();
+        player2 = new Player(new Color(255, 0, 0));
+        currentPlayer = player1;
+        cue = currentPlayer.cue;
+        
 
         score = 0;
         countBallsPocketed = 0;
@@ -117,8 +123,18 @@ public class Table {
                         cueBallPocketed = true;
                     pockets.receive(arrayBalls, currentBall);
                     countBallsPocketed++;
+                    player1.saveBall(currentBall);
+                    
                 }
-            }
+                player1.chooseBallType();
+                if(currentPlayer.ballType == currentBall.ballType && pockets.isPocketed(currentBall)) {
+                    currentPlayer = player1;
+                }else if(currentBall.ballType != currentBall.ballType && pockets.isPocketed(currentBall)){
+                    currentPlayer = player2;
+                }
+                System.out.println(player1.ballType);
+                cue = currentPlayer.cue;
+            }    
         } else {
             this.checkScore();
 
@@ -284,7 +300,7 @@ public class Table {
 
         // * Taco
         if (!this.hasMovement() && cueBall != null) {
-            cue.paint(g2D);
+            currentPlayer.cue.paint(g2D);
         }
     }
 }

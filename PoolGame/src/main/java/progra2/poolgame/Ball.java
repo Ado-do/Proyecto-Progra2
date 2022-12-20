@@ -16,12 +16,12 @@ import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
-enum BallType { SOLID, STRIPE }
+enum BallType { SOLID, STRIPE, NONE }
 
 public class Ball extends Circle {
     private final int number;
     private final Color ballColor;
-    private final BallType ballType;
+    public final BallType ballType;
     private Vector2D vel;
 
     public Ball(int posX, int posY, int radius, int number) {

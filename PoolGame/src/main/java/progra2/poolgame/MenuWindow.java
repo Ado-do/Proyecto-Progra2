@@ -143,7 +143,7 @@ public class MenuWindow extends JFrame {
             this.add(onePlayer, gbc);
 
             twoPlayer = new JToggleButton("Dos jugadores");
-            twoPlayer.setEnabled(false); //TODO Implementar multiplayer
+            //twoPlayer.setEnabled(false); //TODO Implementar multiplayer
             gbc = new GridBagConstraints();
             gbc.gridy = 2; gbc.gridx = 2;
             gbc.fill = GridBagConstraints.HORIZONTAL;
