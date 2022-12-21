@@ -170,27 +170,29 @@ public class Table {
                     else 
                         currentPlayer.giveDifferentBalls(player1);
                 }
-
+                
                 // Contar puntaje
                 checkScore();
                 countBallsPocketed = 0;
 
                 // Si la bola blanca cayo en tronera
                 if (cueBallPocketed) {
+                     if(!IsCurrentPlayer(player1)) { // Si se mete la bola a la tronera se cambia de player
+                        currentPlayer = player1;   // Se rompe todo
+                        System.out.println("soy player1");
+                    }
+                    else if(!IsCurrentPlayer(player2)) {
+                       currentPlayer = player2;
+                        System.out.println("soy player2");
+                     }
                     cueBall.getVel().escale(0); // Detener bola blanca
                     Ball.setRandomLocation(cueBall); // Ubicar bola blanca en mesa
                     arrayBalls.add(0, cueBall); // Agregar bola blanca al arreglo
                     cueBallPocketed = false;
-                    if(!IsCurrentPlayer(player1)) { // Si se mete la bola a la tronera se cambia de player
-                        currentPlayer = player1; 
-                        System.out.println("soy player1");
-                    }
-                    else if(!IsCurrentPlayer(player2)) {
-                        currentPlayer = player2;
-                        System.out.println("soy player2");
-                    }
+                  
                      
                 }
+                cue = currentPlayer.getCue();
             }
         }
 	}
