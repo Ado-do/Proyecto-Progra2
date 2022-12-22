@@ -42,7 +42,7 @@
 ### Fechas Importantes
 
 * [X] ~~Entrega Github Proyecto (07/12) -> Entrega 12/12~~
-* [ ] Entrega final (21/12)
+* [X] Entrega final (21/12)
 
 <p align="right">(<a href="#top">volver a inicio</a>)</p>
 
