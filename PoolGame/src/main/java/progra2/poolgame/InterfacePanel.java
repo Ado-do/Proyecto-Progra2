@@ -11,10 +11,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 
+/**
+ * Clase que representa el panel de la interfaz del juego
+ * @author Alonso Bustos
+ */
 public class InterfacePanel extends JPanel {
     private JButton pauseButton;
     private JLabel scoreLabel;
 
+    /**
+     * Constructor del panel de interfaz, inicializa los campos y configura el panel
+     */
     public InterfacePanel() {
         super(true);
 
@@ -30,7 +37,7 @@ public class InterfacePanel extends JPanel {
         this.addComponents();
     }
 
-    protected void addComponents() {
+    private void addComponents() {
         int tableWidth = PoolGame.table.main.width;
 
         // * Oeste
@@ -63,19 +70,29 @@ public class InterfacePanel extends JPanel {
         bottom.add(scoreLabel);
     }
 
+    /**
+     * Método que actualiza el puntaje
+     * @param score Puntaje a actualizar
+     */
     public void updateScore(int score) {
         scoreLabel.setText("Score: " + score);
     }
 
+    /**
+     * Método que retorna el botón de pausa
+     * @return JButton de pausa
+     */
+    public JButton getPauseButton() {
+        return pauseButton;
+    }
+
+    /**
+     * Método que dibuja el panel
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.black);
         g.drawRect(0, 0, this.getWidth(), this.getHeight());
-    }
-
-    // * Getters
-    public JButton getPauseButton() {
-        return pauseButton;
     }
 }

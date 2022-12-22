@@ -1,6 +1,5 @@
 package inputs;
 
-import javax.swing.JButton;
 import javax.swing.event.MouseInputListener;
 
 import java.awt.event.MouseEvent;
@@ -15,7 +14,11 @@ import progra2.poolgame.Table;
 import geometricas.Angular;
 import geometricas.Vector2D;
 
-//! Patron de diseño: Observer
+/**
+ * Clase que maneja los eventos de entrada del usuario
+ * 
+ * @author Alonso Bustos
+ */
 public class PoolInputHandler implements MouseInputListener, KeyListener {
     private Table table;
     
@@ -27,6 +30,9 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
 
     private boolean mouseDragged;
 
+    /**
+     * Método constructor para el manejador de eventos de entrada
+     */
     public PoolInputHandler() {
         this.table = PoolGame.table;
         
@@ -38,13 +44,21 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         this.cueAngle = 1f;
     }
 
-    //* Eventos
+    /**
+     * Método que se ejecuta cuando se presiona un botón del mouse
+     * Registra posicion de primera pulsación para calcular fuerza de golpe
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         if (PoolGame.state == GameState.PLAYING && !table.hasMovement() ) {
             pDirection = e.getPoint();
         }
     }
+
+    /**
+     * Método que se ejecuta cuando se arrastra el mouse
+     * Registra posición de arrastre del mouse para calcular fuerza de golpe
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         if (PoolGame.state == GameState.PLAYING && !table.hasMovement()) {
@@ -60,6 +74,12 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             }
         }
     }
+
+    /**
+     * Método que se ejecuta cuando se libera el botón del mouse
+     * Calcula fuerza de golpe con información conseguida anteriormente 
+     * y dispara bola
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         if (PoolGame.state == GameState.PLAYING && !table.hasMovement() && mouseDragged) {
@@ -80,6 +100,11 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
             mouseDragged = false;
         }
     }
+
+    /**
+     * Método que se ejecuta cuando se mueve el mouse
+     * Actualiza angulo y posicion del taco
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         if (PoolGame.state == GameState.PLAYING && !table.hasMovement()) {
@@ -88,6 +113,11 @@ public class PoolInputHandler implements MouseInputListener, KeyListener {
         }
     }
 
+    /**
+     * Método que se ejecuta cuando se presiona una tecla
+     * Maneja el movimiento del taco y el disparo de la bola,
+     * además de pausar, reanudar y reiniciar el juego
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         if (PoolGame.state == GameState.PLAYING || PoolGame.state == GameState.PAUSED) {

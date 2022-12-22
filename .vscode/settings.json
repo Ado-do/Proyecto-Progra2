@@ -10,6 +10,7 @@
     "cSpell.words": [
         "Aibe",
         "antialiasing",
+        "arraylists",
         "choko",
         "CODIGO",
         "configurarle",
@@ -26,10 +27,12 @@
         "JPANELS",
         "liraa",
         "Lirayen",
+        "manejador",
         "millseg",
         "Multijugador",
         "nanoseg",
         "nanosegs",
+        "playfield",
         "posicion",
         "puntaje",
         "puntomedio",
@@ -114,6 +117,7 @@
             "li"]
         }
     },
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.format.settings.url": ".vscode/java-formatter.xml"
     
 }

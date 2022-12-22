@@ -21,8 +21,16 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 
+/**
+ * Clase que representa la ventana del menú del juego
+ * 
+ * @author Alonso Bustos
+ */
 public class MenuWindow extends JFrame {
     
+    /**
+     * Constructor de la ventana del menú, inicializa los campos y configura la ventana
+     */
     public MenuWindow() {
         super("PoolGame");
         
@@ -46,6 +54,11 @@ public class MenuWindow extends JFrame {
         this.setVisible(true);
     } 
 
+    /**
+     * Método que inicia el juego con el número de bolas 
+     * 
+     * @param numBalls Número de bolas a usar en el juego
+     */
     public void startGame(int numBalls) {
         PoolGame.getInstance().startGame(numBalls);
 
@@ -66,6 +79,9 @@ public class MenuWindow extends JFrame {
         });
     }
 
+    /**
+     * Clase que representa el panel del menú del juego
+     */
     private class MenuPanel extends JPanel {
         private ButtonGroup playersGroup, modeGroup;
         private JToggleButton onePlayer, twoPlayer;
@@ -75,6 +91,9 @@ public class MenuWindow extends JFrame {
 
         private int holdBallsNum;
 
+        /**
+         * Constructor del panel del menú, inicializa los campos y agrega los componentes
+         */
         public MenuPanel() {
             super(new GridBagLayout());
             // this.setPreferredSize(new Dimension(400, 300));

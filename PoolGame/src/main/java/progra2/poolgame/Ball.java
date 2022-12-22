@@ -16,14 +16,32 @@ import geometricas.Angular;
 import geometricas.Circle;
 import geometricas.Vector2D;
 
+/**
+ * Enumeración que define los tipos de bolas que hay en el juego
+ * Solid: Bolas de color sólido
+ * Stripe: Bolas de color rayado
+ */
 enum BallType { SOLID, STRIPE }
 
+/**
+ * Clase que crea las bolas puestas en la mesa
+ *
+ * @author Alonso Bustos
+ */
 public class Ball extends Circle {
     private final int number;
     private final Color ballColor;
     private final BallType ballType;
     private Vector2D vel;
 
+    /**
+    * Constructor que define la posición y el numero que tiene la bola
+    *
+    * @param posX   Parámetro que define la posición X de la bola en la mesa
+    * @param posY   Parámetro que define la posición y de la bola en la mesa
+    * @param radius Radio que tendrá la bola
+    * @param number Numero que tendrá la bola 
+    */
     public Ball(int posX, int posY, int radius, int number) {
         super(posX, posY, radius);
         this.number = number;
@@ -59,6 +77,11 @@ public class Ball extends Circle {
         }
     }
 
+    /**
+    * Método estático que posiciona de manera aleatoria a la bola en la mesa.
+    *
+    * @param b1 La bola que será puesta en un lugar aleatorio.
+    */
     public static void setRandomLocation(Ball b1) {
         ArrayList<Ball> arrayBalls = PoolGame.table.getArrayBalls();
         Pockets pockets = PoolGame.table.getPockets();
@@ -91,6 +114,11 @@ public class Ball extends Circle {
         } while (wrongLocation); // Repetir en caso de mala ubicación
     }
 
+    /**
+    * Método que le da movimiento a la bola para que se mueva en la mesa.
+    *
+    * @param friction la fricción que tendrá la bola
+    */
     public void move(float friction) {
         // * MOVER BOLA SEGÚN VELOCIDAD
         x += vel.x;
@@ -99,6 +127,12 @@ public class Ball extends Circle {
 
         descel(friction);
     }
+
+    /**
+    * Método que desacelera la bola
+    *
+    * @param friction La fricción que se le aplicará    
+    */
     private void descel(float friction) {
         // * APLICAR ROCE
         // La fuerza de la bola empieza a recibir el roce de la mesa
@@ -112,6 +146,12 @@ public class Ball extends Circle {
         }
     }
 
+    /**
+    * Método que colisiona la bola con la otra y luego las separa.
+    *
+    * @param b2 La segunda bola con la que se comprobara la colisión.
+    * @param friction la fricción que se aplicará.
+    */
     public void collide(Ball b2, float friction) {
         Ball b1 = this;
 
@@ -142,7 +182,7 @@ public class Ball extends Circle {
             b2.vel.addVector(newVelB2);
         }
     }
-    
+
     private void separateBalls(Ball b2) {
         Ball b1 = this;
 
@@ -158,6 +198,12 @@ public class Ball extends Circle {
         b2.setLocation(midPoint.x + (direction.x * radius), midPoint.y + (direction.y * radius));
     }
 
+    /**
+    * Método que revisa si la bola choca con los bordes y si es asi, mueve a la bola.
+    *
+    * @param rectMain el contorno de la mesa.
+    * @param RectPlayfield el contorno del area de juego.
+    */
     public void checkBounces(Rectangle rectMain, Rectangle rectPlayfield) {
         int width = rectMain.width;
         int height = rectMain.height;
@@ -189,36 +235,83 @@ public class Ball extends Circle {
         this.syncBounds();
     }
 
+    /**
+    * Método que analiza si la bola intersecta con otra bola
+    *
+    * @param otra la clase Circle que se le analizará
+    * @return true si intersecta, false si no.
+    */
     public boolean intersecs(Circle otra) {
         return (Angular.distEntre2Puntos(this.getLocation(), otra.getLocation()) <= diameter);
     }
+
+    /**
+    * Método que analiza si la bola esta moviéndose.
+    *
+    * @return si no lo está, true, si sigue moviéndose false.
+    */
     public boolean isMoving() {
         return (vel.x != 0 || vel.y != 0);
     }
 
-    // * Setters
+    /**
+    * Método setter para asignar la velocidad a la bola
+    *
+    * @param v el vector de la magnitud.
+    */
     public void setVel(Vector2D v) {
         vel.setVector(v);
     }
 
-    // * Getters
+    /**
+    * Método getter para recibir la posicion X de la bola
+    *
+    * @return la posicion x.     
+    */
     public float getX() {
         return x;
     }
+
+    /**
+    * Método getter para recibir la posicion Y de la bola
+    *
+    * @return la posicion y.
+    */
     public float getY() {
         return y;
     }
+
+    /**
+    * Método getter para recibir la velocidad de la bola
+    *
+    * @return la velocidad.
+    */
     public Vector2D getVel() {
         return vel;
     }
+
+    /**
+    * Método getter para recibir el numero de la bola
+    *
+    * @return el numero de la bola.
+    */
     public int getNumber() {
         return number;
     }
+
+    /**
+    * Método getter para recibir el tipo de la bola
+    *
+    * @return el tipo de la bola.
+    */
     public BallType getBallType() {
         return ballType;
     }
 
-    // * Paint
+    /**
+     * Método que pinta la bola
+     * @param g2D el objeto Graphics2D para dibujar
+     */
     public void paint(Graphics2D g2D) {
         // Dibujar bola completamente o rayada
         switch (ballType) {
@@ -243,9 +336,11 @@ public class Ball extends Circle {
         g2D.setFont(new Font("Arial", Font.BOLD, round(radius * 0.66f)));
         g2D.drawString(""+number, round(x - (g2D.getFontMetrics().stringWidth(""+number))/2), round(y + (g2D.getFontMetrics().getHeight())/3));
     }
+
     private void paintSolidBall(Graphics2D g2D) {
         this.fillCircle(g2D, ballColor);
     }
+
     private void paintStripedBall(Graphics2D g2D) {
         this.fillCircle(g2D, Color.white);
         float y = bounds.y + (bounds.height * 0.2f);

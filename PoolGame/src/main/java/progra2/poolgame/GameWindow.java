@@ -10,10 +10,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 
+/**
+ * Clase que representa la ventana principal del juego
+ * @author Alonso Bustos
+ */
 public class GameWindow extends JFrame {
     private GamePanel gamePanel;
     private InterfacePanel interfacePanel;
 
+    /**
+     * Constructor de la ventana principal del juego, configura la ventana y agrega los paneles principales
+     */
     public GameWindow() {
         super("PoolGame");
         
@@ -36,9 +43,23 @@ public class GameWindow extends JFrame {
         this.setVisible(true);
     }
     
+    /**
+     * Método que retorna el panel de juego
+     * 
+     * @return Panel de juego que contiene la mesa y las bolas
+     */
     public GamePanel getGamePanel() {
         return gamePanel;
     }
+
+    /**
+     * Método que retorna el panel de interfaz
+     * 
+     * @return Panel de interfaz que contiene los botones y la información del juego
+     */
+    public InterfacePanel getInterfacePanel() {
+		return interfacePanel;
+	}
 
     private void setIcon() {
         try { this.setIconImage(new ImageIcon(getClass().getResource("/resources/icon.png")).getImage());
@@ -57,8 +78,4 @@ public class GameWindow extends JFrame {
             }
         });
     }
-
-	public InterfacePanel getInterfacePanel() {
-		return interfacePanel;
-	}
 }

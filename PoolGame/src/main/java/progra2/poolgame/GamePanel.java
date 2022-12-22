@@ -12,12 +12,19 @@ import java.awt.Toolkit;
 
 import inputs.*;
 
+/**
+ * Clase que crea el panel donde se dibujará la mesa y las bolas
+ * @author Alonso Bustos
+ */
 public class GamePanel extends JPanel {
     private Table table;
 
     private Integer fps;
     private Integer ups;
     
+    /**
+     * Constructor del panel de juego, inicializa los campos y configura el panel
+     */
     public GamePanel() {
         // * Inicializar
         super(true);
@@ -40,10 +47,21 @@ public class GamePanel extends JPanel {
         this.addKeyListener(poolInputs);
     }
 
+    /**
+     * Método que dibuja frame de la mesa
+     * 
+     * @param fps Frames por segundo
+     */
     public void render(Integer fps) {
         this.fps = fps;
         this.repaint();
     }
+
+    /**
+     * Método que actualiza lógica de pool
+     * 
+     * @param ups Actualizaciones por segundo
+     */
     public void update(Integer ups) {
         this.ups = ups;
 
@@ -52,6 +70,11 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * Método que dibuja el frame (mesa y información de monitorio)
+     * 
+     * @param g Graphics
+     */
     @Override
     public void paintComponent(Graphics g) {
         //! Configurar Render (Graphics2D tiene métodos de dibujado mas útiles y complejos)
