@@ -60,7 +60,7 @@
   * [X] ~~"Use Case Diagram" con funciones principales de la aplicación/juego~~
   * [X] ~~UML del contenido gráfico (GUI)~~
   * [X] ~~"TO-DO List" de cosas que no sabes hacer, y nuestro avance respecto a ellas~~
-  * [ ] Agregar JavaDoc
+  * [X] Agregar JavaDoc
   * [ ] Agregar UnitTests
 
 ### TO-DO List
